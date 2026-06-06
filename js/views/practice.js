@@ -2,6 +2,7 @@
 import { S, skillRec } from '../state.js';
 import { getSkill, skillsForGrade } from '../curriculum/index.js';
 import { nextProblem } from '../engine/index.js';
+import { matchMisconception } from '../engine/problemTypes.js';
 import {
   recordAnswer, masterSkill, checkNewBadges, PRAISE, pickPraise, DAILY_GOAL,
   dueReviews, scheduleReview,
@@ -215,7 +216,12 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete }) {
       if (sourceEl) { sourceEl.classList.add('wrong'); setTimeout(() => sourceEl.classList.remove('wrong'), 600); }
       const disp = ansArea.querySelector('#ans-display');
       if (disp) { disp.classList.remove('shake'); void disp.offsetWidth; disp.classList.add('shake'); }
-      if (wrongOnCur === 1) {
+      const misc = matchMisconception(cur, raw); // tutor: address the specific mistake
+      if (misc && wrongOnCur <= 2) {
+        fb.innerHTML = `<span class="fb-soft">${mdInline(misc)}</span>`;
+        mascot.setSay('Let me help with that part. 🦊', 'think');
+        if (wrongOnCur === 2) { hintBtn.classList.add('pulse'); showBtn.classList.add('pulse'); }
+      } else if (wrongOnCur === 1) {
         fb.innerHTML = `<span class="fb-soft">🤔 ${pickPraise(PRAISE.wrong1)}</span>`;
         mascot.setSay(foxLine('encourage'), 'encourage');
       } else if (wrongOnCur === 2) {

@@ -1,6 +1,6 @@
 // views/home.js — the learning map: continue card, daily goal, grade tabs, strands.
 import { S, persist, isUnlocked, isMastered, skillRec } from '../state.js';
-import { groupedByStrand, getSkill } from '../curriculum/index.js';
+import { groupedByStrand, getSkill, GRADES } from '../curriculum/index.js';
 import { gradeCompletion, recommendedSkill, dailyStatus, dueReviews } from '../gamification.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { navigate } from '../ui/shell.js';
@@ -57,7 +57,7 @@ export function renderHome(root) {
     </button>
 
     <div class="grade-tabs" role="tablist" aria-label="Choose grade">
-      ${[3, 4, 5, 6].map((g) => `<button class="grade-tab ${g === grade ? 'active' : ''}" role="tab" aria-selected="${g === grade}" data-grade="${g}">Grade ${g}</button>`).join('')}
+      ${GRADES.map((g) => `<button class="grade-tab ${g === grade ? 'active' : ''}" role="tab" aria-selected="${g === grade}" data-grade="${g}">Grade ${g}</button>`).join('')}
     </div>
 
     <div class="grade-progress card-soft">

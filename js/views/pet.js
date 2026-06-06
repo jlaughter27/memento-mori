@@ -1,6 +1,7 @@
 // views/pet.js — Pet Home: care for your companion (happiness + feeding + play).
 import { S, persist } from '../state.js';
 import { rewardsData } from '../curriculum/index.js';
+import decorData from '../curriculum/decor-data.js';
 import { tickCare, petMood, patPet, playPet, feedPet, buyTreats, addCoins } from '../gamification.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx, speak } from '../ui/sound.js';
@@ -29,7 +30,8 @@ export function renderPet(root) {
         <span class="pet-coins">🪙 <b id="pet-coins">${S.progress.coins}</b></span>
       </header>
 
-      <div class="pet-room card-soft">
+      <div class="pet-room card-soft" id="pet-room" style="background:${roomBg()}">
+        <div class="pet-decor" id="pet-decor">${decorEmojis()}</div>
         <div class="pet-bubble" id="pet-bubble"></div>
         <div class="pet-sprite" id="pet-sprite">${pet.emoji}</div>
         <div class="pet-floor"></div>
@@ -53,6 +55,14 @@ export function renderPet(root) {
           <button class="btn btn-ghost ts-buy" data-n="5" data-cost="20">5 treats · 🪙 20</button>
         </div>
         <button class="btn-link" id="more-pets">🐾 Get more pets &amp; outfits in Rewards →</button>
+      </div>
+
+      <div class="decorate card-soft">
+        <div class="ts-head">🎨 Decorate the home</div>
+        <div class="dec-sub">Rooms</div>
+        <div class="room-row" id="room-row">${decorData.rooms.map(roomCard).join('')}</div>
+        <div class="dec-sub">Decorations</div>
+        <div class="decor-grid" id="decor-grid">${decorData.decor.map(decorCard).join('')}</div>
       </div>
     </div>`;
 
@@ -99,6 +109,47 @@ export function renderPet(root) {
     say('Treats! You\'re the best! 💝');
   }));
   root.querySelector('#more-pets').addEventListener('click', () => { sfx.tap(); navigate('#/rewards'); });
+
+  // rooms
+  root.querySelectorAll('.room-card').forEach((c) => c.addEventListener('click', () => {
+    const r = decorData.rooms.find((x) => x.id === c.dataset.id);
+    const h = S.progress.home;
+    if (!h.ownedRooms.includes(r.id)) {
+      if (S.progress.coins < r.cost) { sfx.wrong(); popup({ emoji: '🪙', title: 'Not enough coins yet!', sub: 'Keep learning to earn coins. 🌱', sound: false, confetti: false }); return; }
+      S.progress.coins -= r.cost; h.ownedRooms.push(r.id); sfx.coin();
+    } else sfx.tap();
+    h.room = r.id; persist(); refreshChrome(); renderPet(root);
+  }));
+  // decorations (buy = collect + place)
+  root.querySelectorAll('.decor-card').forEach((c) => c.addEventListener('click', () => {
+    const d = decorData.decor.find((x) => x.id === c.dataset.id);
+    const h = S.progress.home;
+    if (h.decor.includes(d.id)) { sfx.tap(); h.decor = h.decor.filter((x) => x !== d.id); persist(); renderPet(root); return; }
+    if (S.progress.coins < d.cost) { sfx.wrong(); popup({ emoji: '🪙', title: 'Not enough coins yet!', sub: 'Keep learning to earn coins. 🌱', sound: false, confetti: false }); return; }
+    S.progress.coins -= d.cost; h.decor.push(d.id); sfx.coin(); confetti(40); persist(); refreshChrome(); renderPet(root);
+  }));
+}
+
+function roomBg() {
+  const r = decorData.rooms.find((x) => x.id === S.progress.home.room) || decorData.rooms[0];
+  return r ? r.bg : 'linear-gradient(180deg,#fff6e9,#ffe9cf)';
+}
+function decorEmojis() {
+  const owned = S.progress.home.decor || [];
+  return owned.map((id) => { const d = decorData.decor.find((x) => x.id === id); return d ? `<span class="placed-decor">${d.emoji}</span>` : ''; }).join('');
+}
+function roomCard(r) {
+  const owned = S.progress.home.ownedRooms.includes(r.id);
+  const using = S.progress.home.room === r.id;
+  return `<button class="room-card ${using ? 'using' : ''}" data-id="${r.id}">
+    <span class="room-emoji">${r.emoji}</span><span class="room-name">${escapeHtml(r.name)}</span>
+    <span class="room-tag">${using ? '✓ Using' : owned ? 'Use' : '🪙 ' + r.cost}</span></button>`;
+}
+function decorCard(d) {
+  const have = S.progress.home.decor.includes(d.id);
+  return `<button class="decor-card ${have ? 'have' : ''}" data-id="${d.id}" title="${escapeHtml(d.name)}">
+    <span class="decor-emoji">${d.emoji}</span>
+    <span class="decor-tag">${have ? '✓' : '🪙' + d.cost}</span></button>`;
 }
 
 function meter(label, emoji, key, val) {

@@ -45,6 +45,14 @@ try {
   if (S.progress.coins !== 30) throw new Error('buying treats did not spend coins');
   log('treat shop: bought 5 treats for 20 coins');
 
+  step = 'decorate';
+  if (!q('.room-card') || !q('.decor-card')) throw new Error('decorate panel did not render');
+  const cheapDecor = qa('.decor-card').find((c) => c.querySelector('.decor-tag').textContent.includes('10'));
+  if (cheapDecor) { const before = S.progress.coins; click(cheapDecor); await wait(40);
+    if (S.progress.coins >= before) throw new Error('buying decor did not spend coins');
+    if (!S.progress.home.decor.length) throw new Error('decor not placed'); }
+  log('decorate: bought + placed a decoration; room/decor cards render');
+
   step = 'adventure map';
   hashTo('#/adventure'); await wait(40);
   if (!q('.adv-chapter')) throw new Error('adventure map did not render');

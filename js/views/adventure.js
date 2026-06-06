@@ -208,7 +208,9 @@ function challengePhase(root, ch, scene) {
       recordAnswer(scene.skill, false, false);
       sfx.wrong();
       if (sourceEl) { sourceEl.classList.add('wrong'); setTimeout(() => sourceEl.classList.remove('wrong'), 600); }
-      if (wrong === 1) fb.innerHTML = `<span class="fb-soft">🤔 Not quite — try again! Tap 💡 for a hint.</span>`;
+      const misc = matchMisconception(problem, raw);
+      if (misc && wrong <= 2) { fb.innerHTML = `<span class="fb-soft">${mdInline(misc)}</span>`; if (wrong === 2) body.querySelector('#c-hint').classList.add('pulse'); }
+      else if (wrong === 1) fb.innerHTML = `<span class="fb-soft">🤔 Not quite — try again! Tap 💡 for a hint.</span>`;
       else if (wrong === 2) { fb.innerHTML = `<span class="fb-soft">💛 You can do it — here's a hint.</span>`; body.querySelector('#c-hint').classList.add('pulse'); }
       else { fb.innerHTML = `<span class="fb-soft">Let's look together — then you've got the next one!</span>`; revealSolution(); }
     }

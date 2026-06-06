@@ -1,10 +1,21 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.1.0';
+export const APP_VERSION = '2.2.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.2.0',
+    date: '2026-06-06',
+    title: 'Smarter Tutor & Grades 2–7',
+    items: [
+      '🧠 The tutor now spots common mistakes and explains the exact fix',
+      '📚 New grades: 2nd and 7th — MathQuest now spans grades 2–7 (86 skills)',
+      '🐾 New pet treats, rooms, and decorations to collect',
+      '⭐ Every skill stays Common Core aligned (65 standards)',
+    ],
+  },
   {
     v: '2.1.0',
     date: '2026-06-06',

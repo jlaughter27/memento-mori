@@ -539,3 +539,34 @@ body[data-bg="bg-stars"] .hud-level-badge,body[data-bg="bg-galaxy"] .hud-level-b
 .continue-card.quest-card{background:linear-gradient(135deg,#fff,#fff1e6);border-color:#e17055;box-shadow:0 5px 0 #ffd2c2}
 .continue-card.quest-card .cont-text b{color:#c0392b}
 .continue-card.quest-card .cont-go{color:#e17055}
+
+/* wider grade picker (grades 2–7) */
+.grade-pick-wide{grid-template-columns:repeat(3,1fr)!important}
+@media(min-width:420px){.grade-pick-wide{grid-template-columns:repeat(6,1fr)!important}}
+
+/* pet home decorations */
+.pet-room{position:relative}
+.pet-decor{position:absolute;inset:0;pointer-events:none}
+.placed-decor{position:absolute;font-size:1.6rem;opacity:.95}
+.placed-decor:nth-child(1){left:8%;bottom:14px}
+.placed-decor:nth-child(2){right:10%;bottom:16px}
+.placed-decor:nth-child(3){left:14%;top:16px}
+.placed-decor:nth-child(4){right:16%;top:18px}
+.placed-decor:nth-child(5){left:30%;bottom:12px}
+.placed-decor:nth-child(6){right:30%;bottom:12px}
+.placed-decor:nth-child(7){left:46%;top:14px}
+.placed-decor:nth-child(n+8){left:60%;top:16px}
+.decorate{display:flex;flex-direction:column;gap:8px}
+.dec-sub{font-weight:800;color:var(--ink-soft);font-size:.8rem;text-transform:uppercase;letter-spacing:.4px;margin-top:4px}
+.room-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.room-card{flex:0 0 auto;width:88px;font-family:inherit;background:#fff;border:3px solid #efeaff;border-radius:14px;padding:8px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;box-shadow:0 4px 0 #ece7ff}
+.room-card.using{border-color:var(--good);box-shadow:0 4px 0 #c7f5e7}
+.room-emoji{font-size:1.6rem}.room-name{font-size:.7rem;font-weight:800;line-height:1.1;text-align:center}
+.room-tag{font-size:.7rem;font-weight:800;color:var(--p1)}
+.room-card.using .room-tag{color:var(--good-d)}
+.decor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:8px}
+.decor-card{font-family:inherit;background:#fff;border:2px solid #efeaff;border-radius:12px;padding:8px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 3px 0 #ece7ff}
+.decor-card.have{border-color:var(--good);background:#f3fffb}
+.decor-emoji{font-size:1.5rem}
+.decor-tag{font-size:.66rem;font-weight:800;color:var(--ink-soft)}
+.decor-card.have .decor-tag{color:var(--good-d)}

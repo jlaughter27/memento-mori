@@ -2,7 +2,7 @@
 // Reward philosophy (from research): micro-celebrations + milestones, never payment;
 // grace-day streaks with positive framing; growth-mindset language only.
 import { S, skillRec, persist, persistSoon } from './state.js';
-import { rewardsData, ALL_SKILLS, strandSkills } from './curriculum/index.js';
+import { rewardsData, ALL_SKILLS, strandSkills, GRADES } from './curriculum/index.js';
 
 /* ---------- leveling ---------- */
 export function xpToReach(level) {
@@ -185,7 +185,7 @@ export function recommendedSkill(isUnlocked) {
 /* ---------- badges ---------- */
 function strandMasteredForAnyGrade(strand) {
   // mastered if every skill of this strand in ANY single grade is mastered
-  for (const grade of [3, 4, 5, 6]) {
+  for (const grade of GRADES) {
     const skills = strandSkills(grade, strand);
     if (skills.length && skills.every((s) => S.progress.skills[s.id] && S.progress.skills[s.id].mastered)) return true;
   }
