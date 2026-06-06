@@ -45,6 +45,12 @@ try {
   const { S } = await import('../js/state.js');
   console.log('  • sprint: solved ' + scored + ' problem(s), score live');
 
+  step = 'timer self-clears on navigation';
+  hashTo('#/'); await wait(1300); // > 1 tick: timer should bail, not hijack the view
+  if (!q('.home-hero')) throw new Error('navigated away from sprint but home did not render');
+  if (q('.sprint-final') || q('.sprint-game')) throw new Error('sprint timer hijacked the view after navigation');
+  console.log('  • sprint timer stops cleanly when you leave mid-game');
+
 } catch (e) {
   console.log('\n❌ SPRINT FAILED at [' + step + ']:', e.message);
   if (errors.length) console.log('errors:', errors.slice(0, 5).join(' | '));

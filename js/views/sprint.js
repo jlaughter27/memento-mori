@@ -52,6 +52,7 @@ export function renderSprint(root) {
     sfx.tap();
     const pop = () => { el.classList.remove('pop-in'); void el.offsetWidth; el.classList.add('pop-in'); };
     timer = setInterval(() => {
+      if (!document.body.contains(el)) { clear(); return; } // navigated away
       n--;
       if (n === 0) { el.textContent = 'GO!'; pop(); sfx.star(); }
       else if (n < 0) { clear(); play(); }
@@ -109,6 +110,7 @@ export function renderSprint(root) {
 
     nextProb();
     timer = setInterval(() => {
+      if (!document.body.contains(clockEl)) { clear(); document.removeEventListener('keydown', keyHandler); return; } // navigated away mid-game
       remaining--;
       clockEl.textContent = remaining;
       timeFill.style.width = (remaining / DURATION * 100) + '%';

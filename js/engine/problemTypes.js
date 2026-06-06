@@ -380,9 +380,9 @@ function makePlaceValue(params = {}, rng) {
       prompt: `Write ${grp(n)} in expanded form (like 300 + 40 + 5):`,
       answer: ansStr,
       steps: [
-        { text: `Look at each digit and its place value.` },
-        ...[...digs].map((dv, i) => digs.length - 1 - i >= 0 && digs[digs.length - 1 - i] ? null : null).filter(Boolean),
-        { text: parts.map((p, i) => `${grp(p)}`).join(' + ') + ` = ${grp(n)}.` },
+        { text: `Look at each digit and what place it's in.` },
+        ...parts.map((p) => ({ text: `One digit is worth ${grp(p)}.` })),
+        { text: `Add the place values: ${parts.map(grp).join(' + ')} = ${grp(n)}.` },
         { text: `Expanded form: ${ansStr}. 🧩` },
       ],
       hints: ['Each digit is worth its face value times its place (ones, tens, hundreds...).', 'Write each nonzero digit times its place, joined with +.'],
@@ -540,7 +540,7 @@ function makeFractionAddSub(params = {}, rng) {
     n1 = randInt(rng, 1, d1 - 1); n2 = randInt(rng, 1, d1 - 1);
   } else {
     d1 = randInt(rng, 2, maxD); d2 = randInt(rng, 2, maxD);
-    while (d2 === d1) d2 = randInt(rng, 2, maxD);
+    while (d2 === d1 && maxD > 2) d2 = randInt(rng, 2, maxD);
     n1 = randInt(rng, 1, d1 - 1); n2 = randInt(rng, 1, d2 - 1);
   }
   if (op === '-' && n1 / d1 < n2 / d2) { [d1, d2] = [d2, d1];[n1, n2] = [n2, n1]; }
@@ -570,8 +570,13 @@ function makeFractionAddSub(params = {}, rng) {
       `Always simplify your answer if you can.`,
     ],
     visual: { type: 'fractionBar', bars: [{ num: n1, den: d1 }, { num: n2, den: d2 }] },
-    misconceptions: (() => { const wN = op === '+' ? n1 + n2 : n1 - n2, wD = op === '+' ? d1 + d2 : d1 + d2;
-      return wD > 0 && Math.abs(wN / wD - sNum / sDen) > 1e-9 ? [mis(checkFraction(wN, wD), `Watch out — you **don't add the bottom numbers**. Give both fractions the same denominator first, then ${op === '+' ? 'add' : 'subtract'} just the tops. 🍕`)] : []; })(),
+    misconceptions: (() => {
+      // classic "operate on the denominators too" error — cleanest to detect on addition
+      if (op !== '+') return [];
+      const wN = n1 + n2, wD = d1 + d2;
+      return wD > 0 && Math.abs(wN / wD - sNum / sDen) > 1e-9
+        ? [mis(checkFraction(wN, wD), `Watch out — you **don't add the bottom numbers**. Give both fractions the same denominator first, then add just the tops. 🍕`)] : [];
+    })(),
     check: checkFraction(sNum, sDen),
   });
 }
@@ -966,7 +971,7 @@ function makePercent(params = {}, rng) {
   const kind = params.kind || 'ofNumber';
   if (kind === 'whole') {
     const pct = pick(rng, [10, 20, 25, 50]);
-    const part = randInt(rng, 2, 12) * (pct / 100) * 4; // keep clean
+    const part = Math.round(randInt(rng, 2, 12) * (pct / 100) * 4 * 100) / 100; // keep clean (no float noise)
     const whole = Math.round(part / (pct / 100));
     return P({
       type: 'percent',
@@ -1035,12 +1040,15 @@ function makeMean(params = {}, rng) {
   const ask = params.ask || 'mean';
   let nums;
   if (ask === 'mean') {
-    // make the sum divisible by count for a clean average
-    const target = randInt(rng, 3, max);
-    nums = Array.from({ length: count }, () => randInt(rng, 1, max));
-    const sum = nums.reduce((a, b) => a + b, 0);
-    const fix = (target * count - sum);
-    nums[0] = Math.min(Math.max(nums[0] + fix, 1), max * count);
+    // Start with every value equal to the target mean (sum is exactly mean*count, so the
+    // average is a whole number), then shuffle units between pairs to add variety while
+    // keeping the sum — and therefore the mean — exact.
+    const m = randInt(rng, 3, max);
+    nums = Array.from({ length: count }, () => m);
+    for (let s = 0; s < count * 4; s++) {
+      const i = Math.floor(rng() * count), j = Math.floor(rng() * count);
+      if (i !== j && nums[i] > 1 && nums[j] < max) { nums[i]--; nums[j]++; }
+    }
   } else {
     nums = Array.from({ length: count }, () => randInt(rng, 1, max));
   }

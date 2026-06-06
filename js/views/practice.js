@@ -106,7 +106,9 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete }) {
   let cur = null, curSkillId = null, wrongOnCur = 0, hintIdx = 0, solxIdx = 0, answered = false, sessionOver = false;
   let idleTimers = [];                 // gentle nudges after inactivity (research: ~35s / ~65s)
   let consecCorrect = 0, consecWrong = 0, diff = 0; // adaptive difficulty (-2..+2)
+  let navigatedAway = false;           // stop scheduled callbacks once the learner leaves
   const clearIdle = () => { idleTimers.forEach(clearTimeout); idleTimers = []; };
+  const leave = () => { navigatedAway = true; clearIdle(); if (ansArea._keyHandler) document.removeEventListener('keydown', ansArea._keyHandler); };
 
   root.innerHTML = `
     <div class="practice-wrap">
@@ -132,7 +134,7 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete }) {
   const hintBtn = root.querySelector('#hint-btn');
   const showBtn = root.querySelector('#show-btn');
   const solPanel = root.querySelector('#solution-panel');
-  root.querySelector('#prac-back').addEventListener('click', () => { clearIdle(); navigate('#/'); });
+  root.querySelector('#prac-back').addEventListener('click', () => { leave(); navigate('#/'); });
 
   function drawPips() {
     pips.innerHTML = Array.from({ length: goal }, (_, i) =>
@@ -234,7 +236,7 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete }) {
       drawPips();
       const fresh = checkNewBadges(); refreshChrome();
       const after = () => {
-        if (sessionOver) return;
+        if (sessionOver || navigatedAway) return;
         if (sess.cleared >= goal) { sessionOver = true; mascot.setSay('I\'m SO proud of you! 🏆', 'proud'); onComplete(sess); }
         else load();
       };
