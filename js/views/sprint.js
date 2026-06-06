@@ -10,15 +10,21 @@ import { confetti, popup, sparkle } from '../ui/celebrations.js';
 import { escapeHtml } from '../ui/dom.js';
 
 const DURATION = 60; // seconds
-// quick mental-math pool — answerable in a couple of seconds (fact fluency)
-const POOL = [
-  { practice: { type: 'mult', params: { aDigits: 1, bDigits: 1 } } },
-  { practice: { type: 'mult', params: { aDigits: 1, bDigits: 1 } } },
-  { practice: { type: 'add', params: { digits: 2, regroup: false, terms: 2 } } },
-  { practice: { type: 'sub', params: { digits: 2, regroup: false } } },
-];
+// quick mental-math pool, lightly tuned to the child's grade (fact fluency, not busywork)
+function poolForGrade(grade) {
+  const base = [
+    { practice: { type: 'add', params: { digits: 2, regroup: false, terms: 2 } } },
+    { practice: { type: 'sub', params: { digits: 2, regroup: false } } },
+    { practice: { type: 'mult', params: { aDigits: 1, bDigits: 1 } } },
+  ];
+  if (grade <= 2) return [{ practice: { type: 'add', params: { digits: 1, terms: 2 } } }, { practice: { type: 'sub', params: { digits: 1 } } }, ...base.slice(0, 2)];
+  if (grade >= 4) base.push({ practice: { type: 'div', params: { dividendDigits: 2, divisor: 4, remainder: false } } });
+  if (grade >= 5) base.push({ practice: { type: 'mult', params: { aDigits: 2, bDigits: 1 } } });
+  return base;
+}
 
 export function renderSprint(root) {
+  const POOL = poolForGrade(S.profile.grade || 3);
   let timer = null;
   const clear = () => { if (timer) { clearInterval(timer); timer = null; } };
 

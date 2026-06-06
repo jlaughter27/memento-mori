@@ -148,14 +148,16 @@ function decorEmojis() {
 function roomCard(r) {
   const owned = S.progress.home.ownedRooms.includes(r.id);
   const using = S.progress.home.room === r.id;
-  return `<button class="room-card ${using ? 'using' : ''}" data-id="${r.id}">
-    <span class="room-emoji">${r.emoji}</span><span class="room-name">${escapeHtml(r.name)}</span>
+  const lbl = `${r.name}${using ? ', currently active' : owned ? ', tap to use' : `, costs ${r.cost} coins`}`;
+  return `<button class="room-card ${using ? 'using' : ''}" data-id="${r.id}" aria-pressed="${using}" aria-label="${escapeHtml(lbl)}">
+    <span class="room-emoji" aria-hidden="true">${r.emoji}</span><span class="room-name">${escapeHtml(r.name)}</span>
     <span class="room-tag">${using ? '✓ Using' : owned ? 'Use' : '🪙 ' + r.cost}</span></button>`;
 }
 function decorCard(d) {
   const have = S.progress.home.decor.includes(d.id);
-  return `<button class="decor-card ${have ? 'have' : ''}" data-id="${d.id}" title="${escapeHtml(d.name)}">
-    <span class="decor-emoji">${d.emoji}</span>
+  const lbl = `${d.name}${have ? ', placed (tap to remove)' : `, costs ${d.cost} coins`}`;
+  return `<button class="decor-card ${have ? 'have' : ''}" data-id="${d.id}" aria-pressed="${have}" aria-label="${escapeHtml(lbl)}">
+    <span class="decor-emoji" aria-hidden="true">${d.emoji}</span>
     <span class="decor-tag">${have ? '✓' : '🪙' + d.cost}</span></button>`;
 }
 
