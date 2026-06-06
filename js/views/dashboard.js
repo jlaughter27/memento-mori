@@ -80,10 +80,19 @@ export function renderDashboard(root) {
 
   root.querySelector('#set-name').addEventListener('input', (e) => { S.profile.name = e.target.value; persist(); });
   root.querySelector('#set-grade').addEventListener('change', (e) => { S.profile.grade = +e.target.value; persist(); refreshChrome(); });
-  root.querySelector('#reset-btn').addEventListener('click', () => {
-    if (confirm('Reset ALL progress, coins, and badges? This cannot be undone.')) {
-      resetAll(); applyBodyClasses(); refreshChrome(); navigate('#/onboard');
+  const resetBtn = root.querySelector('#reset-btn');
+  let armed = false, armTimer = null;
+  resetBtn.addEventListener('click', () => {
+    if (!armed) {
+      armed = true;
+      resetBtn.textContent = '⚠️ Tap again to erase everything';
+      resetBtn.classList.add('armed');
+      clearTimeout(armTimer);
+      armTimer = setTimeout(() => { armed = false; resetBtn.textContent = 'Reset all progress'; resetBtn.classList.remove('armed'); }, 5000);
+      return;
     }
+    clearTimeout(armTimer);
+    resetAll(); applyBodyClasses(); refreshChrome(); navigate('#/onboard');
   });
 }
 

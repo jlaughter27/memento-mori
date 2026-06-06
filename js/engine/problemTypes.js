@@ -438,11 +438,11 @@ function makeCompare(params = {}, rng) {
     prompt: `Compare:  ${grp(a)}  ?  ${grp(b)}`,
     answer: ans,
     steps: [
-      { text: `Line them up and compare from the LEFT (biggest place first).` },
+      { text: `Line them up and compare from the **left** (biggest place first).` },
       { text: a === b ? `Every digit matches, so they're equal.` : `The first place where they differ decides it.` },
       { text: `${grp(a)} ${ans} ${grp(b)}. ${ans === '>' ? '◀ points to the bigger one!' : ans === '<' ? 'The open side faces the bigger one!' : ''}` },
     ],
-    hints: [`Compare the leftmost digits first.`, `The alligator mouth always opens toward the BIGGER number. 🐊`],
+    hints: [`Compare the leftmost digits first.`, `The alligator mouth always opens toward the bigger number. 🐊`],
     check: checkChoice(ans),
   });
 }
@@ -584,9 +584,9 @@ function makeDecimalAddSub(params = {}, rng) {
     prompt: `${a.toFixed(places)} ${op} ${b.toFixed(places)} = ?`,
     answer: ans.toFixed(places),
     steps: [
-      { text: `LINE UP THE DECIMAL POINTS — that's the #1 rule with decimals.` },
+      { text: `**Line up the decimal points** — that's the #1 rule with decimals.` },
       { text: `Then ${op === '+' ? 'add' : 'subtract'} just like whole numbers, column by column.` },
-      { text: `Bring the decimal point straight down. Answer: ${ans.toFixed(places)}. 💯` },
+      { text: `Bring the decimal point straight down. Answer: **${ans.toFixed(places)}**. 💯` },
     ],
     hints: [`Stack them so the decimal points are in a straight line.`, `Fill empty spots with 0 if you need to.`, `Drop the decimal point straight down into the answer.`],
     check: checkDecimal(ans),
@@ -607,7 +607,7 @@ function makeDecimalCompare(params = {}, rng) {
     prompt: `Compare:  ${a}  ?  ${b}`,
     answer: ans,
     steps: [
-      { text: `Compare place by place from the LEFT: whole numbers first, then tenths, then hundredths.` },
+      { text: `Compare place by place from the **left**: whole numbers first, then tenths, then hundredths.` },
       { text: `Tip: give them the same number of decimal places by adding zeros.` },
       { text: `${a} ${ans} ${b}. ✅` },
     ],
@@ -709,14 +709,14 @@ function makeOrder(params = {}, rng) {
   if (parens) {
     expr = `(${a} + ${b}) × ${c}`; ans = (a + b) * c;
     steps = [
-      { text: `PEMDAS: do what's inside PARENTHESES first.` },
+      { text: `**PEMDAS:** do what's inside the **parentheses** first.` },
       { text: `(${a} + ${b}) = ${a + b}.` },
-      { text: `Then ${a + b} × ${c} = ${ans}. ✅` },
+      { text: `Then ${a + b} × ${c} = **${ans}**. ✅` },
     ];
   } else {
     expr = `${a} + ${b} × ${c}`; ans = a + b * c;
     steps = [
-      { text: `PEMDAS: MULTIPLY before you add.` },
+      { text: `**PEMDAS:** **multiply** before you add.` },
       { text: `${b} × ${c} = ${b * c} first.` },
       { text: `Then ${a} + ${b * c} = ${ans}. ✅` },
     ];
@@ -785,9 +785,10 @@ function makeVolume(params = {}, rng) {
     steps: [
       { text: `Volume is how many unit cubes fill the box.` },
       { text: `Volume = length × width × height = ${l} × ${w} × ${h}.` },
-      { text: `${l} × ${w} = ${l * w}, then × ${h} = ${ans} cubic units. 📦` },
+      { text: `${l} × ${w} = ${l * w}, then × ${h} = **${ans}** cubic units. 📦` },
     ],
     hints: [`Volume = length × width × height.`, `Find the area of the bottom first, then multiply by the height.`],
+    visual: { type: 'box3d', l, w, h },
     check: checkInt(ans),
   });
 }
@@ -918,6 +919,7 @@ function makeRatio(params = {}, rng) {
       { text: `${a} ÷ ${gcd(a, b)} = ${sa}, ${b} ÷ ${gcd(a, b)} = ${sb} → ${sa}:${sb}. ✅` },
     ],
     hints: [`Treat it like reducing a fraction.`, `Divide both numbers by their greatest common factor.`],
+    visual: { type: 'tape', a: sa, b: sb },
     check: (raw) => {
       const m = String(raw).replace(/\s/g, '').match(/^(\d+):(\d+)$/);
       return m && +m[1] === sa && +m[2] === sb;
@@ -941,9 +943,10 @@ function makePercent(params = {}, rng) {
       steps: [
         { text: `${pct}% means ${pct} out of 100, or the fraction ${pct}/100.` },
         { text: `If ${pct}% is ${part}, then 100% (the whole) is ${part} ÷ ${pct / 100}.` },
-        { text: `${part} ÷ ${pct / 100} = ${whole}. ✅` },
+        { text: `${part} ÷ ${pct / 100} = **${whole}**. ✅` },
       ],
       hints: [`Percent means "out of 100".`, `Divide the part by the percent (as a decimal) to get the whole.`],
+      visual: { type: 'percentBar', pct, label: `${pct}% = ${part}` },
       check: checkInt(whole),
     });
   }
@@ -957,9 +960,10 @@ function makePercent(params = {}, rng) {
     steps: [
       { text: `${pct}% means ${pct} per 100 → the decimal ${(pct / 100).toFixed(2)}.` },
       { text: `Multiply: ${(pct / 100).toFixed(2)} × ${whole}.` },
-      { text: `= ${ans}. 💯` },
+      { text: `= **${ans}**. 💯` },
     ],
     hints: [`Turn the percent into a decimal (move the dot 2 left).`, `Then multiply by the number.`],
+    visual: { type: 'percentBar', pct, label: `${pct}% of ${whole}` },
     check: checkInt(ans),
   });
 }
@@ -978,11 +982,11 @@ function makeIntegers(params = {}, rng) {
     prompt: `${a} ${op} ${bShown} = ?`,
     answer: String(ans),
     steps: [
-      { text: `Think of a NUMBER LINE. Positive = move right, negative = move left.` },
+      { text: `Think of a **number line**. Positive = move right, negative = move left.` },
       { text: op === '+'
-        ? `Start at ${a}. ${b >= 0 ? `Move RIGHT ${b}.` : `Add a negative = move LEFT ${Math.abs(b)}.`}`
-        : `Subtracting ${bShown} means ${b >= 0 ? `move LEFT ${b}` : `move RIGHT ${Math.abs(b)} (minus a negative = plus!)`}.` },
-      { text: `You land on ${ans}. ✅` },
+        ? `Start at ${a}. ${b >= 0 ? `Move **right** ${b}.` : `Adding a negative = move **left** ${Math.abs(b)}.`}`
+        : `Subtracting ${bShown} means ${b >= 0 ? `move **left** ${b}` : `move **right** ${Math.abs(b)} (minus a negative = plus!)`}.` },
+      { text: `You land on **${ans}**. ✅` },
     ],
     hints: [`Use a number line: right for +, left for −.`, `Subtracting a negative is the same as adding!`],
     visual: { type: 'numberLine', min: -max - 5, max: max + 5, step: 5, mark: ans },
@@ -1018,9 +1022,10 @@ function makeMean(params = {}, rng) {
       steps: [
         { text: `Range = biggest − smallest.` },
         { text: `Biggest is ${Math.max(...nums)}, smallest is ${Math.min(...nums)}.` },
-        { text: `${Math.max(...nums)} − ${Math.min(...nums)} = ${ans}. 📊` },
+        { text: `${Math.max(...nums)} − ${Math.min(...nums)} = **${ans}**. 📊` },
       ],
       hints: [`Find the largest and smallest values.`, `Subtract the smallest from the largest.`],
+      visual: { type: 'dotPlot', values: nums },
       check: checkInt(ans),
     });
   }
@@ -1032,9 +1037,10 @@ function makeMean(params = {}, rng) {
     steps: [
       { text: `Mean = add them all up, then divide by how many.` },
       { text: `${nums.join(' + ')} = ${sum}. There are ${count} numbers.` },
-      { text: `${sum} ÷ ${count} = ${ans}. 📈` },
+      { text: `${sum} ÷ ${count} = **${ans}**. 📈` },
     ],
     hints: [`Add every number first.`, `Then divide the total by how many numbers there are.`],
+    visual: { type: 'dotPlot', values: nums, mean: ans },
     check: checkInt(ans),
   });
 }

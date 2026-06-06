@@ -305,3 +305,54 @@ body[data-bg="bg-cloud-palace"]{background:linear-gradient(180deg,#e0f7ff,#b3e5f
 body[data-bg="bg-aurora"]{background:linear-gradient(180deg,#1d2b64,#3a7bd5,#00d2ff)}
 /* keep cards readable on dark backgrounds */
 body[data-bg="bg-stars"] .muted,body[data-bg="bg-galaxy"] .muted,body[data-bg="bg-aurora"] .muted{color:#d8d4ff}
+
+/* ============================================================
+   v1.1 UPGRADES — a11y, continue card, daily goal, polish
+   ============================================================ */
+
+/* visible keyboard focus everywhere (WCAG 2.4.11) */
+:focus{outline:none}
+:focus-visible{outline:4px solid var(--accent);outline-offset:3px;border-radius:14px}
+.skill-card:focus-visible,.choice-btn:focus-visible,.key:focus-visible{outline-offset:2px}
+
+/* non-color answer states on choice buttons (color-blind safe) */
+.choice-btn.correct::after{content:" ✓";font-weight:900}
+.choice-btn.wrong::after{content:" ✗";font-weight:900}
+
+/* continue / keep-going card */
+.continue-card{display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+  background:linear-gradient(135deg,#fff,#eafff4);border:3px solid var(--good);border-radius:var(--radius);
+  padding:14px 18px;margin-bottom:14px;cursor:pointer;box-shadow:0 5px 0 #c7f5e7;font-family:inherit}
+.continue-card:active{transform:translateY(3px)}
+.cont-emoji{font-size:2.2rem}
+.cont-text{flex:1;display:flex;flex-direction:column}
+.cont-text b{color:var(--good-d);font-size:.85rem;text-transform:uppercase;letter-spacing:.5px}
+.cont-text span{font-weight:800;font-size:1.1rem;color:var(--ink)}
+.cont-go{font-size:1.4rem;color:var(--good)}
+
+/* daily goal */
+.daily-goal{margin-bottom:8px}
+.goal-pips{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
+.goal-pip{flex:1;min-width:14px;height:14px;border-radius:99px;background:#ece7ff;transition:.3s}
+.goal-pip.on{background:linear-gradient(90deg,#ffd56b,#ff9f1c)}
+.goal-done{margin:8px 0 0;color:var(--good-d);font-weight:800;text-align:center}
+
+/* keypad space key */
+.key-space{grid-column:span 2;font-size:1rem;color:var(--ink-soft)}
+.keypad[data-kind="text"] .key-space{grid-column:span 1}
+
+/* worked-solution visual */
+.sol-visual{margin:4px 0 12px;display:flex;justify-content:center}
+.sol-step .ss-text strong{color:var(--p1)}
+
+/* armed danger button (two-tap reset) */
+.btn-danger.armed{background:linear-gradient(180deg,#ff7675,#d63031);box-shadow:0 4px 0 #a01818;animation:pulse 1s ease-in-out infinite}
+
+/* dark-background themes: keep chrome + text legible */
+body[data-bg="bg-stars"],body[data-bg="bg-galaxy"],body[data-bg="bg-aurora"]{--ink-soft:#cfc7f0}
+body[data-bg="bg-stars"] .hud,body[data-bg="bg-galaxy"] .hud,body[data-bg="bg-aurora"] .hud,
+body[data-bg="bg-stars"] .nav,body[data-bg="bg-galaxy"] .nav,body[data-bg="bg-aurora"] .nav{
+  background:rgba(28,24,52,.82);color:#fff}
+body[data-bg="bg-stars"] .nav-btn,body[data-bg="bg-galaxy"] .nav-btn,body[data-bg="bg-aurora"] .nav-btn{color:#cfc7f0}
+body[data-bg="bg-stars"] .nav-btn.active,body[data-bg="bg-galaxy"] .nav-btn.active,body[data-bg="bg-aurora"] .nav-btn.active{background:rgba(108,92,231,.5);color:#fff}
+body[data-bg="bg-stars"] .hud-level-badge,body[data-bg="bg-galaxy"] .hud-level-badge,body[data-bg="bg-aurora"] .hud-level-badge{color:#cdbfff}

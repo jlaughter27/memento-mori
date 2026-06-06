@@ -7,15 +7,28 @@ const rng = makeRng(0); // reseeds itself from Math.random on first use
 
 export { TYPES };
 
-// Generate the next practice problem for a given skill object.
-export function nextProblem(skill) {
+// numeric params that scale difficulty; nudged by the adaptive `diff` (−2..+2)
+const SCALE_KEYS = ['digits', 'aDigits', 'bDigits', 'maxDenom', 'dividendDigits', 'max', 'terms'];
+const BOUNDS = { digits: [1, 6], aDigits: [1, 3], bDigits: [1, 2], maxDenom: [2, 12], dividendDigits: [2, 4], terms: [2, 3] };
+function adapt(params, diff) {
+  if (!diff) return params;
+  const out = { ...params };
+  for (const k of SCALE_KEYS) {
+    if (typeof out[k] === 'number') {
+      const b = BOUNDS[k] || [1, 99];
+      out[k] = Math.max(b[0], Math.min(b[1], out[k] + diff));
+    }
+  }
+  return out;
+}
+
+// Generate the next practice problem. `diff` (optional) adapts difficulty.
+export function nextProblem(skill, diff = 0) {
   const pr = skill.practice || { type: 'add', params: {} };
   if (pr.type === 'wordProblem') {
     return wordProblem({ skill: (pr.params && pr.params.skill) || 'add', grade: skill.grade });
   }
-  const p = generateProblem(pr.type, pr.params || {}, rng);
-  // optionally attach a word problem hint context for variety on some skills
-  return p;
+  return generateProblem(pr.type, adapt(pr.params || {}, diff), rng);
 }
 
 /* ---------- word problems from the bank ---------- */

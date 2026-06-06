@@ -3,6 +3,7 @@ import { S, applyBodyClasses, persist } from './state.js';
 import { updateStreakOnOpen, checkNewBadges } from './gamification.js';
 import { renderHUD, renderNav, setRouter, refreshChrome } from './ui/shell.js';
 import { primeAudio } from './ui/sound.js';
+import { popup } from './ui/celebrations.js';
 import { renderHome } from './views/home.js';
 import { renderLesson } from './views/lesson.js';
 import { renderPractice, renderPlay } from './views/practice.js';
@@ -49,9 +50,16 @@ function route() {
 function boot() {
   applyBodyClasses();
   if (S.onboarded) {
-    updateStreakOnOpen();
+    const streak = updateStreakOnOpen();
     const fresh = checkNewBadges();
     if (fresh.length) setTimeout(() => showBadges(fresh, () => {}), 800);
+    else if (streak.milestone) {
+      setTimeout(() => popup({
+        emoji: '🔥', title: `${streak.milestone}-day streak!`,
+        sub: `You've practiced ${streak.milestone} days — amazing! Keep it going!`,
+        sound: 'level', confetti: true, hold: true,
+      }), 800);
+    }
   }
   setRouter(route);
   window.addEventListener('hashchange', route);

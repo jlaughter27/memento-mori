@@ -2,15 +2,18 @@
 import { S } from '../state.js';
 import { speak } from './sound.js';
 
-// mood ∈ idle | happy | think | celebrate | encourage | wave
+// mood ∈ idle | happy | think | celebrate | encourage | wave | proud | surprised
 export function foxSVG(mood = 'idle') {
+  const eyeCurveUp = '<path d="M73 92 q7 -9 14 0" fill="none" stroke="#2d2233" stroke-width="5" stroke-linecap="round"/><path d="M113 92 q7 -9 14 0" fill="none" stroke="#2d2233" stroke-width="5" stroke-linecap="round"/>';
   const eyes = {
     idle: '<circle cx="80" cy="92" r="7"/><circle cx="120" cy="92" r="7"/>',
-    happy: '<path d="M73 92 q7 -9 14 0" fill="none" stroke="#2d2233" stroke-width="5" stroke-linecap="round"/><path d="M113 92 q7 -9 14 0" fill="none" stroke="#2d2233" stroke-width="5" stroke-linecap="round"/>',
+    happy: eyeCurveUp,
     celebrate: '<path d="M73 90 q7 -10 14 0" fill="none" stroke="#2d2233" stroke-width="5" stroke-linecap="round"/><path d="M113 90 q7 -10 14 0" fill="none" stroke="#2d2233" stroke-width="5" stroke-linecap="round"/>',
     think: '<circle cx="80" cy="92" r="7"/><circle cx="122" cy="90" r="7"/>',
     encourage: '<circle cx="80" cy="92" r="7.5"/><circle cx="120" cy="92" r="7.5"/>',
     wave: '<circle cx="80" cy="92" r="7"/><circle cx="120" cy="92" r="7"/>',
+    proud: '<path d="M72 94 q8 -8 16 0" fill="none" stroke="#2d2233" stroke-width="5" stroke-linecap="round"/><path d="M112 94 q8 -8 16 0" fill="none" stroke="#2d2233" stroke-width="5" stroke-linecap="round"/>',
+    surprised: '<circle cx="80" cy="90" r="10" fill="#fff" stroke="#2d2233" stroke-width="3"/><circle cx="80" cy="91" r="5"/><circle cx="120" cy="90" r="10" fill="#fff" stroke="#2d2233" stroke-width="3"/><circle cx="120" cy="91" r="5"/>',
   }[mood] || '<circle cx="80" cy="92" r="7"/><circle cx="120" cy="92" r="7"/>';
   const mouth = {
     idle: '<path d="M88 112 q12 10 24 0" fill="none" stroke="#2d2233" stroke-width="4" stroke-linecap="round"/>',
@@ -19,13 +22,17 @@ export function foxSVG(mood = 'idle') {
     think: '<path d="M92 116 q10 -4 18 2" fill="none" stroke="#2d2233" stroke-width="4" stroke-linecap="round"/>',
     encourage: '<path d="M86 110 q14 14 28 0" fill="none" stroke="#2d2233" stroke-width="4.5" stroke-linecap="round"/>',
     wave: '<path d="M86 110 q14 14 28 0" fill="none" stroke="#2d2233" stroke-width="4.5" stroke-linecap="round"/>',
+    proud: '<path d="M86 110 q14 16 28 0" fill="none" stroke="#2d2233" stroke-width="4.5" stroke-linecap="round"/>',
+    surprised: '<ellipse cx="100" cy="116" rx="9" ry="12" fill="#b8336a" stroke="#2d2233" stroke-width="3"/>',
   }[mood] || '';
-  const arm = (mood === 'wave' || mood === 'celebrate')
+  const arm = (mood === 'wave' || mood === 'celebrate' || mood === 'proud')
     ? '<g class="fox-arm"><ellipse cx="150" cy="120" rx="11" ry="20" fill="#f0833a" transform="rotate(28 150 120)"/></g>'
     : '';
   const props = mood === 'think'
     ? '<text x="138" y="60" font-size="26">💭</text>'
-    : mood === 'celebrate' ? '<text x="22" y="52" font-size="24">🎉</text><text x="150" y="52" font-size="24">⭐</text>' : '';
+    : mood === 'celebrate' ? '<text x="22" y="52" font-size="24">🎉</text><text x="150" y="52" font-size="24">⭐</text>'
+    : mood === 'proud' ? '<text x="150" y="50" font-size="26">🏆</text>'
+    : mood === 'surprised' ? '<text x="148" y="54" font-size="24">❗</text>' : '';
   return `
   <svg class="fox" viewBox="0 0 200 200" aria-hidden="true">
     <!-- ears -->

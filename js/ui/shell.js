@@ -22,11 +22,13 @@ export function renderHUD() {
     </button>
     <div class="hud-level">
       <div class="hud-level-badge">Lv ${lp.level}</div>
-      <div class="hud-xp"><div class="hud-xp-fill" style="width:${(lp.pct * 100).toFixed(0)}%"></div></div>
+      <div class="hud-xp" role="progressbar" aria-label="Experience to next level" aria-valuemin="0" aria-valuemax="${lp.span}" aria-valuenow="${lp.into}" title="${lp.into} / ${lp.span} XP to level ${lp.level + 1}">
+        <div class="hud-xp-fill" style="width:${(lp.pct * 100).toFixed(0)}%"></div>
+      </div>
     </div>
     <div class="hud-stats">
-      <span class="hud-coins" title="Coins">🪙 <b>${S.progress.coins}</b></span>
-      <span class="hud-streak ${st > 0 ? 'lit' : ''}" title="Day streak">🔥 <b>${st}</b></span>
+      <span class="hud-coins" aria-label="${S.progress.coins} coins">🪙 <b>${S.progress.coins}</b></span>
+      <span class="hud-streak ${st > 0 ? 'lit' : ''}" aria-label="${st} day streak">🔥 <b>${st}</b></span>
     </div>`;
   host.querySelector('[data-go]').addEventListener('click', () => navigate('#/'));
 }

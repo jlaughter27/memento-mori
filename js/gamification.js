@@ -44,12 +44,29 @@ export function addCoins(amount) {
 const XP_CORRECT = 10;
 const XP_FIRST_TRY = 5;
 const COINS_CORRECT = 4;
+export const DAILY_GOAL = 10;
+
+function bumpDaily() {
+  const today = todayStr();
+  const d = S.progress.daily;
+  if (d.date !== today) { d.date = today; d.count = 0; d.goalReached = false; }
+  d.count++;
+  let justReached = false;
+  if (!d.goalReached && d.count >= DAILY_GOAL) { d.goalReached = true; justReached = true; }
+  return justReached;
+}
+export function dailyStatus() {
+  const today = todayStr();
+  const d = S.progress.daily;
+  const count = d.date === today ? d.count : 0;
+  return { count, goal: DAILY_GOAL, reached: count >= DAILY_GOAL };
+}
 
 export function recordAnswer(skillId, correct, firstTry) {
   const rec = skillRec(skillId);
   rec.attempts++;
   S.progress.stats.problemsAttempted++;
-  let xpGained = 0, coinsGained = 0, surprise = false;
+  let xpGained = 0, coinsGained = 0, surprise = false, dailyReached = false;
   if (correct) {
     rec.correct++;
     S.progress.stats.problemsCorrect++;
@@ -58,11 +75,12 @@ export function recordAnswer(skillId, correct, firstTry) {
     // ~1 in 6 "wow" surprise bonus (variable reward, not a gamble)
     if (Math.random() < 1 / 6) { coinsGained += 10; surprise = true; }
     addCoins(coinsGained);
+    dailyReached = bumpDaily();
   }
   rec.lastSeen = Date.now();
   const lvl = correct ? addXp(xpGained) : { leveledUp: false };
   persistSoon();
-  return { xpGained, coinsGained, surprise, ...lvl };
+  return { xpGained, coinsGained, surprise, dailyReached, ...lvl };
 }
 
 export function completeLesson(skillId) {
@@ -105,9 +123,11 @@ function dayDiff(a, b) {
   const da = new Date(pa[0], pa[1] - 1, pa[2]), db = new Date(pb[0], pb[1] - 1, pb[2]);
   return Math.round((db - da) / 86400000);
 }
+const STREAK_MILESTONES = [3, 5, 7, 14, 21, 30, 50, 100];
 export function updateStreakOnOpen() {
   const st = S.progress.streak;
   const today = todayStr();
+  const before = st.count;
   if (!st.lastActiveDate) {
     st.count = 1; st.lastActiveDate = today; st.graceUsed = false;
   } else {
@@ -118,8 +138,29 @@ export function updateStreakOnOpen() {
     else { st.count = 1; st.lastActiveDate = today; st.graceUsed = false; }
   }
   S.progress.stats.bestStreak = Math.max(S.progress.stats.bestStreak || 0, st.count);
+  // reset the daily-goal counter for a new calendar day
+  if (S.progress.daily.date !== today) { S.progress.daily.date = today; S.progress.daily.count = 0; S.progress.daily.goalReached = false; }
   persist();
-  return st.count;
+  const milestone = st.count > before && STREAK_MILESTONES.includes(st.count) ? st.count : 0;
+  return { count: st.count, milestone };
+}
+
+// pick the best skill to suggest "continue" with: most recently seen, not yet mastered,
+// otherwise the first unlocked, not-mastered skill in the current grade.
+export function recommendedSkill(isUnlocked) {
+  const grade = S.profile.grade;
+  const inGrade = ALL_SKILLS.filter((s) => s.grade === grade);
+  let best = null, bestSeen = 0;
+  for (const s of inGrade) {
+    const r = S.progress.skills[s.id];
+    if (r && !r.mastered && r.lastSeen && r.lastSeen > bestSeen) { best = s; bestSeen = r.lastSeen; }
+  }
+  if (best) return best;
+  for (const s of inGrade) {
+    const r = S.progress.skills[s.id];
+    if ((!r || !r.mastered) && (!isUnlocked || isUnlocked(s))) return s;
+  }
+  return null;
 }
 
 /* ---------- badges ---------- */

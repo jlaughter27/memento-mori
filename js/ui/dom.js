@@ -16,3 +16,10 @@ export function escapeHtml(s) {
 
 // preserve line breaks from worked-solution text
 export function nl2br(s) { return escapeHtml(s).replace(/\n/g, '<br>'); }
+
+// escape, then render **bold** and line breaks (safe lightweight markdown)
+export function mdInline(s) {
+  return escapeHtml(s)
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
+}
