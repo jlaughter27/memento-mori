@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a29bfe"/><stop offset="1" stop-color="#6c5ce7"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <!-- fox head -->
+  <path d="M150 200 L120 110 L210 170 Z" fill="#f0833a"/>
+  <path d="M362 200 L392 110 L302 170 Z" fill="#f0833a"/>
+  <ellipse cx="256" cy="270" rx="140" ry="130" fill="#f7943e"/>
+  <path d="M256 195 q-100 14 -90 110 q45 56 90 56 q45 0 90 -56 q10 -96 -90 -110 Z" fill="#fff3e6"/>
+  <circle cx="256" cy="318" r="20" fill="#3a2a33"/>
+  <circle cx="206" cy="280" r="16" fill="#2d2233"/><circle cx="306" cy="280" r="16" fill="#2d2233"/>
+  <!-- math symbols -->
+  <text x="256" y="470" font-family="Arial Rounded MT Bold, Arial, sans-serif" font-size="70" font-weight="900" fill="#fff" text-anchor="middle">＋ ✕ ＝</text>
+</svg>
