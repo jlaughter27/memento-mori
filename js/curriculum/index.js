@@ -5,13 +5,16 @@ import g5 from './grade5.js';
 import g6 from './grade6.js';
 import wordbank from './wordbank.js';
 import rewardsData from './rewards-data.js';
+import standards from './standards.js';
 
 export const ALL_SKILLS = [...g3, ...g4, ...g5, ...g6];
 export const BY_GRADE = { 3: g3, 4: g4, 5: g5, 6: g6 };
-export { wordbank, rewardsData };
+export { wordbank, rewardsData, standards };
 
 const byId = new Map(ALL_SKILLS.map((s) => [s.id, s]));
 export const getSkill = (id) => byId.get(id);
+export const getStandard = (id) => standards[id] || null;
+export const standardsCount = new Set(Object.values(standards).map((s) => s.code)).size;
 
 export const STRANDS = [
   'Numbers & Place Value',

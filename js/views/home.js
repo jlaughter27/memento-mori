@@ -1,7 +1,7 @@
 // views/home.js — the learning map: continue card, daily goal, grade tabs, strands.
 import { S, persist, isUnlocked, isMastered, skillRec } from '../state.js';
 import { groupedByStrand, getSkill } from '../curriculum/index.js';
-import { gradeCompletion, recommendedSkill, dailyStatus } from '../gamification.js';
+import { gradeCompletion, recommendedSkill, dailyStatus, dueReviews } from '../gamification.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { navigate } from '../ui/shell.js';
 import { sfx } from '../ui/sound.js';
@@ -15,6 +15,7 @@ export function renderHome(root) {
   const streak = S.progress.streak.count || 0;
   const daily = dailyStatus();
   const cont = recommendedSkill(isUnlocked);
+  const reviews = dueReviews();
   const greeting = streak > 1
     ? `You've practiced ${streak} days in a row — keep it up! 🔥`
     : "Let's learn something awesome today.";
@@ -28,6 +29,13 @@ export function renderHome(root) {
         <button class="btn btn-big btn-play" id="daily-btn">⚡ Daily Challenge</button>
       </div>
     </section>
+
+    ${reviews.length ? `
+    <button class="continue-card review-card" id="review-btn">
+      <span class="cont-emoji">🔁</span>
+      <span class="cont-text"><b>Review time</b><span>${reviews.length} skill${reviews.length > 1 ? 's' : ''} ready for a quick refresh</span></span>
+      <span class="cont-go">▶</span>
+    </button>` : ''}
 
     ${cont ? `
     <button class="continue-card" id="continue-btn" data-id="${cont.id}">
@@ -61,6 +69,8 @@ export function renderHome(root) {
   setTimeout(() => m.setMood('idle'), 1600);
 
   root.querySelector('#daily-btn').addEventListener('click', () => { sfx.tap(); navigate('#/play'); });
+  const revBtn = root.querySelector('#review-btn');
+  if (revBtn) revBtn.addEventListener('click', () => { sfx.tap(); navigate('#/review'); });
   const contBtn = root.querySelector('#continue-btn');
   if (contBtn) contBtn.addEventListener('click', () => {
     sfx.tap();

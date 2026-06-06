@@ -8,6 +8,13 @@ it grows with the child from **3rd through 6th grade**.
 > No accounts, no internet, no API keys, nothing to install. Just open it and learn.
 > All progress is saved privately on the device.
 
+**[▶️ Live demo](https://jlaughter27.github.io/memento-mori/)** ·
+**[📚 Docs](docs/INDEX.md)** ·
+**[🗺️ Roadmap](ROADMAP.md)** ·
+**[📓 Changelog](CHANGELOG.md)** ·
+**[🔒 Privacy](docs/PRIVACY.md)** ·
+MIT licensed · v2.0
+
 ---
 
 ## ▶️ How to run it
@@ -52,9 +59,24 @@ it will then work completely offline.
 - **Grown-ups Corner**: a parent dashboard with progress, mastery-by-topic, accuracy,
   and settings (sound, read-aloud, calm/reduced-motion mode, easy-reading font, reset).
 
+### Built to be legit 🎓
+- **Common Core aligned** — every skill is tagged with its CCSS standard, shown in the
+  lesson and on a **printable curriculum map** in the parent area.
+- **Placement quiz** at onboarding finds the right starting grade.
+- **Spaced review** — mastered skills resurface on a lengthening schedule (3→7→16→35 days)
+  so they actually stick (retrieval practice).
+- **Private by design** — no accounts, no ads, no tracking; everything stays on the device.
+- **Self-updating** — installed apps detect new versions and offer a one-tap update, with a
+  "What's New" sheet. See [`CHANGELOG.md`](CHANGELOG.md) and [`ROADMAP.md`](ROADMAP.md).
+- Accessibility: visible focus, pinch-zoom, color-blind-safe answer states, keyboard nav,
+  ARIA, reduced-motion + dyslexia-font + read-aloud options.
+
+The market/credibility research behind these is in
+[`docs/research/landscape.md`](docs/research/landscape.md).
+
 The teaching philosophy and reward design are grounded in research notes saved in
-[`docs/research-curriculum.md`](docs/research-curriculum.md) and
-[`docs/research-engagement.md`](docs/research-engagement.md).
+[`docs/research/pedagogy.md`](docs/research/pedagogy.md) and
+[`docs/research/engagement.md`](docs/research/engagement.md).
 
 ---
 
@@ -63,38 +85,57 @@ The teaching philosophy and reward design are grounded in research notes saved i
 Vanilla JavaScript ES modules + CSS. **Zero runtime dependencies, zero build step.**
 
 ```
-index.html               app shell (HUD + content + nav)
-css/styles.css           full kid-friendly design system + themes
+index.html · manifest.json · service-worker.js   PWA shell (offline + self-update)
+css/styles.css                                    design system + themes
 js/
-  app.js                 boot + hash router
-  state.js storage.js    progress model + localStorage
-  gamification.js        XP, levels, coins, streaks, badges
-  engine/                problem generation + step-by-step solvers + hints
-  curriculum/            grade3–6 skills, word bank, rewards data
-  ui/                    mascot, manipulatives (SVG), sound, celebrations, shell
-  views/                 home map, lesson, practice, rewards, dashboard, onboarding
-docs/                    research notes, content schema, automated tests
-service-worker.js        offline caching
-manifest.json            installable PWA
+  app.js                  boot + hash router + update flow
+  state.js · storage.js   progress model + localStorage
+  gamification.js         XP, levels, coins, streaks, badges, daily, spaced review
+  version.js              app version + release notes
+  engine/                 problem generation + step-by-step solvers + hints
+  curriculum/             grade3–6 · wordbank · rewards-data · standards · index
+  ui/                     mascot · manipulatives (SVG) · sound · celebrations · shell · whatsnew
+  views/                  home · lesson · practice · rewards · dashboard · onboard · curriculum
+docs/                     all documentation (start at docs/INDEX.md) + research/
+tests/                    smoke · smoke-v2 · mastery (jsdom)
+tools/                    engine-check · gen-curriculum-doc
 ```
+
+For the full design, see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). New contributors:
+[`CONTRIBUTING.md`](CONTRIBUTING.md). Working with an AI agent: [`CLAUDE.md`](CLAUDE.md).
 
 ### Adding or editing content
 All lessons are plain data following [`docs/CONTENT_SCHEMA.md`](docs/CONTENT_SCHEMA.md).
 Edit `js/curriculum/grade*.js` to add skills — no engine changes needed for any of the
-supported problem types.
+supported problem types — then `npm run docs:curriculum`.
+
+---
+
+## 📚 Documentation
+
+Everything lives in **[`docs/INDEX.md`](docs/INDEX.md)**. Highlights:
+
+| Doc | What |
+|---|---|
+| [Project Charter](docs/PROJECT.md) | Vision, principles, status, metrics |
+| [Architecture](docs/ARCHITECTURE.md) | System design, the teaching engine, data flow |
+| [Wiki & FAQ](docs/WIKI.md) | Every feature + glossary + parent FAQ |
+| [Curriculum Map](docs/CURRICULUM.md) | Auto-generated scope & sequence + Common Core |
+| [Content Schema](docs/CONTENT_SCHEMA.md) | The locked data contract for content |
+| [Privacy](docs/PRIVACY.md) · [Testing](docs/TESTING.md) | Trust + how the tests work |
 
 ---
 
 ## ✅ Tests
 
-Automated DOM tests drive the real UI (onboarding → lesson → practice → mastery) and
-verify the full reward loop with no runtime errors:
-
 ```bash
-npm test
+npm test               # jsdom UI flows: smoke + smoke-v2 + mastery
+npm run engine:check   # 1,000+ generated problems vs their own solvers
 ```
-(installs `jsdom` on first run). There's also an engine self-check that generates
-1,000+ problems and confirms every worked solution matches its answer.
+
+The UI tests drive the real app (onboarding → lesson → practice → mastery, plus placement,
+curriculum map, spaced review) with zero runtime errors. The engine check guarantees every
+worked solution matches its answer. See [`docs/TESTING.md`](docs/TESTING.md).
 
 ---
 

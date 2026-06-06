@@ -31,6 +31,7 @@ function defaultState() {
       settings: { sound: true, reducedMotion: false, dyslexicFont: false, tts: false },
     },
     onboarded: false,
+    lastVersion: null, // last APP_VERSION the learner has seen (drives "What's New")
   };
 }
 

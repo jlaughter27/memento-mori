@@ -110,8 +110,27 @@ export function masterSkill(skillId, accuracy) {
   const coins = firstTime ? 20 : 8;
   const lvl = addXp(xp);
   addCoins(coins);
+  scheduleReview(skillId, firstTime ? 0 : null); // first mastery starts the review ladder
   persist();
   return { stars, firstTime, xp, coins, ...lvl };
+}
+
+/* ---------- spaced review (lightweight Leitner ladder) ---------- */
+const DAY = 86400000;
+const REVIEW_INTERVALS = [3, 7, 16, 35, 70]; // days between refreshers, lengthening as it sticks
+export function scheduleReview(skillId, stage) {
+  const rec = skillRec(skillId);
+  if (stage === null) stage = Math.min((rec.reviewStage || 0) + 1, REVIEW_INTERVALS.length - 1);
+  rec.reviewStage = stage;
+  rec.reviewAt = Date.now() + REVIEW_INTERVALS[stage] * DAY;
+  persistSoon();
+}
+export function dueReviews() {
+  const now = Date.now();
+  return ALL_SKILLS.filter((s) => {
+    const r = S.progress.skills[s.id];
+    return r && r.mastered && r.reviewAt && r.reviewAt <= now;
+  });
 }
 
 /* ---------- streaks (grace-day, positive framing) ---------- */

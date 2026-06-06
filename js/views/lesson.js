@@ -1,5 +1,5 @@
 // views/lesson.js — teach a skill with a guided, progressive lesson.
-import { getSkill } from '../curriculum/index.js';
+import { getSkill, getStandard } from '../curriculum/index.js';
 import { completeLesson, checkNewBadges } from '../gamification.js';
 import { mountMascot } from '../ui/mascot.js';
 import { renderVisual } from '../ui/manipulatives.js';
@@ -37,6 +37,7 @@ export function renderLesson(root, id) {
         <button class="btn-ghost" id="lesson-back">← Map</button>
         <span class="lesson-title">${skill.emoji || ''} ${escapeHtml(skill.title)}</span>
       </header>
+      ${(() => { const st = getStandard(skill.id); return st ? `<div class="lesson-standard"><span class="std-tag" title="${escapeHtml(st.domain)}"><span class="std-code">${escapeHtml(st.code)}</span><span class="std-text">${escapeHtml(st.text)}</span></span></div>` : ''; })()}
       <div class="lesson-mascot" id="lesson-mascot"></div>
       <div class="lesson-stage card-soft" id="lesson-stage"></div>
       <div class="lesson-dots" id="lesson-dots"></div>
