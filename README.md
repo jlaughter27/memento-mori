@@ -10,10 +10,11 @@ it grows with the child from **3rd through 6th grade**.
 
 **[▶️ Live demo](https://jlaughter27.github.io/memento-mori/)** ·
 **[📚 Docs](docs/INDEX.md)** ·
-**[🗺️ Roadmap](ROADMAP.md)** ·
+**[🗺️ Master Plan](docs/MASTER_PLAN.md)** ·
+**[🛣️ Roadmap](ROADMAP.md)** ·
 **[📓 Changelog](CHANGELOG.md)** ·
 **[🔒 Privacy](docs/PRIVACY.md)** ·
-MIT licensed · v2.0
+MIT licensed · v2.2 · grades 2–7
 
 ---
 
@@ -41,8 +42,10 @@ it will then work completely offline.
 
 ## ✨ What's inside
 
-- **60 lessons across grades 3–6**, organized by topic (place value, +−×÷, fractions,
-  decimals, geometry, measurement, data, ratios, percent, integers, and more).
+- **86 lessons across grades 2–7**, organized by topic (place value, +−×÷, fractions,
+  decimals, geometry, measurement, data, ratios, percent, integers, pre-algebra, and more).
+- **A tutor that spots mistakes** — when an answer matches a classic error (forgot to carry,
+  added the denominators, ignored the remainder…), it names the exact fix, not just "try again".
 - **A real teaching engine** — every problem is generated fresh and comes with a full
   **step-by-step worked solution** ("📖 Show me how") and a **3-step hint ladder**
   (💡), so the child is never stuck. It explains long division, regrouping, common
@@ -53,6 +56,11 @@ it will then work completely offline.
   the *strategy*, not just the arithmetic.
 - **Rewards that motivate without bribing**: XP & levels, coins, **36 badges**, daily
   challenge, gentle grace-day streaks, a **shop** (38 items), and **11 collectible pets**.
+- **🐾 Pet Home**: feed, play with, and pat your pet — with a **happiness meter** and a treat
+  shop, so the coins and pets have a cozy place to live.
+- **⚔️ Pet Quest**: a 3-chapter story adventure (focused on **4th grade**) where your pet is
+  the hero and every obstacle is a math problem **taught before it's tested** — a real
+  **tutor mode**: concept → worked example → "tell your pet why" → your turn (with hints).
 - **Kid-first design**: big tap targets, friendly mascot, encouraging growth-mindset
   language, sound effects, and confetti. Wrong answers are met with "not yet" and help —
   never "wrong!".

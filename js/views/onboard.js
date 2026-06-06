@@ -8,6 +8,7 @@ import { escapeHtml } from '../ui/dom.js';
 import { APP_VERSION } from '../version.js';
 import { generateProblem } from '../engine/problemTypes.js';
 import { makeRng, shuffle } from '../engine/rng.js';
+import { GRADES } from '../curriculum/index.js';
 
 // placement ladder: easy (g3) → hard (g6). Numeric answers only.
 const LADDER = [
@@ -69,8 +70,8 @@ export function renderOnboard(root) {
       c.innerHTML = `
         <h1>Pick your level 🎯</h1>
         <p>Don't worry — you can change this anytime!</p>
-        <div class="grade-pick">
-          ${[3, 4, 5, 6].map((g) => `<button class="grade-choice ${g === grade ? 'sel' : ''}" data-g="${g}">
+        <div class="grade-pick grade-pick-wide">
+          ${GRADES.map((g) => `<button class="grade-choice ${g === grade ? 'sel' : ''}" data-g="${g}">
             <span class="gc-num">${g}</span><span class="gc-label">Grade</span></button>`).join('')}
         </div>
         <button class="btn btn-big" id="ob-start">Start my adventure! 🚀</button>

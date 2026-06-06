@@ -2,7 +2,7 @@
 // Reward philosophy (from research): micro-celebrations + milestones, never payment;
 // grace-day streaks with positive framing; growth-mindset language only.
 import { S, skillRec, persist, persistSoon } from './state.js';
-import { rewardsData, ALL_SKILLS, strandSkills } from './curriculum/index.js';
+import { rewardsData, ALL_SKILLS, strandSkills, GRADES } from './curriculum/index.js';
 
 /* ---------- leveling ---------- */
 export function xpToReach(level) {
@@ -133,6 +133,49 @@ export function dueReviews() {
   });
 }
 
+/* ---------- Mistakes Notebook (Fix-It loop) ----------
+   Missed problems reliably return: a first-try miss notes the skill; a clean
+   first-try-correct (anywhere) resolves one. Surfaced as a "Fix-It" session. */
+export function noteMistake(skillId) {
+  const m = S.progress.mistakes;
+  const e = m[skillId] || { count: 0, lastMiss: 0 };
+  e.count = Math.min((e.count || 0) + 1, 5);
+  e.lastMiss = Date.now();
+  m[skillId] = e;
+  persistSoon();
+}
+export function resolveMistake(skillId) {
+  const m = S.progress.mistakes;
+  if (!m[skillId]) return;
+  m[skillId].count -= 1;
+  if (m[skillId].count <= 0) delete m[skillId];
+  persistSoon();
+}
+export function mistakeSkills() {
+  return Object.keys(S.progress.mistakes)
+    .map((id) => ALL_SKILLS.find((s) => s.id === id))
+    .filter(Boolean)
+    .sort((a, b) => (S.progress.mistakes[b.id].lastMiss || 0) - (S.progress.mistakes[a.id].lastMiss || 0));
+}
+export function mistakeCount() {
+  return Object.values(S.progress.mistakes).reduce((n, e) => n + (e.count || 0), 0);
+}
+
+/* ---------- daily warm-up (retrieval practice on open) ----------
+   Once a day, a short interleaved check of past material — "your pet wants to
+   see what you remember." Pool = recently practiced/mastered skills. */
+export function warmupPool() {
+  const seen = ALL_SKILLS.filter((s) => { const r = S.progress.skills[s.id]; return r && (r.mastered || r.attempts > 0); });
+  return seen.sort((a, b) => (S.progress.skills[b.id].lastSeen || 0) - (S.progress.skills[a.id].lastSeen || 0)).slice(0, 8);
+}
+export function warmupDue() {
+  return S.progress.warmup.date !== todayStr() && warmupPool().length >= 3;
+}
+export function markWarmupDone() {
+  S.progress.warmup.date = todayStr();
+  persist();
+}
+
 /* ---------- streaks (grace-day, positive framing) ---------- */
 function todayStr(d = new Date()) {
   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
@@ -185,7 +228,7 @@ export function recommendedSkill(isUnlocked) {
 /* ---------- badges ---------- */
 function strandMasteredForAnyGrade(strand) {
   // mastered if every skill of this strand in ANY single grade is mastered
-  for (const grade of [3, 4, 5, 6]) {
+  for (const grade of GRADES) {
     const skills = strandSkills(grade, strand);
     if (skills.length && skills.every((s) => S.progress.skills[s.id] && S.progress.skills[s.id].mastered)) return true;
   }
@@ -272,3 +315,52 @@ export function gradeCompletion(grade) {
   const done = skills.filter((s) => S.progress.skills[s.id] && S.progress.skills[s.id].mastered).length;
   return { done, total: skills.length, pct: skills.length ? done / skills.length : 0 };
 }
+
+/* ---------- pet care (happiness + feeding) ----------
+   Gentle, never punishing: meters drift down slowly over real time and are
+   refilled by free play/pats and (treat-based) feeding. Happiness floors high
+   enough that the pet is never "sad and neglected" — this is delight, not guilt. */
+const CARE = { happyFloor: 15, fullFloor: 0, happyDecayPerHr: 1.5, fullDecayPerHr: 2.5, maxHours: 36 };
+
+export function tickCare() {
+  const c = S.progress.care;
+  const now = Date.now();
+  const hrs = Math.min(CARE.maxHours, Math.max(0, (now - (c.lastTick || now)) / 3600000));
+  if (hrs > 0.01) {
+    c.fullness = clamp(c.fullness - hrs * CARE.fullDecayPerHr, CARE.fullFloor, 100);
+    let hd = hrs * CARE.happyDecayPerHr + (c.fullness < 20 ? hrs * 1 : 0); // hungry pets get a little sadder
+    c.happiness = clamp(c.happiness - hd, CARE.happyFloor, 100);
+    c.lastTick = now;
+    persistSoon();
+  }
+  return c;
+}
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+export function petMood() {
+  const h = S.progress.care.happiness;
+  return h >= 80 ? 'celebrate' : h >= 55 ? 'happy' : h >= 30 ? 'idle' : 'encourage';
+}
+export function patPet() {
+  tickCare(); const c = S.progress.care;
+  c.happiness = clamp(c.happiness + 3, 0, 100); c.pats = (c.pats || 0) + 1; c.lastTick = Date.now(); persistSoon();
+  return c;
+}
+export function playPet() {
+  tickCare(); const c = S.progress.care;
+  c.happiness = clamp(c.happiness + 10, 0, 100); c.plays = (c.plays || 0) + 1; c.lastTick = Date.now(); persist();
+  return c;
+}
+export function feedPet() {
+  tickCare(); const c = S.progress.care;
+  if ((c.treats || 0) <= 0) return { ok: false, reason: 'no-treats' };
+  c.treats -= 1; c.fullness = clamp(c.fullness + 35, 0, 100); c.happiness = clamp(c.happiness + 8, 0, 100);
+  c.feeds = (c.feeds || 0) + 1; c.lastTick = Date.now(); persist();
+  return { ok: true, care: c };
+}
+export function buyTreats(count, cost) {
+  if (S.progress.coins < cost) return { ok: false, reason: 'poor' };
+  S.progress.coins -= cost; S.progress.care.treats = (S.progress.care.treats || 0) + count; persist();
+  return { ok: true };
+}
+// small treats reward from learning (called occasionally on correct answers)
+export function awardTreat(n = 1) { S.progress.care.treats = (S.progress.care.treats || 0) + n; persistSoon(); }

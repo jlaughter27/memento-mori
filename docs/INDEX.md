@@ -14,15 +14,17 @@ Welcome to the MathQuest docs. Everything you need, organized by who you are.
 | A **parent / homeschooler** | [README](../README.md) → [Wiki & FAQ](WIKI.md) → [Curriculum Map](CURRICULUM.md) → [Privacy](PRIVACY.md) |
 | A **developer / contributor** | [CLAUDE.md](../CLAUDE.md) → [Architecture](ARCHITECTURE.md) → [Contributing](../CONTRIBUTING.md) → [Testing](TESTING.md) |
 | An **AI agent (Claude Code)** | [CLAUDE.md](../CLAUDE.md) (rules & invariants) then this index |
-| A **reviewer / stakeholder** | [Project Charter](PROJECT.md) → [Roadmap](../ROADMAP.md) → [Changelog](../CHANGELOG.md) |
+| A **reviewer / stakeholder** | [Master Plan](MASTER_PLAN.md) → [Project Charter](PROJECT.md) → [Roadmap](../ROADMAP.md) |
 
 ---
 
 ## 📄 All documents
 
 ### Product & vision
+- **⭐ [Master Plan](MASTER_PLAN.md)** — the North Star outcome, the work-backward decomposition,
+  and the sequenced plan to v3.0. **Start here for the big picture.**
 - **[Project Charter](PROJECT.md)** — vision, audience, principles, status, success criteria.
-- **[Roadmap](../ROADMAP.md)** — the upgrade path, by horizon.
+- **[Roadmap](../ROADMAP.md)** — the tactical upgrade path, by horizon.
 - **[Changelog](../CHANGELOG.md)** — release history (SemVer).
 
 ### For families
@@ -41,6 +43,14 @@ Welcome to the MathQuest docs. Everything you need, organized by who you are.
 - **[Pedagogy](research/pedagogy.md)** — how to teach grades 3–6 math; common misconceptions.
 - **[Engagement](research/engagement.md)** — reward design & UX for ages 7–11.
 - **[Landscape](research/landscape.md)** — competitive analysis + the "what makes it legit" bar.
+- **[Grade 4 Standards](research/grade4-standards.md)** · **[Grade 2](research/grade2-standards.md)** ·
+  **[Grade 7](research/grade7-standards.md)** — national/CCSS maps by grade.
+- **[Tutor Design](research/tutor-design.md)** — how to build an effective tutor (ITS) offline.
+- **[Learning Science](research/learning-science.md)** — how kids learn best, made implementable.
+- **[Efficacy Measurement](research/efficacy-measurement.md)** — showing learning gains offline.
+- **[Mini-games](research/minigames.md)** — skill-building math games (not busywork).
+- **[Accessibility & COPPA](research/accessibility-compliance.md)** — WCAG 2.2 AA + privacy compliance.
+- **[Companion Design](research/companion-design.md)** — ethical pet-bonding (no dark patterns).
 
 ---
 

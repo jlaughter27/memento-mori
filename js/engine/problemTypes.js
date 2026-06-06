@@ -84,7 +84,32 @@ const checkSet = (targetArr) => (raw) => {
   return a.length === b.length && a.every((v, i) => v === b[i]);
 };
 
-const P = (o) => ({ steps: [], hints: [], visual: null, inputKind: 'number', ...o });
+const P = (o) => ({ steps: [], hints: [], visual: null, inputKind: 'number', misconceptions: [], ...o });
+
+/* ---------- misconception detection (tutor: error-specific feedback) ----------
+   Each entry { test(raw)->bool, msg } fires when the child's WRONG answer matches a
+   classic error, so the tutor can address the specific misunderstanding, not "try again". */
+const mis = (test, msg) => ({ test, msg });
+// build the number you'd get by writing each column's digit-sum WITHOUT carrying
+function addNoCarry(nums) {
+  const maxLen = Math.max(...nums.map((n) => String(n).length));
+  let s = '';
+  for (let i = maxLen - 1; i >= 0; i--) s += (nums.reduce((a, n) => a + digitAt(n, i), 0) % 10);
+  return parseInt(s, 10);
+}
+// build the number from taking |top-bottom| in each column (the "flip the small digit" error)
+function subAbsCols(a, b) {
+  const len = String(a).length;
+  let s = '';
+  for (let i = len - 1; i >= 0; i--) s += Math.abs(digitAt(a, i) - digitAt(b, i));
+  return parseInt(s, 10) || 0;
+}
+export function matchMisconception(problem, raw) {
+  for (const m of problem.misconceptions || []) {
+    try { if (m.test(raw)) return m.msg; } catch (e) { /* ignore */ }
+  }
+  return null;
+}
 
 /* =====================================================================
    ADDITION
@@ -113,6 +138,7 @@ function makeAdd(params = {}, rng) {
       `If a column adds up to 10 or more, carry the extra to the next column. ${regroup ? 'This one needs carrying!' : ''}`,
     ],
     visual: terms === 2 && total <= 30 ? { type: 'numberLine', min: 0, max: roundUp(total), step: stepFor(total), mark: total } : null,
+    misconceptions: (() => { const w = addNoCarry(nums); return w !== total ? [mis(checkInt(w), 'Careful — when a column adds up to 10 or more, you have to **carry** the extra ten to the next column. 🔟')] : []; })(),
     check: checkInt(total),
   });
 }
@@ -178,6 +204,7 @@ function makeSub(params = {}, rng) {
         : 'Each top digit is big enough — no borrowing needed here.',
     ],
     visual: a <= 30 ? { type: 'numberLine', min: 0, max: roundUp(a), step: stepFor(a), mark: ans } : null,
+    misconceptions: (() => { const w = subAbsCols(a, b); return w !== ans ? [mis(checkInt(w), 'Hmm — you can\'t just subtract the smaller digit from the bigger one in each column. When the top is smaller, **borrow** 10 from the next column. 🔄')] : []; })(),
     check: checkInt(ans),
   });
 }
@@ -302,6 +329,7 @@ function makeDiv(params = {}, rng) {
       wantRem ? `Whatever is left at the end that's smaller than ${divisor} is the remainder.` : `It should divide evenly with nothing left over.`,
     ],
     inputKind: r ? 'text' : 'number',
+    misconceptions: r ? [mis((raw) => { const s = String(raw).toLowerCase().replace(/\s+/g, ''); return s === String(q); }, `So close! ${grp(q)} is right, but there's a **remainder** left over. Write it as "${q} r${r}". ➗`)] : [],
     check: r
       ? (raw) => {
           const s = String(raw).toLowerCase().replace(/\s+/g, '');
@@ -420,6 +448,7 @@ function makeRounding(params = {}, rng) {
     ],
     hints: [`Find the digit just to the RIGHT of the place you're rounding to.`, `5 or more? Round up. 4 or less? Keep it the same.`, `Everything to the right becomes 0.`],
     visual: n <= 100 ? { type: 'numberLine', min: Math.floor(n / to) * to, max: Math.ceil(n / to) * to, step: to / 2 || 1, mark: n } : null,
+    misconceptions: (() => { const w = Math.floor(n / to) * to; return w !== rounded ? [mis(checkInt(w), `Not quite — that digit is **${lookDigit}**, which is 5 or more, so you round **up**, not down. ⬆️`)] : []; })(),
     check: checkInt(rounded),
   });
 }
@@ -468,6 +497,7 @@ function makeFractionCompare(params = {}, rng) {
     ],
     hints: [`Same-size pieces are easy to compare — find a common denominator.`, `When denominators match, just compare the numerators.`],
     visual: { type: 'fractionBar', bars: [{ num: n1, den: d1 }, { num: n2, den: d2 }] },
+    misconceptions: (() => { const byDenom = d1 > d2 ? '>' : d1 < d2 ? '<' : '='; return byDenom !== ans && d1 !== d2 ? [mis(checkChoice(byDenom), `Tricky! A **bigger bottom number means smaller pieces**, not a bigger fraction. Picture the bars to compare. 🍕`)] : []; })(),
     check: checkChoice(ans),
   });
 }
@@ -540,6 +570,8 @@ function makeFractionAddSub(params = {}, rng) {
       `Always simplify your answer if you can.`,
     ],
     visual: { type: 'fractionBar', bars: [{ num: n1, den: d1 }, { num: n2, den: d2 }] },
+    misconceptions: (() => { const wN = op === '+' ? n1 + n2 : n1 - n2, wD = op === '+' ? d1 + d2 : d1 + d2;
+      return wD > 0 && Math.abs(wN / wD - sNum / sDen) > 1e-9 ? [mis(checkFraction(wN, wD), `Watch out — you **don't add the bottom numbers**. Give both fractions the same denominator first, then ${op === '+' ? 'add' : 'subtract'} just the tops. 🍕`)] : []; })(),
     check: checkFraction(sNum, sDen),
   });
 }

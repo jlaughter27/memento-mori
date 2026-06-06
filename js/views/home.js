@@ -1,7 +1,8 @@
 // views/home.js — the learning map: continue card, daily goal, grade tabs, strands.
 import { S, persist, isUnlocked, isMastered, skillRec } from '../state.js';
-import { groupedByStrand, getSkill } from '../curriculum/index.js';
-import { gradeCompletion, recommendedSkill, dailyStatus, dueReviews } from '../gamification.js';
+import { groupedByStrand, getSkill, GRADES } from '../curriculum/index.js';
+import { gradeCompletion, recommendedSkill, dailyStatus, dueReviews, mistakeCount, warmupDue } from '../gamification.js';
+import { rewardsData } from '../curriculum/index.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { navigate } from '../ui/shell.js';
 import { sfx } from '../ui/sound.js';
@@ -16,6 +17,9 @@ export function renderHome(root) {
   const daily = dailyStatus();
   const cont = recommendedSkill(isUnlocked);
   const reviews = dueReviews();
+  const mistakes = mistakeCount();
+  const showWarmup = warmupDue();
+  const petName = (rewardsData.pets.find((p) => p.id === S.profile.avatar.pet) || { name: 'Your pet' }).name;
   const greeting = streak > 1
     ? `You've practiced ${streak} days in a row — keep it up! 🔥`
     : "Let's learn something awesome today.";
@@ -29,6 +33,20 @@ export function renderHome(root) {
         <button class="btn btn-big btn-play" id="daily-btn">⚡ Daily Challenge</button>
       </div>
     </section>
+
+    ${showWarmup ? `
+    <button class="continue-card warmup-card" id="warmup-btn">
+      <span class="cont-emoji">🌅</span>
+      <span class="cont-text"><b>Daily warm-up</b><span>${escapeHtml(petName)} wants to see what you remember!</span></span>
+      <span class="cont-go">▶</span>
+    </button>` : ''}
+
+    ${mistakes ? `
+    <button class="continue-card fixit-card" id="fixit-btn">
+      <span class="cont-emoji">🔧</span>
+      <span class="cont-text"><b>Fix-It time</b><span>${mistakes} tricky problem${mistakes > 1 ? 's' : ''} to master</span></span>
+      <span class="cont-go">▶</span>
+    </button>` : ''}
 
     ${reviews.length ? `
     <button class="continue-card review-card" id="review-btn">
@@ -50,8 +68,21 @@ export function renderHome(root) {
       ${daily.reached ? '<p class="goal-done">Goal complete — you\'re a star today! 🌟</p>' : ''}
     </div>
 
+    <div class="home-cta-row">
+      <button class="continue-card quest-card" id="quest-btn">
+        <span class="cont-emoji">⚔️</span>
+        <span class="cont-text"><b>Pet Quest</b><span>A story adventure with your pet!</span></span>
+        <span class="cont-go">▶</span>
+      </button>
+      <button class="continue-card sprint-card" id="sprint-btn">
+        <span class="cont-emoji">⚡</span>
+        <span class="cont-text"><b>Math Sprint</b><span>Beat your best in 60 seconds!</span></span>
+        <span class="cont-go">▶</span>
+      </button>
+    </div>
+
     <div class="grade-tabs" role="tablist" aria-label="Choose grade">
-      ${[3, 4, 5, 6].map((g) => `<button class="grade-tab ${g === grade ? 'active' : ''}" role="tab" aria-selected="${g === grade}" data-grade="${g}">Grade ${g}</button>`).join('')}
+      ${GRADES.map((g) => `<button class="grade-tab ${g === grade ? 'active' : ''}" role="tab" aria-selected="${g === grade}" data-grade="${g}">Grade ${g}</button>`).join('')}
     </div>
 
     <div class="grade-progress card-soft">
@@ -71,6 +102,12 @@ export function renderHome(root) {
   root.querySelector('#daily-btn').addEventListener('click', () => { sfx.tap(); navigate('#/play'); });
   const revBtn = root.querySelector('#review-btn');
   if (revBtn) revBtn.addEventListener('click', () => { sfx.tap(); navigate('#/review'); });
+  const fixBtn = root.querySelector('#fixit-btn');
+  if (fixBtn) fixBtn.addEventListener('click', () => { sfx.tap(); navigate('#/fixit'); });
+  const warmBtn = root.querySelector('#warmup-btn');
+  if (warmBtn) warmBtn.addEventListener('click', () => { sfx.tap(); navigate('#/warmup'); });
+  root.querySelector('#quest-btn').addEventListener('click', () => { sfx.tap(); navigate('#/adventure'); });
+  root.querySelector('#sprint-btn').addEventListener('click', () => { sfx.tap(); navigate('#/sprint'); });
   const contBtn = root.querySelector('#continue-btn');
   if (contBtn) contBtn.addEventListener('click', () => {
     sfx.tap();

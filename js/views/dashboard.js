@@ -1,6 +1,6 @@
 // views/dashboard.js — parent/grown-up dashboard: progress + settings.
 import { S, persist, setSetting, resetAll, applyBodyClasses } from '../state.js';
-import { STRANDS, STRAND_META, skillsForGrade, ALL_SKILLS, standardsCount } from '../curriculum/index.js';
+import { STRANDS, STRAND_META, skillsForGrade, ALL_SKILLS, standardsCount, GRADES } from '../curriculum/index.js';
 import { levelProgress, allBadges } from '../gamification.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx } from '../ui/sound.js';
@@ -42,7 +42,7 @@ export function renderDashboard(root) {
           <input type="text" id="set-name" maxlength="20" value="${escapeHtml(S.profile.name)}">
         </label>
         <label class="set-row">Starting grade
-          <select id="set-grade">${[3,4,5,6].map((g)=>`<option value="${g}" ${g===S.profile.grade?'selected':''}>Grade ${g}</option>`).join('')}</select>
+          <select id="set-grade">${GRADES.map((g)=>`<option value="${g}" ${g===S.profile.grade?'selected':''}>Grade ${g}</option>`).join('')}</select>
         </label>
         <button class="btn btn-danger" id="reset-btn">Reset all progress</button>
       </div>

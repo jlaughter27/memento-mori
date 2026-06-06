@@ -8,14 +8,17 @@ import { APP_VERSION } from './version.js';
 import { showWhatsNew } from './ui/whatsnew.js';
 import { renderHome } from './views/home.js';
 import { renderLesson } from './views/lesson.js';
-import { renderPractice, renderPlay, renderReview } from './views/practice.js';
+import { renderPractice, renderPlay, renderReview, renderFixit, renderWarmup } from './views/practice.js';
 import { renderRewards, showBadges } from './views/rewards.js';
 import { renderDashboard } from './views/dashboard.js';
 import { renderCurriculum } from './views/curriculum.js';
+import { renderPet } from './views/pet.js';
+import { renderAdventure } from './views/adventure.js';
+import { renderSprint } from './views/sprint.js';
 import { renderOnboard } from './views/onboard.js';
 
 const content = () => document.getElementById('content');
-const TOP_LEVEL = new Set(['', 'rewards', 'parent']);
+const TOP_LEVEL = new Set(['', 'adventure', 'pet', 'rewards', 'parent']);
 
 function parseHash() {
   const h = (location.hash || '#/').replace(/^#\//, '');
@@ -44,9 +47,14 @@ function route() {
     case 'practice': renderPractice(root, param); break;
     case 'play': renderPlay(root); break;
     case 'review': renderReview(root); break;
+    case 'fixit': renderFixit(root); break;
+    case 'warmup': renderWarmup(root); break;
+    case 'sprint': renderSprint(root); break;
     case 'rewards': renderRewards(root); break;
     case 'parent': renderDashboard(root); break;
     case 'curriculum': renderCurriculum(root); break;
+    case 'pet': renderPet(root); break;
+    case 'adventure': renderAdventure(root); break;
     default: location.hash = '#/'; return;
   }
   refreshChrome();

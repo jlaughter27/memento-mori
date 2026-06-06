@@ -1,12 +1,12 @@
 // views/curriculum.js — printable scope & sequence with Common Core alignment.
-import { BY_GRADE, getStandard, standardsCount } from '../curriculum/index.js';
+import { BY_GRADE, getStandard, standardsCount, GRADES, ALL_SKILLS } from '../curriculum/index.js';
 import { isMastered } from '../state.js';
 import { navigate } from '../ui/shell.js';
 import { sfx } from '../ui/sound.js';
 import { escapeHtml } from '../ui/dom.js';
 
 export function renderCurriculum(root) {
-  const grades = [3, 4, 5, 6];
+  const grades = GRADES;
   root.innerHTML = `
     <div class="curric-wrap">
       <header class="curric-top no-print">
@@ -15,8 +15,8 @@ export function renderCurriculum(root) {
       </header>
       <div class="curric-doc">
         <h1 class="curric-h1">🦊 MathQuest Curriculum Map</h1>
-        <p class="curric-sub">${BY_GRADE[3].length + BY_GRADE[4].length + BY_GRADE[5].length + BY_GRADE[6].length}
-          skills · ${standardsCount} Common Core standards · Grades 3–6</p>
+        <p class="curric-sub">${ALL_SKILLS.length}
+          skills · ${standardsCount} Common Core standards · Grades ${grades[0]}–${grades[grades.length - 1]}</p>
         ${grades.map((g) => `
           <section class="curric-grade">
             <h2 class="curric-g">Grade ${g}</h2>

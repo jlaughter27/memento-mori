@@ -2,9 +2,11 @@
 import { S, skillRec } from '../state.js';
 import { getSkill, skillsForGrade } from '../curriculum/index.js';
 import { nextProblem } from '../engine/index.js';
+import { matchMisconception } from '../engine/problemTypes.js';
 import {
   recordAnswer, masterSkill, checkNewBadges, PRAISE, pickPraise, DAILY_GOAL,
-  dueReviews, scheduleReview,
+  dueReviews, scheduleReview, noteMistake, resolveMistake, mistakeSkills, mistakeCount,
+  warmupPool, markWarmupDone,
 } from '../gamification.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { renderVisual } from '../ui/manipulatives.js';
@@ -63,6 +65,40 @@ export function renderReview(root) {
     onComplete: (stats) => finishReview(due, stats),
   });
 }
+
+// Daily warm-up: a short interleaved retrieval check of past material.
+export function renderWarmup(root) {
+  const pool = warmupPool();
+  if (pool.length < 3) { navigate('#/'); return; }
+  startSession(root, {
+    title: '🌅 Warm-Up',
+    subtitle: 'A quick memory check',
+    goal: 4,
+    getNext: (diff) => { const s = pool[Math.floor(Math.random() * pool.length)]; return { problem: nextProblem(s, diff), skillId: s.id }; },
+    onComplete: (stats) => { markWarmupDone(); finishWarmup(stats); },
+  });
+}
+function finishWarmup(sess) {
+  const fresh = checkNewBadges(); refreshChrome(); confetti(110);
+  popup({ emoji: '🧠', title: 'Brain Warmed Up!', sub: `${accuracyPhrase(sess.firstTryCorrect, sess.distinct)}\n+${sess.xp} XP · +${sess.coins} 🪙`, sound: 'level', hold: true, confetti: false });
+  setTimeout(() => { if (fresh.length) showBadges(fresh, () => navigate('#/')); }, 300);
+}
+
+// Fix-It: drill the skills the child has recently missed (the Mistakes Notebook).
+export function renderFixit(root) {
+  const skills = mistakeSkills();
+  if (!skills.length) { navigate('#/'); return; }
+  const before = mistakeCount();
+  const goal = Math.min(8, Math.max(3, skills.length + 2));
+  startSession(root, {
+    title: '🔧 Fix-It Time',
+    subtitle: `${skills.length} tricky skill${skills.length > 1 ? 's' : ''}`,
+    goal,
+    getNext: (diff) => { const s = skills[Math.floor(Math.random() * skills.length)]; return { problem: nextProblem(s, diff), skillId: s.id }; },
+    onComplete: (stats) => finishFixit(stats, before),
+  });
+}
+
 
 /* ---------------- the session runner ---------------- */
 function startSession(root, { title, subtitle, goal, getNext, onComplete }) {
@@ -185,7 +221,7 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete }) {
       consecWrong = 0; consecCorrect++;
       if (consecCorrect >= 2 && diff < 2) { diff++; consecCorrect = 0; } // ramp up after a streak
       const firstTry = wrongOnCur === 0;
-      if (firstTry) sess.firstTryCorrect++;
+      if (firstTry) { sess.firstTryCorrect++; resolveMistake(curSkillId); }
       sess.cleared++;
       const r = recordAnswer(curSkillId, true, firstTry);
       sess.coins += r.coinsGained; sess.xp += r.xpGained;
@@ -208,6 +244,7 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete }) {
       setTimeout(() => { if (fresh.length) showBadges(fresh, after); else after(); }, delay);
     } else {
       wrongOnCur++; clearIdle();
+      if (wrongOnCur === 1) noteMistake(curSkillId); // capture the miss once per problem
       consecCorrect = 0; consecWrong++;
       if (consecWrong >= 2 && diff > -2) { diff--; consecWrong = 0; } // ease off after struggles
       recordAnswer(curSkillId, false, false);
@@ -215,7 +252,12 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete }) {
       if (sourceEl) { sourceEl.classList.add('wrong'); setTimeout(() => sourceEl.classList.remove('wrong'), 600); }
       const disp = ansArea.querySelector('#ans-display');
       if (disp) { disp.classList.remove('shake'); void disp.offsetWidth; disp.classList.add('shake'); }
-      if (wrongOnCur === 1) {
+      const misc = matchMisconception(cur, raw); // tutor: address the specific mistake
+      if (misc && wrongOnCur <= 2) {
+        fb.innerHTML = `<span class="fb-soft">${mdInline(misc)}</span>`;
+        mascot.setSay('Let me help with that part. 🦊', 'think');
+        if (wrongOnCur === 2) { hintBtn.classList.add('pulse'); showBtn.classList.add('pulse'); }
+      } else if (wrongOnCur === 1) {
         fb.innerHTML = `<span class="fb-soft">🤔 ${pickPraise(PRAISE.wrong1)}</span>`;
         mascot.setSay(foxLine('encourage'), 'encourage');
       } else if (wrongOnCur === 2) {
@@ -334,6 +376,19 @@ function finishQuiz(sess) {
   popup({
     emoji: '⚡', title: 'Challenge Complete!',
     sub: `You cleared ${sess.cleared} problems!\n${accuracyPhrase(sess.firstTryCorrect, sess.distinct)}\n+${sess.xp} XP · +${sess.coins} 🪙`,
+    sound: 'level', hold: true, confetti: false,
+  });
+  setTimeout(() => { if (fresh.length) showBadges(fresh, () => navigate('#/')); }, 300);
+}
+
+function finishFixit(sess, before) {
+  const fixed = Math.max(0, before - mistakeCount());
+  const fresh = checkNewBadges();
+  refreshChrome();
+  confetti(120);
+  popup({
+    emoji: '🛠️', title: 'Tricky Ones Tackled!',
+    sub: `${fixed > 0 ? `You fixed ${fixed} tricky skill${fixed > 1 ? 's' : ''}! ` : ''}${accuracyPhrase(sess.firstTryCorrect, sess.distinct)}\n+${sess.xp} XP · +${sess.coins} 🪙`,
     sound: 'level', hold: true, confetti: false,
   });
   setTimeout(() => { if (fresh.length) showBadges(fresh, () => navigate('#/')); }, 300);

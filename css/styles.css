@@ -443,3 +443,168 @@ body[data-bg="bg-stars"] .hud-level-badge,body[data-bg="bg-galaxy"] .hud-level-b
   .curric-table{font-size:11px}
   .curric-grade{break-inside:avoid}
 }
+
+/* ============================================================
+   Pet Home (care) + Pet Quest (adventure)
+   ============================================================ */
+
+/* ---- Pet Home ---- */
+.pet-wrap{display:flex;flex-direction:column;gap:14px}
+.pet-top{display:flex;align-items:center;justify-content:space-between}
+.pet-h1{margin:.1em 0;font-size:1.5rem}
+.pet-coins{font-weight:800;color:#b97e00}
+.pet-room{position:relative;min-height:230px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  background:linear-gradient(180deg,#fff6e9,#ffe9cf);overflow:hidden}
+.pet-bubble{position:absolute;top:14px;left:50%;transform:translateX(-50%);background:#fff;border:3px solid var(--p2);
+  border-radius:16px;padding:8px 14px;font-weight:700;max-width:80%;text-align:center;box-shadow:0 4px 0 #e0d9ff}
+.pet-bubble::after{content:"";position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);border:9px solid transparent;border-top-color:var(--p2)}
+.pet-bubble.pop{animation:popin .3s ease}
+.pet-sprite{font-size:7rem;line-height:1;animation:petbob 2.6s ease-in-out infinite;filter:drop-shadow(0 8px 6px rgba(0,0,0,.15));margin-bottom:6px}
+.pet-sprite.react{animation:petjump .5s ease}
+@keyframes petbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes petjump{0%{transform:scale(1)}40%{transform:scale(1.25) rotate(-6deg)}100%{transform:scale(1)}}
+.pet-floor{width:80%;height:14px;border-radius:50%;background:rgba(0,0,0,.08);filter:blur(3px);margin-bottom:10px}
+.pet-meters{display:flex;gap:12px}
+.meter{flex:1}
+.meter-label{font-weight:800;font-size:.85rem;margin-bottom:4px}
+.meter-track{height:18px;background:#ece7ff;border-radius:99px;overflow:hidden}
+.meter-fill{height:100%;border-radius:99px;transition:width .5s}
+.meter-fill.happy{background:linear-gradient(90deg,#ff8fab,#e84393)}
+.meter-fill.full{background:linear-gradient(90deg,#ffd56b,#ff9f1c)}
+.pet-actions{display:flex;gap:10px}
+.pet-btn{flex:1;font-family:inherit;font-weight:800;border:none;border-radius:18px;background:#fff;color:var(--ink);
+  box-shadow:0 5px 0 #e0d9ff;cursor:pointer;padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:74px}
+.pet-btn span{font-size:1.8rem}
+.pet-btn small{color:var(--ink-soft);font-weight:700;font-size:.7rem}
+.pet-btn:active{transform:translateY(3px);box-shadow:0 2px 0 #e0d9ff}
+.treat-shop{display:flex;flex-direction:column;gap:10px;align-items:center}
+.treat-shop.flash{animation:flashcard .6s ease}
+@keyframes flashcard{0%,100%{box-shadow:var(--card-shadow)}50%{box-shadow:0 0 0 4px var(--coin)}}
+.ts-head{font-weight:900;align-self:flex-start}
+.ts-row{display:flex;gap:10px;width:100%}
+.ts-row .ts-buy{flex:1}
+
+/* ---- Adventure map ---- */
+.adv-wrap{display:flex;flex-direction:column;gap:14px}
+.adv-top{display:flex;align-items:center;justify-content:space-between}
+.adv-h1{margin:.1em 0;font-size:1.5rem}
+.adv-prog{font-weight:800;color:var(--p1);background:#f0ecff;border-radius:99px;padding:4px 12px}
+.adv-chapter{background:#fff;border-radius:var(--radius);box-shadow:var(--card-shadow);padding:var(--pad);margin-bottom:4px}
+.adv-chapter.locked{opacity:.7;filter:grayscale(.4)}
+.adv-chapter.done{border:2px solid var(--good)}
+.ach-head{display:flex;align-items:center;gap:8px;font-weight:900;font-size:1.1rem}
+.ach-emoji{font-size:1.6rem}.ach-title{flex:1}
+.ach-count{background:var(--p1);color:#fff;border-radius:99px;padding:2px 10px;font-size:.8rem}
+.ach-blurb{color:var(--ink-soft);font-weight:600;margin:6px 0 10px}
+.scene-path{display:flex;align-items:center;justify-content:center;gap:2px;margin:10px 0 14px;font-size:1.5rem}
+.scene-node{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:#f0ecff}
+.scene-node.done{background:#fff6da}
+.scene-node.current{background:var(--p1);box-shadow:0 0 0 4px #d9d2ff;animation:pulse 1.4s infinite}
+.scene-node.locked{font-size:1rem;color:#cfc7e6}
+.scene-link{flex:1;max-width:30px;height:4px;background:#e0d9ff;border-radius:2px}
+.ach-complete{text-align:center;font-weight:800;color:var(--good-d)}
+
+/* ---- Adventure scene ---- */
+.adv-scene{display:flex;flex-direction:column;gap:14px;align-items:center}
+.adv-scene-top{display:flex;align-items:center;gap:10px;width:100%}
+.scene-chapter{font-weight:800;color:var(--ink-soft)}
+.scene-art{font-size:5rem;line-height:1;animation:petbob 3s ease-in-out infinite}
+.scene-art.win{animation:petjump .6s ease}
+.scene-pet{font-size:3.4rem;margin-top:-18px;filter:drop-shadow(0 6px 5px rgba(0,0,0,.15))}
+.scene-pet.small{font-size:2.4rem}
+.scene-pet.bounce{animation:petjump .6s ease}
+.scene-story{width:100%;font-size:1.15rem;line-height:1.5;text-align:center;font-weight:600}
+.scene-story.success{border:2px solid var(--good);background:linear-gradient(180deg,#fff,#f2fffb)}
+.scene-reward{margin-top:10px;font-weight:900;color:#b97e00;font-size:1.1rem}
+
+/* ---- Teach-first card ---- */
+.teach-card{width:100%}
+.teach-head{font-weight:900;color:var(--p1);font-size:1.15rem;margin-bottom:6px}
+.teach-idea{background:#fff7e0;border:2px dashed var(--coin);border-radius:14px;padding:10px 12px;font-weight:700}
+.teach-problem{font-size:1.8rem;font-weight:900;text-align:center;margin:12px 0;color:var(--ink)}
+.teach-visual{display:flex;justify-content:center;margin-bottom:10px}
+.teach-steps{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.teach-controls{display:flex;gap:10px;margin-top:10px}
+.teach-controls .btn{flex:1}
+
+/* ---- Challenge card (reuses problem-prompt/keypad/choices/solution-panel) ---- */
+.challenge-card{width:100%;display:flex;flex-direction:column;align-items:center;gap:10px}
+.challenge-tag{font-weight:800;color:var(--p1);background:#f0ecff;border-radius:99px;padding:4px 14px;font-size:.85rem}
+.challenge-actions{display:flex;gap:10px;width:100%;max-width:420px}
+
+.self-explain{background:#eef9ff;border:2px solid #bfe3ff;border-radius:14px;padding:10px 12px;margin:8px 0;font-weight:600;animation:slidein .35s ease}
+.self-explain b{color:#2f6fd0}
+
+/* home quest discovery card */
+.continue-card.quest-card{background:linear-gradient(135deg,#fff,#fff1e6);border-color:#e17055;box-shadow:0 5px 0 #ffd2c2}
+.continue-card.quest-card .cont-text b{color:#c0392b}
+.continue-card.quest-card .cont-go{color:#e17055}
+
+/* wider grade picker (grades 2–7) */
+.grade-pick-wide{grid-template-columns:repeat(3,1fr)!important}
+@media(min-width:420px){.grade-pick-wide{grid-template-columns:repeat(6,1fr)!important}}
+
+/* pet home decorations */
+.pet-room{position:relative}
+.pet-decor{position:absolute;inset:0;pointer-events:none}
+.placed-decor{position:absolute;font-size:1.6rem;opacity:.95}
+.placed-decor:nth-child(1){left:8%;bottom:14px}
+.placed-decor:nth-child(2){right:10%;bottom:16px}
+.placed-decor:nth-child(3){left:14%;top:16px}
+.placed-decor:nth-child(4){right:16%;top:18px}
+.placed-decor:nth-child(5){left:30%;bottom:12px}
+.placed-decor:nth-child(6){right:30%;bottom:12px}
+.placed-decor:nth-child(7){left:46%;top:14px}
+.placed-decor:nth-child(n+8){left:60%;top:16px}
+.decorate{display:flex;flex-direction:column;gap:8px}
+.dec-sub{font-weight:800;color:var(--ink-soft);font-size:.8rem;text-transform:uppercase;letter-spacing:.4px;margin-top:4px}
+.room-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.room-card{flex:0 0 auto;width:88px;font-family:inherit;background:#fff;border:3px solid #efeaff;border-radius:14px;padding:8px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;box-shadow:0 4px 0 #ece7ff}
+.room-card.using{border-color:var(--good);box-shadow:0 4px 0 #c7f5e7}
+.room-emoji{font-size:1.6rem}.room-name{font-size:.7rem;font-weight:800;line-height:1.1;text-align:center}
+.room-tag{font-size:.7rem;font-weight:800;color:var(--p1)}
+.room-card.using .room-tag{color:var(--good-d)}
+.decor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:8px}
+.decor-card{font-family:inherit;background:#fff;border:2px solid #efeaff;border-radius:12px;padding:8px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;box-shadow:0 3px 0 #ece7ff}
+.decor-card.have{border-color:var(--good);background:#f3fffb}
+.decor-emoji{font-size:1.5rem}
+.decor-tag{font-size:.66rem;font-weight:800;color:var(--ink-soft)}
+.decor-card.have .decor-tag{color:var(--good-d)}
+
+/* home fix-it card */
+.continue-card.fixit-card{background:linear-gradient(135deg,#fff,#fff0ef);border-color:#ff7043;box-shadow:0 5px 0 #ffd2c2}
+.continue-card.fixit-card .cont-text b{color:#d84315}
+.continue-card.fixit-card .cont-go{color:#ff7043}
+
+/* home daily warm-up card */
+.continue-card.warmup-card{background:linear-gradient(135deg,#fff,#fff7e0);border-color:#fdcb6e;box-shadow:0 5px 0 #ffe9b3}
+.continue-card.warmup-card .cont-text b{color:#b97e00}
+.continue-card.warmup-card .cont-go{color:#f0a500}
+
+/* home CTA row (quest + sprint) */
+.home-cta-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.home-cta-row .continue-card{margin-bottom:0;flex-direction:column;text-align:center;gap:6px}
+.home-cta-row .cont-text{align-items:center}
+.home-cta-row .cont-go{display:none}
+.continue-card.sprint-card{background:linear-gradient(135deg,#fff,#fff8e6);border-color:#ffb300;box-shadow:0 5px 0 #ffe9b3}
+.continue-card.sprint-card .cont-text b{color:#e08a00}
+@media(max-width:380px){.home-cta-row{grid-template-columns:1fr}}
+
+/* Math Sprint */
+.sprint-wrap{display:flex;flex-direction:column;gap:14px;min-height:70dvh;justify-content:center}
+.sprint-top{display:flex}
+.sprint-intro{text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
+.sprint-emoji{font-size:4rem;animation:bounceBig .6s}
+.sprint-best{font-weight:800;color:#b97e00}
+.sprint-count{font-size:6rem;font-weight:900;color:var(--p1);text-align:center;animation:pop .4s}
+.sprint-game{justify-content:flex-start;min-height:auto}
+.sprint-hud{display:flex;align-items:center;gap:12px}
+.sprint-score{font-weight:900;font-size:1.3rem;color:#e08a00}
+.sprint-timebar{flex:1;height:14px;background:#ece7ff;border-radius:99px;overflow:hidden}
+.sprint-timefill{height:100%;width:100%;background:linear-gradient(90deg,#6bcB77,#ffd56b,#ff7043);border-radius:99px;transition:width 1s linear}
+.sprint-clock{font-weight:900;font-size:1.2rem;min-width:32px;text-align:right}
+.sprint-clock.low{color:var(--bad);animation:pulse .6s infinite}
+.sprint-problem{font-size:clamp(2rem,9vw,3rem);font-weight:900;text-align:center;margin:18px 0}
+.sprint-ans{max-width:340px;margin:0 auto}
+.sprint-game .keypad{max-width:340px;margin:10px auto 0}
+.sprint-final{font-size:4rem;font-weight:900;color:var(--p1)}

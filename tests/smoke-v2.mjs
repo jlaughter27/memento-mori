@@ -74,11 +74,21 @@ try {
   if (!q('.practice-wrap') || !q('.problem-prompt').textContent) throw new Error('review session did not start');
   log('spaced review: due card + session work');
 
+  step = 'mistakes notebook / fix-it';
+  const { noteMistake, mistakeCount } = await import('../js/gamification.js');
+  noteMistake(skId); persist();
+  if (mistakeCount() < 1) throw new Error('noteMistake did not record a mistake');
+  hashTo('#/'); await wait(50);
+  if (!q('#fixit-btn')) throw new Error('Fix-It card not shown when mistakes exist');
+  click(q('#fixit-btn')); await wait(50);
+  if (!q('.practice-wrap') || !q('.problem-prompt').textContent) throw new Error('Fix-It session did not start');
+  log('mistakes notebook: miss captured → Fix-It card + session work');
+
 } catch (e) {
   console.log('\n❌ V2 SMOKE FAILED at [' + step + ']:', e.message);
   if (errors.length) console.log('errors:', errors.slice(0, 5).join(' | '));
   process.exit(1);
 }
 if (errors.length) { console.log('\n⚠️ runtime errors:', errors.slice(0, 5).join(' | ')); process.exit(1); }
-console.log('\n✅ V2 SMOKE PASSED — placement, standards, curriculum map, what\'s-new, and spaced review all work.');
+console.log('\n✅ V2 SMOKE PASSED — placement, standards, curriculum map, what\'s-new, spaced review, and Fix-It all work.');
 process.exit(0);

@@ -39,7 +39,8 @@ export function renderNav() {
   const route = (location.hash || '#/').split('/')[1] || '';
   const items = [
     { hash: '#/', icon: '🗺️', label: 'Learn', key: '' },
-    { hash: '#/play', icon: '⚡', label: 'Play', key: 'play' },
+    { hash: '#/adventure', icon: '⚔️', label: 'Quest', key: 'adventure' },
+    { hash: '#/pet', icon: '🐾', label: 'Pet', key: 'pet' },
     { hash: '#/rewards', icon: '🏆', label: 'Rewards', key: 'rewards' },
     { hash: '#/parent', icon: '👨‍👩‍👧', label: 'Grown-ups', key: 'parent' },
   ];
