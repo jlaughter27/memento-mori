@@ -4,6 +4,21 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.6.0] — 2026-06-06 — "Learn with Foxy"
+### Added
+- **Tutor mode (`#/tutor`)** — a teach-first "Learn with Foxy" flow is now the default learning
+  path (lesson concept → fully worked example + self-explanation → practice that **fades**
+  scaffolding as the child succeeds → independent). Lesson + home route into it until a skill is
+  mastered, then drop to regular practice.
+- **Number Line (Magnitude Match) mini-game (`#/magnitude`)** — Siegler number-line estimation,
+  scored by closeness (never right/wrong), keyboard-accessible pin, beat-your-best.
+- **Parent Efficacy Report (`#/report`)** — growth-first headline stats, mastery-by-topic, an
+  accuracy sparkline (from a new on-device daily history log + mastery timestamps), retention
+  health, recently-mastered with CCSS codes, printable. Plus in-app **privacy + accessibility
+  statements** in the Grown-ups Corner.
+### State
+- Added `history` (rolling 30-day log), `magnitudeBest`, and `masteredAt` (per-skill).
+
 ## [2.5.0] — 2026-06-06 — "Polished & Hardened"
 Driven by three parallel audit agents (correctness, accessibility, UX polish).
 ### Fixed (correctness)
