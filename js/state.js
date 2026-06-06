@@ -16,6 +16,8 @@ function defaultState() {
       coins: 0,
       streak: { count: 0, lastActiveDate: null, graceUsed: false },
       daily: { date: null, count: 0, goalReached: false }, // today's problem count toward daily goal
+      care: { happiness: 85, fullness: 70, lastTick: Date.now(), treats: 3, feeds: 0, plays: 0, pats: 0 },
+      adventure: { chapter: 0, scene: 0, completed: [] }, // pet story progress
       skills: {}, // id -> {attempts, correct, mastered, stars, lastSeen}
       badges: [], // earned badge ids
       owned: ['pet-cat'], // owned shop/pet ids (first pet free)

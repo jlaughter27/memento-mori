@@ -12,10 +12,12 @@ import { renderPractice, renderPlay, renderReview } from './views/practice.js';
 import { renderRewards, showBadges } from './views/rewards.js';
 import { renderDashboard } from './views/dashboard.js';
 import { renderCurriculum } from './views/curriculum.js';
+import { renderPet } from './views/pet.js';
+import { renderAdventure } from './views/adventure.js';
 import { renderOnboard } from './views/onboard.js';
 
 const content = () => document.getElementById('content');
-const TOP_LEVEL = new Set(['', 'rewards', 'parent']);
+const TOP_LEVEL = new Set(['', 'adventure', 'pet', 'rewards', 'parent']);
 
 function parseHash() {
   const h = (location.hash || '#/').replace(/^#\//, '');
@@ -47,6 +49,8 @@ function route() {
     case 'rewards': renderRewards(root); break;
     case 'parent': renderDashboard(root); break;
     case 'curriculum': renderCurriculum(root); break;
+    case 'pet': renderPet(root); break;
+    case 'adventure': renderAdventure(root); break;
     default: location.hash = '#/'; return;
   }
   refreshChrome();

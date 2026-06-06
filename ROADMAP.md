@@ -5,17 +5,22 @@ zero-backend PWA**, so each item is scoped to what's achievable without servers 
 (unless explicitly marked). Shipping a release = bump `APP_VERSION` in `js/version.js` and the
 `CACHE` name in `service-worker.js`; installed devices self-update.
 
-## ✅ Shipped (v2.0)
+## ✅ Shipped (v2.0 · v2.1)
 - Common Core standards on every lesson · placement quiz · spaced review
 - Self-updating PWA + "What's New" · adaptive difficulty · daily goals
 - New manipulatives (percent / ratio / volume / data) · full accessibility pass
+- **Pet Home** (happiness meter, feed/play/pat, treat shop)
+- **Pet Quest** — 3-chapter story adventure (4th-grade focus) with a teach-first **tutor mode**
+  (concept → worked example → self-explanation → guided try)
 
-## 🔜 Next (v2.1 — content & mastery depth)
-- **Mixed review sessions** that interleave several mastered skills (proven retention win).
-- **Mastery decay + smarter spaced-repetition scheduler** (Leitner-style boxes per skill).
-- **"Challenge" tier** per skill (harder params, multi-step) for 3-star+ learners.
-- **Printable worksheets** (generate a PDF/print sheet of problems + answer key from any skill).
-- Per-skill **error-pattern hints** (detect the classic misconception and address it directly).
+## 🔜 Next (v2.2 — deepen the tutor & the quest)
+Grounded in `docs/research/tutor-design.md` and `docs/research/learning-science.md`:
+- **Worked-example fading** — full example → partial fill-in → hint-available → independent,
+  gated on 3 consecutive first-try-correct (the #1 cognitive-load lever).
+- **Step-level error feedback** — misconception-specific messages per (skill, step, error).
+- **BKT-style mastery** + a "bottom-out" 4th hint (with a read-speed delay) that never auto-fills.
+- **Mixed/interleaved review sessions**; per-skill **Challenge tier**; **printable worksheets**.
+- **More quest chapters** + grade 3/5/6 quest lines; **pet rooms & decor** to buy with coins.
 
 ## 🌱 Later (v2.2+ — reach & trust)
 - **Diagnostic report** for parents (strengths/gaps by domain) + weekly email-style summary card.

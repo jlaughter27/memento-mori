@@ -272,3 +272,52 @@ export function gradeCompletion(grade) {
   const done = skills.filter((s) => S.progress.skills[s.id] && S.progress.skills[s.id].mastered).length;
   return { done, total: skills.length, pct: skills.length ? done / skills.length : 0 };
 }
+
+/* ---------- pet care (happiness + feeding) ----------
+   Gentle, never punishing: meters drift down slowly over real time and are
+   refilled by free play/pats and (treat-based) feeding. Happiness floors high
+   enough that the pet is never "sad and neglected" — this is delight, not guilt. */
+const CARE = { happyFloor: 15, fullFloor: 0, happyDecayPerHr: 1.5, fullDecayPerHr: 2.5, maxHours: 36 };
+
+export function tickCare() {
+  const c = S.progress.care;
+  const now = Date.now();
+  const hrs = Math.min(CARE.maxHours, Math.max(0, (now - (c.lastTick || now)) / 3600000));
+  if (hrs > 0.01) {
+    c.fullness = clamp(c.fullness - hrs * CARE.fullDecayPerHr, CARE.fullFloor, 100);
+    let hd = hrs * CARE.happyDecayPerHr + (c.fullness < 20 ? hrs * 1 : 0); // hungry pets get a little sadder
+    c.happiness = clamp(c.happiness - hd, CARE.happyFloor, 100);
+    c.lastTick = now;
+    persistSoon();
+  }
+  return c;
+}
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+export function petMood() {
+  const h = S.progress.care.happiness;
+  return h >= 80 ? 'celebrate' : h >= 55 ? 'happy' : h >= 30 ? 'idle' : 'encourage';
+}
+export function patPet() {
+  tickCare(); const c = S.progress.care;
+  c.happiness = clamp(c.happiness + 3, 0, 100); c.pats = (c.pats || 0) + 1; c.lastTick = Date.now(); persistSoon();
+  return c;
+}
+export function playPet() {
+  tickCare(); const c = S.progress.care;
+  c.happiness = clamp(c.happiness + 10, 0, 100); c.plays = (c.plays || 0) + 1; c.lastTick = Date.now(); persist();
+  return c;
+}
+export function feedPet() {
+  tickCare(); const c = S.progress.care;
+  if ((c.treats || 0) <= 0) return { ok: false, reason: 'no-treats' };
+  c.treats -= 1; c.fullness = clamp(c.fullness + 35, 0, 100); c.happiness = clamp(c.happiness + 8, 0, 100);
+  c.feeds = (c.feeds || 0) + 1; c.lastTick = Date.now(); persist();
+  return { ok: true, care: c };
+}
+export function buyTreats(count, cost) {
+  if (S.progress.coins < cost) return { ok: false, reason: 'poor' };
+  S.progress.coins -= cost; S.progress.care.treats = (S.progress.care.treats || 0) + count; persist();
+  return { ok: true };
+}
+// small treats reward from learning (called occasionally on correct answers)
+export function awardTreat(n = 1) { S.progress.care.treats = (S.progress.care.treats || 0) + n; persistSoon(); }

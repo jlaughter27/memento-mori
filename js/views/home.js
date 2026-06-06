@@ -50,6 +50,12 @@ export function renderHome(root) {
       ${daily.reached ? '<p class="goal-done">Goal complete — you\'re a star today! 🌟</p>' : ''}
     </div>
 
+    <button class="continue-card quest-card" id="quest-btn">
+      <span class="cont-emoji">⚔️</span>
+      <span class="cont-text"><b>Pet Quest</b><span>Go on a story adventure with your pet!</span></span>
+      <span class="cont-go">▶</span>
+    </button>
+
     <div class="grade-tabs" role="tablist" aria-label="Choose grade">
       ${[3, 4, 5, 6].map((g) => `<button class="grade-tab ${g === grade ? 'active' : ''}" role="tab" aria-selected="${g === grade}" data-grade="${g}">Grade ${g}</button>`).join('')}
     </div>
@@ -71,6 +77,7 @@ export function renderHome(root) {
   root.querySelector('#daily-btn').addEventListener('click', () => { sfx.tap(); navigate('#/play'); });
   const revBtn = root.querySelector('#review-btn');
   if (revBtn) revBtn.addEventListener('click', () => { sfx.tap(); navigate('#/review'); });
+  root.querySelector('#quest-btn').addEventListener('click', () => { sfx.tap(); navigate('#/adventure'); });
   const contBtn = root.querySelector('#continue-btn');
   if (contBtn) contBtn.addEventListener('click', () => {
     sfx.tap();

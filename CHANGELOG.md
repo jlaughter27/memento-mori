@@ -4,6 +4,25 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.1.0] — 2026-06-06 — "Pet Quest & Tutor Mode"
+### Added
+- **Pet Home** (`js/views/pet.js`) — care for your companion: feed (treats), play, and pat,
+  with a **happiness** meter and **fullness** meter that gently drift over real time. A small
+  in-app treat shop spends coins; playing sometimes turns up bonus coins.
+- **Pet Quest** (`js/views/adventure.js`, `js/curriculum/adventures.js`) — a 3-chapter,
+  15-scene story adventure where your pet is the hero and every obstacle is a **4th-grade**
+  math problem. Chapters unlock in sequence; scenes reward coins, treats, and pet happiness.
+- **Tutor mode (teach-first):** each new concept in the quest is taught before it's tested —
+  concept → fully worked example (step-by-step, with the visual) → a **self-explanation**
+  prompt ("tell your pet why it works") → your turn, with the hint ladder + "show me".
+- Bottom nav reorganized: **Learn · Quest · Pet · Rewards · Grown-ups** (Daily Challenge moved
+  to a button on the home screen). Home gains a Pet Quest discovery card.
+- New research informing this release: `docs/research/grade4-standards.md`,
+  `docs/research/tutor-design.md`, `docs/research/learning-science.md`.
+### Notes
+- Deeper tutor features (worked-example *fading*, step-level error feedback, BKT-style mastery)
+  are speced in the research docs and scheduled on the roadmap.
+
 ## [2.0.0] — 2026-06-06 — "The Legit Update"
 ### Added
 - **Common Core alignment** — every skill is tagged with its CCSS standard, shown in the

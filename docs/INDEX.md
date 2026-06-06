@@ -41,6 +41,9 @@ Welcome to the MathQuest docs. Everything you need, organized by who you are.
 - **[Pedagogy](research/pedagogy.md)** — how to teach grades 3–6 math; common misconceptions.
 - **[Engagement](research/engagement.md)** — reward design & UX for ages 7–11.
 - **[Landscape](research/landscape.md)** — competitive analysis + the "what makes it legit" bar.
+- **[Grade 4 Standards](research/grade4-standards.md)** — the national/CCSS map for 4th grade.
+- **[Tutor Design](research/tutor-design.md)** — how to build an effective tutor (ITS) offline.
+- **[Learning Science](research/learning-science.md)** — how kids learn best, made implementable.
 
 ---
 

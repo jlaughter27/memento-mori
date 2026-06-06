@@ -13,7 +13,7 @@ it grows with the child from **3rd through 6th grade**.
 **[🗺️ Roadmap](ROADMAP.md)** ·
 **[📓 Changelog](CHANGELOG.md)** ·
 **[🔒 Privacy](docs/PRIVACY.md)** ·
-MIT licensed · v2.0
+MIT licensed · v2.1
 
 ---
 
@@ -53,6 +53,11 @@ it will then work completely offline.
   the *strategy*, not just the arithmetic.
 - **Rewards that motivate without bribing**: XP & levels, coins, **36 badges**, daily
   challenge, gentle grace-day streaks, a **shop** (38 items), and **11 collectible pets**.
+- **🐾 Pet Home**: feed, play with, and pat your pet — with a **happiness meter** and a treat
+  shop, so the coins and pets have a cozy place to live.
+- **⚔️ Pet Quest**: a 3-chapter story adventure (focused on **4th grade**) where your pet is
+  the hero and every obstacle is a math problem **taught before it's tested** — a real
+  **tutor mode**: concept → worked example → "tell your pet why" → your turn (with hints).
 - **Kid-first design**: big tap targets, friendly mascot, encouraging growth-mindset
   language, sound effects, and confetti. Wrong answers are met with "not yet" and help —
   never "wrong!".

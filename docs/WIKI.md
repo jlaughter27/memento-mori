@@ -53,6 +53,24 @@ diagrams, 3-D volume boxes, and data dot plots — all drawn live.
 - **Daily goal & Streaks** — a gentle daily target and a positively framed day streak with a
   built-in grace day (no guilt, no harsh resets).
 
+### 🐾 Pet Home (care)
+Your pet lives in a cozy home. **Pat** it (free), **Play** (free — and it sometimes finds a
+coin), or **Feed** it a treat. A **happiness meter** and a **fullness meter** drift down gently
+over time and refill when you visit and interact — it's designed to be delightful, never
+guilt-inducing (the pet is never neglected-sad). **Treats** are bought with coins in the home's
+little treat shop, giving coins a warm purpose. Adventuring also makes your pet happier.
+
+### ⚔️ Pet Quest (story adventure + tutor mode)
+A 3-chapter, 15-scene story where **your pet is the hero** — the Whispering Woods, the Sparkle
+Caves, and the Cloud Castle. Each scene tells a bit of story and then blocks the path with a
+**4th-grade math challenge**. Crucially, new concepts are **taught before they're tested**
+(*tutor mode*): the tutor shows the big idea and a **fully worked example** step-by-step, asks
+your child to **explain why it works** to their pet (self-explanation), and *then* hands over a
+problem to try — with the hint ladder and "show me how" always available. Clearing a scene
+advances the story and rewards coins, treats, and pet happiness; finishing a chapter unlocks
+the next. (This is the most pedagogically important mode — it's built on the research in
+`docs/research/tutor-design.md` and `docs/research/learning-science.md`.)
+
 ### 🦊 Foxy, the guide
 A friendly fox who teaches, hints, and cheers — with several expressions and optional
 read-aloud.
