@@ -14,7 +14,7 @@ it grows with the child from **3rd through 6th grade**.
 **[🛣️ Roadmap](ROADMAP.md)** ·
 **[📓 Changelog](CHANGELOG.md)** ·
 **[🔒 Privacy](docs/PRIVACY.md)** ·
-MIT licensed · v2.1
+MIT licensed · v2.2 · grades 2–7
 
 ---
 
@@ -42,8 +42,10 @@ it will then work completely offline.
 
 ## ✨ What's inside
 
-- **60 lessons across grades 3–6**, organized by topic (place value, +−×÷, fractions,
-  decimals, geometry, measurement, data, ratios, percent, integers, and more).
+- **86 lessons across grades 2–7**, organized by topic (place value, +−×÷, fractions,
+  decimals, geometry, measurement, data, ratios, percent, integers, pre-algebra, and more).
+- **A tutor that spots mistakes** — when an answer matches a classic error (forgot to carry,
+  added the denominators, ignored the remainder…), it names the exact fix, not just "try again".
 - **A real teaching engine** — every problem is generated fresh and comes with a full
   **step-by-step worked solution** ("📖 Show me how") and a **3-step hint ladder**
   (💡), so the child is never stuck. It explains long division, regrouping, common

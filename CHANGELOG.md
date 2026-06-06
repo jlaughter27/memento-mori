@@ -4,6 +4,21 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.2.0] — 2026-06-06 — "Smarter Tutor & Grades 2–7"
+### Added
+- **Misconception-aware feedback** (`js/engine/problemTypes.js`): problems predict classic wrong
+  answers and the tutor names the specific fix (no-carry, borrow/abs-columns, rounded-down,
+  ignored remainder, added-denominators, bigger-denominator-is-bigger). Wired into Practice + Quest.
+- **Grades 2 and 7** (`grade2.js` 12 skills, `grade7.js` 14 skills) — MathQuest now spans **grades
+  2–7 (86 skills, 65 Common Core standards)**. `cc` tags + `getStandard()` fallback; dynamic `GRADES`.
+- **Pet home decorations** (`decor-data.js`: 8 rooms + 18 items) — a Decorate panel to buy/equip
+  rooms (room background) and collect/place decorations with coins. New `progress.home` state.
+- **Research banked** in `docs/research/`: efficacy-measurement, grade2/grade7 standards, minigames,
+  accessibility-compliance (WCAG 2.2 AA + COPPA), companion-design.
+### Notes
+- Grade-7 skills currently reuse existing engine types as proxies; dedicated types (solve-equation,
+  circle/probability, signed mult/div) are speced in the research and on the roadmap (v2.6).
+
 ## [2.1.0] — 2026-06-06 — "Pet Quest & Tutor Mode"
 ### Added
 - **Pet Home** (`js/views/pet.js`) — care for your companion: feed (treats), play, and pat,

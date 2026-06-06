@@ -106,20 +106,25 @@ Every pillar below is decomposed the same way.
 
 | # | Pillar | Now | Target | The gap (what's missing for 10/10) |
 |---|---|----|----|---|
-| 1 | **Curriculum & Standards** | 7 | 10 | Extend to grades 2 & 7; deepen grade 4 to the 18-skill gold standard; tag sub-standards; per-skill misconception list |
+| 1 | **Curriculum & Standards** | **8** | 10 | ✅ grades 2–7 (86 skills, 65 standards). Left: deepen grade 4 to 18-skill gold standard; sub-standard tags |
 | 2 | **Teaching Engine** | 8 | 10 | More problem types (multiplicative comparison, line plots, angles, symmetry, mixed-number mult); richer/animated manipulatives; CRA drag-objects layer |
-| 3 | **The Tutor** | 5 | 10 | Worked-example **fading**; step-level misconception feedback; mastery tracing; bottom-out hint; self-explanation everywhere (not just quest) |
+| 3 | **The Tutor** | **7** | 10 | ✅ misconception-aware feedback (Practice + Quest). Left: worked-example **fading**; step-level feedback; mastery tracing; bottom-out hint |
 | 4 | **Mastery & Memory** | 6 | 10 | Interleaved/mixed review; mastery **decay**; a **mistakes notebook** loop; smarter diagnostic placement; warm-up-on-open |
 | 5 | **World & Story** | 5 | 10 | Quest lines for grades 2,3,5,6,7; an explorable world map; mini-games; more chapters; choices/branching |
-| 6 | **Companion & Care** | 6 | 10 | Decoratable pet **home/rooms**; pet **growth/evolution**; richer reactions/animation; bonding moments tied to learning |
+| 6 | **Companion & Care** | **7** | 10 | ✅ decoratable home/rooms + collectible decor. Left: pet **growth/evolution**; richer reactions; bonding moments tied to learning |
 | 7 | **Motivation & Economy** | 8 | 10 | Re-tune so story/pet are the core loop (not coins); collections/sets; goal-setting with the parent; anti-overjustification audit |
 | 8 | **Accessibility & Inclusion** | 7 | 10 | Formal WCAG 2.2 AA audit + statement; SVG ARIA; screen-reader passes on every view; switch support; full read-aloud of problems |
 | 9 | **Trust & Credibility** | 7 | 10 | Published privacy + accessibility pages; parent **efficacy reports**; worksheet export; Common Sense submission packet |
 | 10 | **Craft, Platform & Reliability** | 8 | 10 | Multi-child profiles; performance budget; motion/sound polish; visual-design system refresh; localization scaffolding; landing page |
 
-> **Overall today ≈ 6.7/10.** The biggest levers to "amazing" are **Pillar 3 (the Tutor)**,
-> **Pillar 4 (Memory)**, and **Pillar 5 (World)** — they're the largest gaps and the most
-> differentiating. The plan front-loads them.
+> **Overall ≈ 7.1/10** (was 6.7). The overnight push lifted Curriculum (→8, grades 2–7), the
+> Tutor (→7, misconception feedback), and the Companion (→7, decoratable home). The biggest
+> remaining levers are **Pillar 4 (Memory)** and **Pillar 5 (World)**, plus finishing the Tutor
+> (fading + mastery tracing). The plan front-loads them.
+>
+> **Research bank is now complete for the next phases** — all forward-agenda topics (Part V) have
+> docs in `docs/research/`: efficacy measurement, grades 2 & 7 standards, mini-games, accessibility
+> & COPPA, and companion design. Building can proceed straight from spec.
 
 ### Per-pillar capability decomposition (condensed)
 
@@ -272,8 +277,12 @@ consistent with the design tokens.
 
 ## Part V — THE RESEARCH AGENDA (what we still need to learn)
 
-We've banked six research docs (pedagogy, engagement, landscape, grade-4 standards, tutor design,
-learning science). Open questions to commission (one agent each, to a doc in `docs/research/`):
+> ✅ **Update:** all six forward-agenda topics below have now been researched and written to
+> `docs/research/` (efficacy-measurement, grade2-standards, grade7-standards, minigames,
+> accessibility-compliance, companion-design) — joining the original six. Building can proceed
+> straight from spec. The list remains here as a record of what each doc answers.
+
+We've banked twelve research docs total. The forward-agenda questions (now answered):
 
 1. **Efficacy measurement (offline):** how to *show* learning gains on-device — pre/post deltas,
    mastery curves, retention — without accounts. → informs Parent Reports (v2.5).
