@@ -4,6 +4,27 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.5.0] — 2026-06-06 — "Polished & Hardened"
+Driven by three parallel audit agents (correctness, accessibility, UX polish).
+### Fixed (correctness)
+- **`makeMean`** could produce a non-integer true mean → the worked solution showed a false
+  equation and rejected the correct decimal. Now always averages to a whole number.
+- **Quest crash**: `adventure.js` used `matchMisconception` without importing it (crashed the
+  wrong-answer path). Fixed + a wrong-answer regression test added.
+- **`makePercent`** float garbage in prompts; **`fractionAddSub`** wrong subtraction
+  misconception + a `maxDenom:2` infinite-loop guard; **`placeValue`** expanded-form dead steps.
+- **Timer/listener leaks**: Sprint timer and Practice keyboard handler / scheduled callbacks no
+  longer run after you navigate away (could hijack a screen / double-count). Self-clear + cleanup.
+### Accessibility (WCAG 2.2 AA pass)
+- Removed `<main aria-live>` misuse; landmark labels + skip link; modals are real dialogs
+  (focus, Escape, inert background, focus restore); feedback/mascot/pet/sprint live regions;
+  SVG diagrams carry descriptive labels; decorative emoji/confetti hidden; 44px targets;
+  reduced-motion zeroes transitions; high-contrast focus rings per theme.
+### Polish
+- Home reordered (primary action first; remedial cards grouped under "Quick boosts").
+- Ability praise removed; grade-aware Sprint pool; clearer affordances; locked quest nodes 🔒;
+  decorations spread out (no stacking) + removal acknowledged; rewards bar shows the equipped pet.
+
 ## [2.4.0] — 2026-06-06 — "Math Sprint"
 ### Added
 - **Math Sprint** mini-game (`js/views/sprint.js`, `#/sprint`) — a 60-second fact-fluency game
