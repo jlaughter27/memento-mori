@@ -107,7 +107,7 @@ MathQuest is already well-positioned in several areas — it has a real teaching
 
 **What's missing**: A human-readable, printable document that maps all 60 lessons to their CCSS code, grade level, and prerequisite structure. This is the document that justifies the curriculum to a parent or teacher.
 
-**Why it matters**: SplashLearn, Zearn, IXL, and Khan Academy all publish scope and sequence documents publicly. Homeschool parents, especially, make curriculum choices based on these documents. The existing `docs/research-curriculum.md` is close but is developer-facing, not parent-facing.
+**Why it matters**: SplashLearn, Zearn, IXL, and Khan Academy all publish scope and sequence documents publicly. Homeschool parents, especially, make curriculum choices based on these documents. The existing `docs/research/pedagogy.md` is close but is developer-facing, not parent-facing.
 
 **For an offline PWA**: A static HTML page or a printable-formatted section of the parent dashboard. The app can auto-generate a scope-and-sequence view from the curriculum data files.
 
