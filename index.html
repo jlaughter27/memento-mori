@@ -2,94 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Live Transformed Countdown</title>
-  <meta name="theme-color" content="#111111">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+  <title>MathQuest — Fun Math Adventures</title>
+  <meta name="description" content="A friendly, interactive math tutor for grades 3–6. Learn, play, earn badges!">
+  <meta name="theme-color" content="#6c5ce7">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <link rel="stylesheet" href="style.css" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="MathQuest">
   <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <!-- Progressive font enhancement; falls back to rounded system fonts offline -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
-<body>
-  <div class="background-text">Live<br>Transformed</div>
-
-  <header class="top-bar">
-    <button id="open-settings" aria-label="Open settings">⚙️</button>
-    <span id="local-time" aria-live="polite">--:--:--</span>
-  </header>
-
-  <main>
-    <section class="center-stack">
-      <h1 id="countdown" aria-live="polite" aria-atomic="true">00:00:00:00</h1>
-      <p id="percentage-lived">0% lived</p>
-      <blockquote id="quote" aria-live="polite">"Quote will appear here."</blockquote>
-    </section>
-
-    <section id="loved-ones" class="loved-ones">
-      <ul id="loved-ones-list"></ul>
-      <button id="add-loved-one" type="button">+ Add Loved One</button>
-    </section>
-
-    <section id="slogan-section" class="slogan">
-      <span id="slogan-display">live like it matters</span>
-    </section>
-  </main>
-
-  <!-- Settings Modal -->
-  <dialog id="settings-dialog">
-    <form method="dialog" id="settings-form">
-      <h2>Settings</h2>
-      <label> Your Birthdate
-        <input type="date" id="user-birthdate">
-      </label>
-
-      <label> Lifespan (years)
-        <input type="number" id="lifespan" min="1" max="130" value="80">
-      </label>
-
-      <label> Life Slogan
-        <input type="text" id="slogan-input" maxlength="80" placeholder="Enter your slogan">
-      </label>
-
-      <label> Quote Interval (seconds)
-        <input type="number" id="quote-interval" min="10" max="600" value="30">
-      </label>
-
-      <label class="toggle">
-        <input type="checkbox" id="tts-enabled">
-        Text-to-Speech for quotes
-      </label>
-
-      <menu>
-        <button value="cancel">Cancel</button>
-        <button id="save-settings" value="default">Save</button>
-      </menu>
-    </form>
-  </dialog>
-
-  <!-- Loved One Editor Modal -->
-  <dialog id="loved-one-dialog">
-    <form method="dialog" id="loved-one-form">
-      <h3 id="loved-one-title">Add Loved One</h3>
-      <input type="hidden" id="loved-one-index">
-      <label> Name
-        <input type="text" id="lo-name" maxlength="32" required>
-      </label>
-      <label> Birthdate
-        <input type="date" id="lo-birthdate" required>
-      </label>
-      <label> Photo (optional)
-        <input type="file" id="lo-photo" accept="image/*">
-      </label>
-      <menu>
-        <button value="cancel">Cancel</button>
-        <button id="save-loved-one" value="default">Save</button>
-      </menu>
-    </form>
-  </dialog>
-
-  <script src="quotes.js"></script>
-  <script src="app.js" defer></script>
+<body data-theme="default" data-bg="default">
+  <header id="hud" class="hud"></header>
+  <main id="content" class="content" aria-live="polite"></main>
+  <nav id="nav" class="nav"></nav>
+  <script type="module" src="js/app.js"></script>
+  <noscript style="padding:2rem;display:block;font-family:sans-serif">MathQuest needs JavaScript turned on. 🦊</noscript>
 </body>
 </html>
