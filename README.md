@@ -10,7 +10,8 @@ it grows with the child from **3rd through 6th grade**.
 
 **[▶️ Live demo](https://jlaughter27.github.io/memento-mori/)** ·
 **[📚 Docs](docs/INDEX.md)** ·
-**[🗺️ Roadmap](ROADMAP.md)** ·
+**[🗺️ Master Plan](docs/MASTER_PLAN.md)** ·
+**[🛣️ Roadmap](ROADMAP.md)** ·
 **[📓 Changelog](CHANGELOG.md)** ·
 **[🔒 Privacy](docs/PRIVACY.md)** ·
 MIT licensed · v2.1

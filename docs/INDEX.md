@@ -14,15 +14,17 @@ Welcome to the MathQuest docs. Everything you need, organized by who you are.
 | A **parent / homeschooler** | [README](../README.md) → [Wiki & FAQ](WIKI.md) → [Curriculum Map](CURRICULUM.md) → [Privacy](PRIVACY.md) |
 | A **developer / contributor** | [CLAUDE.md](../CLAUDE.md) → [Architecture](ARCHITECTURE.md) → [Contributing](../CONTRIBUTING.md) → [Testing](TESTING.md) |
 | An **AI agent (Claude Code)** | [CLAUDE.md](../CLAUDE.md) (rules & invariants) then this index |
-| A **reviewer / stakeholder** | [Project Charter](PROJECT.md) → [Roadmap](../ROADMAP.md) → [Changelog](../CHANGELOG.md) |
+| A **reviewer / stakeholder** | [Master Plan](MASTER_PLAN.md) → [Project Charter](PROJECT.md) → [Roadmap](../ROADMAP.md) |
 
 ---
 
 ## 📄 All documents
 
 ### Product & vision
+- **⭐ [Master Plan](MASTER_PLAN.md)** — the North Star outcome, the work-backward decomposition,
+  and the sequenced plan to v3.0. **Start here for the big picture.**
 - **[Project Charter](PROJECT.md)** — vision, audience, principles, status, success criteria.
-- **[Roadmap](../ROADMAP.md)** — the upgrade path, by horizon.
+- **[Roadmap](../ROADMAP.md)** — the tactical upgrade path, by horizon.
 - **[Changelog](../CHANGELOG.md)** — release history (SemVer).
 
 ### For families
