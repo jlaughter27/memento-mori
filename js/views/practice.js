@@ -5,7 +5,7 @@ import { nextProblem } from '../engine/index.js';
 import { matchMisconception } from '../engine/problemTypes.js';
 import {
   recordAnswer, masterSkill, checkNewBadges, PRAISE, pickPraise, DAILY_GOAL,
-  dueReviews, scheduleReview,
+  dueReviews, scheduleReview, noteMistake, resolveMistake, mistakeSkills, mistakeCount,
 } from '../gamification.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { renderVisual } from '../ui/manipulatives.js';
@@ -64,6 +64,22 @@ export function renderReview(root) {
     onComplete: (stats) => finishReview(due, stats),
   });
 }
+
+// Fix-It: drill the skills the child has recently missed (the Mistakes Notebook).
+export function renderFixit(root) {
+  const skills = mistakeSkills();
+  if (!skills.length) { navigate('#/'); return; }
+  const before = mistakeCount();
+  const goal = Math.min(8, Math.max(3, skills.length + 2));
+  startSession(root, {
+    title: '🔧 Fix-It Time',
+    subtitle: `${skills.length} tricky skill${skills.length > 1 ? 's' : ''}`,
+    goal,
+    getNext: (diff) => { const s = skills[Math.floor(Math.random() * skills.length)]; return { problem: nextProblem(s, diff), skillId: s.id }; },
+    onComplete: (stats) => finishFixit(stats, before),
+  });
+}
+
 
 /* ---------------- the session runner ---------------- */
 function startSession(root, { title, subtitle, goal, getNext, onComplete }) {
@@ -186,7 +202,7 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete }) {
       consecWrong = 0; consecCorrect++;
       if (consecCorrect >= 2 && diff < 2) { diff++; consecCorrect = 0; } // ramp up after a streak
       const firstTry = wrongOnCur === 0;
-      if (firstTry) sess.firstTryCorrect++;
+      if (firstTry) { sess.firstTryCorrect++; resolveMistake(curSkillId); }
       sess.cleared++;
       const r = recordAnswer(curSkillId, true, firstTry);
       sess.coins += r.coinsGained; sess.xp += r.xpGained;
@@ -209,6 +225,7 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete }) {
       setTimeout(() => { if (fresh.length) showBadges(fresh, after); else after(); }, delay);
     } else {
       wrongOnCur++; clearIdle();
+      if (wrongOnCur === 1) noteMistake(curSkillId); // capture the miss once per problem
       consecCorrect = 0; consecWrong++;
       if (consecWrong >= 2 && diff > -2) { diff--; consecWrong = 0; } // ease off after struggles
       recordAnswer(curSkillId, false, false);
@@ -340,6 +357,19 @@ function finishQuiz(sess) {
   popup({
     emoji: '⚡', title: 'Challenge Complete!',
     sub: `You cleared ${sess.cleared} problems!\n${accuracyPhrase(sess.firstTryCorrect, sess.distinct)}\n+${sess.xp} XP · +${sess.coins} 🪙`,
+    sound: 'level', hold: true, confetti: false,
+  });
+  setTimeout(() => { if (fresh.length) showBadges(fresh, () => navigate('#/')); }, 300);
+}
+
+function finishFixit(sess, before) {
+  const fixed = Math.max(0, before - mistakeCount());
+  const fresh = checkNewBadges();
+  refreshChrome();
+  confetti(120);
+  popup({
+    emoji: '🛠️', title: 'Tricky Ones Tackled!',
+    sub: `${fixed > 0 ? `You fixed ${fixed} tricky skill${fixed > 1 ? 's' : ''}! ` : ''}${accuracyPhrase(sess.firstTryCorrect, sess.distinct)}\n+${sess.xp} XP · +${sess.coins} 🪙`,
     sound: 'level', hold: true, confetti: false,
   });
   setTimeout(() => { if (fresh.length) showBadges(fresh, () => navigate('#/')); }, 300);

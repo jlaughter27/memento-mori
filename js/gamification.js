@@ -133,6 +133,34 @@ export function dueReviews() {
   });
 }
 
+/* ---------- Mistakes Notebook (Fix-It loop) ----------
+   Missed problems reliably return: a first-try miss notes the skill; a clean
+   first-try-correct (anywhere) resolves one. Surfaced as a "Fix-It" session. */
+export function noteMistake(skillId) {
+  const m = S.progress.mistakes;
+  const e = m[skillId] || { count: 0, lastMiss: 0 };
+  e.count = Math.min((e.count || 0) + 1, 5);
+  e.lastMiss = Date.now();
+  m[skillId] = e;
+  persistSoon();
+}
+export function resolveMistake(skillId) {
+  const m = S.progress.mistakes;
+  if (!m[skillId]) return;
+  m[skillId].count -= 1;
+  if (m[skillId].count <= 0) delete m[skillId];
+  persistSoon();
+}
+export function mistakeSkills() {
+  return Object.keys(S.progress.mistakes)
+    .map((id) => ALL_SKILLS.find((s) => s.id === id))
+    .filter(Boolean)
+    .sort((a, b) => (S.progress.mistakes[b.id].lastMiss || 0) - (S.progress.mistakes[a.id].lastMiss || 0));
+}
+export function mistakeCount() {
+  return Object.values(S.progress.mistakes).reduce((n, e) => n + (e.count || 0), 0);
+}
+
 /* ---------- streaks (grace-day, positive framing) ---------- */
 function todayStr(d = new Date()) {
   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;

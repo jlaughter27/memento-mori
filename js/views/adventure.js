@@ -5,7 +5,7 @@ import { S, persist } from '../state.js';
 import { getSkill } from '../curriculum/index.js';
 import { rewardsData } from '../curriculum/index.js';
 import { nextProblem } from '../engine/index.js';
-import { recordAnswer, checkNewBadges, addCoins, awardTreat, patPet } from '../gamification.js';
+import { recordAnswer, checkNewBadges, addCoins, awardTreat, patPet, noteMistake, resolveMistake } from '../gamification.js';
 import { renderVisual } from '../ui/manipulatives.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx, speak } from '../ui/sound.js';
@@ -198,6 +198,7 @@ function challengePhase(root, ch, scene) {
     if (problem.check(raw)) {
       answered = true;
       const firstTry = wrong === 0;
+      if (firstTry) resolveMistake(scene.skill);
       const r = recordAnswer(scene.skill, true, firstTry);
       sfx.correct(); if (sourceEl) { sourceEl.classList.add('correct'); sparkle(sourceEl); }
       fb.innerHTML = `<span class="fb-good">✅ ${firstTry ? 'Perfect!' : 'You did it!'}</span>`;
@@ -205,6 +206,7 @@ function challengePhase(root, ch, scene) {
       setTimeout(() => { if (fresh.length) showBadges(fresh, () => successPhase(root, ch, scene)); else successPhase(root, ch, scene); }, 700);
     } else {
       wrong++;
+      if (wrong === 1) noteMistake(scene.skill);
       recordAnswer(scene.skill, false, false);
       sfx.wrong();
       if (sourceEl) { sourceEl.classList.add('wrong'); setTimeout(() => sourceEl.classList.remove('wrong'), 600); }

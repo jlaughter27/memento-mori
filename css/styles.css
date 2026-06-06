@@ -570,3 +570,8 @@ body[data-bg="bg-stars"] .hud-level-badge,body[data-bg="bg-galaxy"] .hud-level-b
 .decor-emoji{font-size:1.5rem}
 .decor-tag{font-size:.66rem;font-weight:800;color:var(--ink-soft)}
 .decor-card.have .decor-tag{color:var(--good-d)}
+
+/* home fix-it card */
+.continue-card.fixit-card{background:linear-gradient(135deg,#fff,#fff0ef);border-color:#ff7043;box-shadow:0 5px 0 #ffd2c2}
+.continue-card.fixit-card .cont-text b{color:#d84315}
+.continue-card.fixit-card .cont-go{color:#ff7043}

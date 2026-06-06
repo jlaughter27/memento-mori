@@ -8,7 +8,7 @@ import { APP_VERSION } from './version.js';
 import { showWhatsNew } from './ui/whatsnew.js';
 import { renderHome } from './views/home.js';
 import { renderLesson } from './views/lesson.js';
-import { renderPractice, renderPlay, renderReview } from './views/practice.js';
+import { renderPractice, renderPlay, renderReview, renderFixit } from './views/practice.js';
 import { renderRewards, showBadges } from './views/rewards.js';
 import { renderDashboard } from './views/dashboard.js';
 import { renderCurriculum } from './views/curriculum.js';
@@ -46,6 +46,7 @@ function route() {
     case 'practice': renderPractice(root, param); break;
     case 'play': renderPlay(root); break;
     case 'review': renderReview(root); break;
+    case 'fixit': renderFixit(root); break;
     case 'rewards': renderRewards(root); break;
     case 'parent': renderDashboard(root); break;
     case 'curriculum': renderCurriculum(root); break;

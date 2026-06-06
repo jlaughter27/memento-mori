@@ -1,7 +1,7 @@
 // views/home.js — the learning map: continue card, daily goal, grade tabs, strands.
 import { S, persist, isUnlocked, isMastered, skillRec } from '../state.js';
 import { groupedByStrand, getSkill, GRADES } from '../curriculum/index.js';
-import { gradeCompletion, recommendedSkill, dailyStatus, dueReviews } from '../gamification.js';
+import { gradeCompletion, recommendedSkill, dailyStatus, dueReviews, mistakeCount } from '../gamification.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { navigate } from '../ui/shell.js';
 import { sfx } from '../ui/sound.js';
@@ -16,6 +16,7 @@ export function renderHome(root) {
   const daily = dailyStatus();
   const cont = recommendedSkill(isUnlocked);
   const reviews = dueReviews();
+  const mistakes = mistakeCount();
   const greeting = streak > 1
     ? `You've practiced ${streak} days in a row — keep it up! 🔥`
     : "Let's learn something awesome today.";
@@ -29,6 +30,13 @@ export function renderHome(root) {
         <button class="btn btn-big btn-play" id="daily-btn">⚡ Daily Challenge</button>
       </div>
     </section>
+
+    ${mistakes ? `
+    <button class="continue-card fixit-card" id="fixit-btn">
+      <span class="cont-emoji">🔧</span>
+      <span class="cont-text"><b>Fix-It time</b><span>${mistakes} tricky problem${mistakes > 1 ? 's' : ''} to master</span></span>
+      <span class="cont-go">▶</span>
+    </button>` : ''}
 
     ${reviews.length ? `
     <button class="continue-card review-card" id="review-btn">
@@ -77,6 +85,8 @@ export function renderHome(root) {
   root.querySelector('#daily-btn').addEventListener('click', () => { sfx.tap(); navigate('#/play'); });
   const revBtn = root.querySelector('#review-btn');
   if (revBtn) revBtn.addEventListener('click', () => { sfx.tap(); navigate('#/review'); });
+  const fixBtn = root.querySelector('#fixit-btn');
+  if (fixBtn) fixBtn.addEventListener('click', () => { sfx.tap(); navigate('#/fixit'); });
   root.querySelector('#quest-btn').addEventListener('click', () => { sfx.tap(); navigate('#/adventure'); });
   const contBtn = root.querySelector('#continue-btn');
   if (contBtn) contBtn.addEventListener('click', () => {
