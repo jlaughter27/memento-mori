@@ -109,7 +109,7 @@ Every pillar below is decomposed the same way.
 | 1 | **Curriculum & Standards** | **8** | 10 | ✅ grades 2–7 (86 skills, 65 standards). Left: deepen grade 4 to 18-skill gold standard; sub-standard tags |
 | 2 | **Teaching Engine** | 8 | 10 | More problem types (multiplicative comparison, line plots, angles, symmetry, mixed-number mult); richer/animated manipulatives; CRA drag-objects layer |
 | 3 | **The Tutor** | **7** | 10 | ✅ misconception-aware feedback (Practice + Quest). Left: worked-example **fading**; step-level feedback; mastery tracing; bottom-out hint |
-| 4 | **Mastery & Memory** | 6 | 10 | Interleaved/mixed review; mastery **decay**; a **mistakes notebook** loop; smarter diagnostic placement; warm-up-on-open |
+| 4 | **Mastery & Memory** | **8** | 10 | ✅ Mistakes Notebook/Fix-It, daily warm-up, spaced review. Left: mastery **decay**; smarter diagnostic placement v2; mixed-review tuning |
 | 5 | **World & Story** | 5 | 10 | Quest lines for grades 2,3,5,6,7; an explorable world map; mini-games; more chapters; choices/branching |
 | 6 | **Companion & Care** | **7** | 10 | ✅ decoratable home/rooms + collectible decor. Left: pet **growth/evolution**; richer reactions; bonding moments tied to learning |
 | 7 | **Motivation & Economy** | 8 | 10 | Re-tune so story/pet are the core loop (not coins); collections/sets; goal-setting with the parent; anti-overjustification audit |
@@ -117,10 +117,11 @@ Every pillar below is decomposed the same way.
 | 9 | **Trust & Credibility** | 7 | 10 | Published privacy + accessibility pages; parent **efficacy reports**; worksheet export; Common Sense submission packet |
 | 10 | **Craft, Platform & Reliability** | 8 | 10 | Multi-child profiles; performance budget; motion/sound polish; visual-design system refresh; localization scaffolding; landing page |
 
-> **Overall ≈ 7.1/10** (was 6.7). The overnight push lifted Curriculum (→8, grades 2–7), the
-> Tutor (→7, misconception feedback), and the Companion (→7, decoratable home). The biggest
-> remaining levers are **Pillar 4 (Memory)** and **Pillar 5 (World)**, plus finishing the Tutor
-> (fading + mastery tracing). The plan front-loads them.
+> **Overall ≈ 7.4/10** (was 6.7). The overnight push lifted Curriculum (→8, grades 2–7), the
+> Tutor (→7, misconception feedback), the Companion (→7, decoratable home), and **Memory (→8,
+> Mistakes Notebook + Fix-It + daily warm-up)**. The biggest remaining levers are **Pillar 5
+> (World)** — mini-games, more quest lines — and finishing the **Tutor** (worked-example fading +
+> mastery tracing). The plan front-loads them.
 >
 > **Research bank is now complete for the next phases** — all forward-agenda topics (Part V) have
 > docs in `docs/research/`: efficacy measurement, grades 2 & 7 standards, mini-games, accessibility

@@ -1,7 +1,8 @@
 // views/home.js — the learning map: continue card, daily goal, grade tabs, strands.
 import { S, persist, isUnlocked, isMastered, skillRec } from '../state.js';
 import { groupedByStrand, getSkill, GRADES } from '../curriculum/index.js';
-import { gradeCompletion, recommendedSkill, dailyStatus, dueReviews, mistakeCount } from '../gamification.js';
+import { gradeCompletion, recommendedSkill, dailyStatus, dueReviews, mistakeCount, warmupDue } from '../gamification.js';
+import { rewardsData } from '../curriculum/index.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { navigate } from '../ui/shell.js';
 import { sfx } from '../ui/sound.js';
@@ -17,6 +18,8 @@ export function renderHome(root) {
   const cont = recommendedSkill(isUnlocked);
   const reviews = dueReviews();
   const mistakes = mistakeCount();
+  const showWarmup = warmupDue();
+  const petName = (rewardsData.pets.find((p) => p.id === S.profile.avatar.pet) || { name: 'Your pet' }).name;
   const greeting = streak > 1
     ? `You've practiced ${streak} days in a row — keep it up! 🔥`
     : "Let's learn something awesome today.";
@@ -30,6 +33,13 @@ export function renderHome(root) {
         <button class="btn btn-big btn-play" id="daily-btn">⚡ Daily Challenge</button>
       </div>
     </section>
+
+    ${showWarmup ? `
+    <button class="continue-card warmup-card" id="warmup-btn">
+      <span class="cont-emoji">🌅</span>
+      <span class="cont-text"><b>Daily warm-up</b><span>${escapeHtml(petName)} wants to see what you remember!</span></span>
+      <span class="cont-go">▶</span>
+    </button>` : ''}
 
     ${mistakes ? `
     <button class="continue-card fixit-card" id="fixit-btn">
@@ -87,6 +97,8 @@ export function renderHome(root) {
   if (revBtn) revBtn.addEventListener('click', () => { sfx.tap(); navigate('#/review'); });
   const fixBtn = root.querySelector('#fixit-btn');
   if (fixBtn) fixBtn.addEventListener('click', () => { sfx.tap(); navigate('#/fixit'); });
+  const warmBtn = root.querySelector('#warmup-btn');
+  if (warmBtn) warmBtn.addEventListener('click', () => { sfx.tap(); navigate('#/warmup'); });
   root.querySelector('#quest-btn').addEventListener('click', () => { sfx.tap(); navigate('#/adventure'); });
   const contBtn = root.querySelector('#continue-btn');
   if (contBtn) contBtn.addEventListener('click', () => {

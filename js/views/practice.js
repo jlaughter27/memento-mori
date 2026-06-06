@@ -6,6 +6,7 @@ import { matchMisconception } from '../engine/problemTypes.js';
 import {
   recordAnswer, masterSkill, checkNewBadges, PRAISE, pickPraise, DAILY_GOAL,
   dueReviews, scheduleReview, noteMistake, resolveMistake, mistakeSkills, mistakeCount,
+  warmupPool, markWarmupDone,
 } from '../gamification.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { renderVisual } from '../ui/manipulatives.js';
@@ -63,6 +64,24 @@ export function renderReview(root) {
     },
     onComplete: (stats) => finishReview(due, stats),
   });
+}
+
+// Daily warm-up: a short interleaved retrieval check of past material.
+export function renderWarmup(root) {
+  const pool = warmupPool();
+  if (pool.length < 3) { navigate('#/'); return; }
+  startSession(root, {
+    title: '🌅 Warm-Up',
+    subtitle: 'A quick memory check',
+    goal: 4,
+    getNext: (diff) => { const s = pool[Math.floor(Math.random() * pool.length)]; return { problem: nextProblem(s, diff), skillId: s.id }; },
+    onComplete: (stats) => { markWarmupDone(); finishWarmup(stats); },
+  });
+}
+function finishWarmup(sess) {
+  const fresh = checkNewBadges(); refreshChrome(); confetti(110);
+  popup({ emoji: '🧠', title: 'Brain Warmed Up!', sub: `${accuracyPhrase(sess.firstTryCorrect, sess.distinct)}\n+${sess.xp} XP · +${sess.coins} 🪙`, sound: 'level', hold: true, confetti: false });
+  setTimeout(() => { if (fresh.length) showBadges(fresh, () => navigate('#/')); }, 300);
 }
 
 // Fix-It: drill the skills the child has recently missed (the Mistakes Notebook).

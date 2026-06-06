@@ -575,3 +575,8 @@ body[data-bg="bg-stars"] .hud-level-badge,body[data-bg="bg-galaxy"] .hud-level-b
 .continue-card.fixit-card{background:linear-gradient(135deg,#fff,#fff0ef);border-color:#ff7043;box-shadow:0 5px 0 #ffd2c2}
 .continue-card.fixit-card .cont-text b{color:#d84315}
 .continue-card.fixit-card .cont-go{color:#ff7043}
+
+/* home daily warm-up card */
+.continue-card.warmup-card{background:linear-gradient(135deg,#fff,#fff7e0);border-color:#fdcb6e;box-shadow:0 5px 0 #ffe9b3}
+.continue-card.warmup-card .cont-text b{color:#b97e00}
+.continue-card.warmup-card .cont-go{color:#f0a500}

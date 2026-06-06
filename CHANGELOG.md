@@ -4,6 +4,18 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.3.0] — 2026-06-06 — "Make It Stick"
+### Added
+- **Mistakes Notebook / Fix-It loop** — a first-try miss notes the skill; a clean first-try-correct
+  resolves one. A "🔧 Fix-It time" home card launches an interleaved session (`#/fixit`) that drills
+  exactly the missed skills until the notebook empties. Wired into Practice + Pet Quest.
+- **Daily warm-up** — once a day, a short interleaved retrieval check of past material (`#/warmup`),
+  framed as the pet checking what you remember. Surfaces as a home card.
+- Curriculum map now spans **all grades (2–7, 86 skills)**.
+### Why
+- Retrieval + spaced + interleaved practice is the strongest lever for durable memory
+  (see `docs/research/learning-science.md`). This makes "mastered" mean "mastered and retained."
+
 ## [2.2.0] — 2026-06-06 — "Smarter Tutor & Grades 2–7"
 ### Added
 - **Misconception-aware feedback** (`js/engine/problemTypes.js`): problems predict classic wrong

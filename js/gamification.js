@@ -161,6 +161,21 @@ export function mistakeCount() {
   return Object.values(S.progress.mistakes).reduce((n, e) => n + (e.count || 0), 0);
 }
 
+/* ---------- daily warm-up (retrieval practice on open) ----------
+   Once a day, a short interleaved check of past material — "your pet wants to
+   see what you remember." Pool = recently practiced/mastered skills. */
+export function warmupPool() {
+  const seen = ALL_SKILLS.filter((s) => { const r = S.progress.skills[s.id]; return r && (r.mastered || r.attempts > 0); });
+  return seen.sort((a, b) => (S.progress.skills[b.id].lastSeen || 0) - (S.progress.skills[a.id].lastSeen || 0)).slice(0, 8);
+}
+export function warmupDue() {
+  return S.progress.warmup.date !== todayStr() && warmupPool().length >= 3;
+}
+export function markWarmupDone() {
+  S.progress.warmup.date = todayStr();
+  persist();
+}
+
 /* ---------- streaks (grace-day, positive framing) ---------- */
 function todayStr(d = new Date()) {
   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
