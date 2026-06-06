@@ -117,11 +117,12 @@ Every pillar below is decomposed the same way.
 | 9 | **Trust & Credibility** | 7 | 10 | Published privacy + accessibility pages; parent **efficacy reports**; worksheet export; Common Sense submission packet |
 | 10 | **Craft, Platform & Reliability** | 8 | 10 | Multi-child profiles; performance budget; motion/sound polish; visual-design system refresh; localization scaffolding; landing page |
 
-> **Overall ≈ 7.4/10** (was 6.7). The overnight push lifted Curriculum (→8, grades 2–7), the
-> Tutor (→7, misconception feedback), the Companion (→7, decoratable home), and **Memory (→8,
-> Mistakes Notebook + Fix-It + daily warm-up)**. The biggest remaining levers are **Pillar 5
-> (World)** — mini-games, more quest lines — and finishing the **Tutor** (worked-example fading +
-> mastery tracing). The plan front-loads them.
+> **Overall ≈ 7.5/10** (was 6.7). The overnight push lifted Curriculum (→8, grades 2–7), the
+> Tutor (→7, misconception feedback), the Companion (→7, decoratable home), **Memory (→8,
+> Mistakes Notebook + Fix-It + daily warm-up)**, and **World (→6, the Math Sprint mini-game)**.
+> Shipped as v2.2 → v2.4. The biggest remaining levers are finishing the **Tutor**
+> (worked-example fading + mastery tracing) and growing the **World** (more mini-games, quest
+> lines per grade, an overworld map).
 >
 > **Research bank is now complete for the next phases** — all forward-agenda topics (Part V) have
 > docs in `docs/research/`: efficacy measurement, grades 2 & 7 standards, mini-games, accessibility
