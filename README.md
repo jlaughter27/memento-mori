@@ -52,6 +52,21 @@ it will then work completely offline.
 - **Grown-ups Corner**: a parent dashboard with progress, mastery-by-topic, accuracy,
   and settings (sound, read-aloud, calm/reduced-motion mode, easy-reading font, reset).
 
+### Built to be legit 🎓
+- **Common Core aligned** — every skill is tagged with its CCSS standard, shown in the
+  lesson and on a **printable curriculum map** in the parent area.
+- **Placement quiz** at onboarding finds the right starting grade.
+- **Spaced review** — mastered skills resurface on a lengthening schedule (3→7→16→35 days)
+  so they actually stick (retrieval practice).
+- **Private by design** — no accounts, no ads, no tracking; everything stays on the device.
+- **Self-updating** — installed apps detect new versions and offer a one-tap update, with a
+  "What's New" sheet. See [`CHANGELOG.md`](CHANGELOG.md) and [`ROADMAP.md`](ROADMAP.md).
+- Accessibility: visible focus, pinch-zoom, color-blind-safe answer states, keyboard nav,
+  ARIA, reduced-motion + dyslexia-font + read-aloud options.
+
+The market/credibility research behind these is in
+[`docs/research-landscape.md`](docs/research-landscape.md).
+
 The teaching philosophy and reward design are grounded in research notes saved in
 [`docs/research-curriculum.md`](docs/research-curriculum.md) and
 [`docs/research-engagement.md`](docs/research-engagement.md).

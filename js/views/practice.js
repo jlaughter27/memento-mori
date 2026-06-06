@@ -4,6 +4,7 @@ import { getSkill, skillsForGrade } from '../curriculum/index.js';
 import { nextProblem } from '../engine/index.js';
 import {
   recordAnswer, masterSkill, checkNewBadges, PRAISE, pickPraise, DAILY_GOAL,
+  dueReviews, scheduleReview,
 } from '../gamification.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { renderVisual } from '../ui/manipulatives.js';
@@ -43,6 +44,23 @@ export function renderPlay(root) {
       return { problem: nextProblem(s, diff), skillId: s.id };
     },
     onComplete: (stats) => finishQuiz(stats),
+  });
+}
+
+// Spaced review: interleave problems from skills that are due for a refresh.
+export function renderReview(root) {
+  const due = dueReviews();
+  if (!due.length) { navigate('#/'); return; }
+  const goal = Math.min(8, Math.max(4, due.length * 2));
+  startSession(root, {
+    title: '🔁 Review Time',
+    subtitle: `${due.length} skill${due.length > 1 ? 's' : ''} to refresh`,
+    goal,
+    getNext: (diff) => {
+      const s = due[Math.floor(Math.random() * due.length)];
+      return { problem: nextProblem(s, diff), skillId: s.id };
+    },
+    onComplete: (stats) => finishReview(due, stats),
   });
 }
 
@@ -316,6 +334,19 @@ function finishQuiz(sess) {
   popup({
     emoji: '⚡', title: 'Challenge Complete!',
     sub: `You cleared ${sess.cleared} problems!\n${accuracyPhrase(sess.firstTryCorrect, sess.distinct)}\n+${sess.xp} XP · +${sess.coins} 🪙`,
+    sound: 'level', hold: true, confetti: false,
+  });
+  setTimeout(() => { if (fresh.length) showBadges(fresh, () => navigate('#/')); }, 300);
+}
+
+function finishReview(dueSkills, sess) {
+  dueSkills.forEach((s) => scheduleReview(s.id, null)); // push each skill further out the ladder
+  const fresh = checkNewBadges();
+  refreshChrome();
+  confetti(120);
+  popup({
+    emoji: '🧠', title: 'Memory Boosted!',
+    sub: `You refreshed ${dueSkills.length} skill${dueSkills.length > 1 ? 's' : ''}!\n${accuracyPhrase(sess.firstTryCorrect, sess.distinct)}\n+${sess.xp} XP · +${sess.coins} 🪙`,
     sound: 'level', hold: true, confetti: false,
   });
   setTimeout(() => { if (fresh.length) showBadges(fresh, () => navigate('#/')); }, 300);

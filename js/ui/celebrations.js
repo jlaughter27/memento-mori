@@ -5,6 +5,26 @@ import { sfx } from './sound.js';
 
 const reduce = () => S.progress.settings.reducedMotion;
 
+// bottom toast with an optional action button (used for app updates / info)
+export function toast(message, { actionLabel, onAction, duration = 0 } = {}) {
+  const existing = document.querySelector('.app-toast');
+  if (existing) existing.remove();
+  const node = el(`
+    <div class="app-toast" role="status">
+      <span class="toast-msg">${message}</span>
+      ${actionLabel ? `<button class="toast-action">${actionLabel}</button>` : ''}
+      <button class="toast-close" aria-label="Dismiss">✕</button>
+    </div>`);
+  document.body.appendChild(node);
+  requestAnimationFrame(() => node.classList.add('show'));
+  const close = () => { node.classList.remove('show'); setTimeout(() => node.remove(), 250); };
+  const act = node.querySelector('.toast-action');
+  if (act) act.addEventListener('click', () => { close(); onAction && onAction(); });
+  node.querySelector('.toast-close').addEventListener('click', close);
+  if (duration) setTimeout(close, duration);
+  return close;
+}
+
 const COLORS = ['#ff6b6b', '#ffd93d', '#6bcB77', '#4d96ff', '#ff8fab', '#b983ff', '#ff9f1c'];
 
 export function confetti(amount = 90) {

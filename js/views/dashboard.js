@@ -1,10 +1,12 @@
 // views/dashboard.js — parent/grown-up dashboard: progress + settings.
 import { S, persist, setSetting, resetAll, applyBodyClasses } from '../state.js';
-import { STRANDS, STRAND_META, skillsForGrade, ALL_SKILLS } from '../curriculum/index.js';
+import { STRANDS, STRAND_META, skillsForGrade, ALL_SKILLS, standardsCount } from '../curriculum/index.js';
 import { levelProgress, allBadges } from '../gamification.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx } from '../ui/sound.js';
 import { escapeHtml } from '../ui/dom.js';
+import { APP_VERSION } from '../version.js';
+import { showWhatsNew } from '../ui/whatsnew.js';
 
 export function renderDashboard(root) {
   const st = S.progress.stats;
@@ -44,7 +46,20 @@ export function renderDashboard(root) {
         </label>
         <button class="btn btn-danger" id="reset-btn">Reset all progress</button>
       </div>
-      <div class="dash-foot muted">MathQuest • all progress is saved on this device only.</div>
+
+      <h2 class="section-h">Curriculum &amp; trust</h2>
+      <div class="settings card-soft">
+        <div class="trust-row"><span>✅ <b>Common Core aligned</b></span><span class="muted">${standardsCount} standards · grades 3–6</span></div>
+        <div class="trust-row"><span>🔒 <b>Private by design</b></span><span class="muted">No accounts, ads, or tracking — data stays on this device.</span></div>
+        <div class="trust-row"><span>♿ <b>Built for everyone</b></span><span class="muted">Keyboard-friendly, dyslexia font, calm mode, read-aloud.</span></div>
+        <button class="btn btn-ghost" id="curric-map-btn">📚 View &amp; print curriculum map</button>
+      </div>
+
+      <div class="dash-version">
+        <span class="ver-pill">MathQuest v${APP_VERSION}</span>
+        <button class="btn-link" id="whatsnew-btn">What's new?</button>
+      </div>
+      <div class="dash-foot muted">All progress is saved on this device only.</div>
     </div>`;
 
   // mastery bars
@@ -80,6 +95,9 @@ export function renderDashboard(root) {
 
   root.querySelector('#set-name').addEventListener('input', (e) => { S.profile.name = e.target.value; persist(); });
   root.querySelector('#set-grade').addEventListener('change', (e) => { S.profile.grade = +e.target.value; persist(); refreshChrome(); });
+  root.querySelector('#curric-map-btn').addEventListener('click', () => { sfx.tap(); navigate('#/curriculum'); });
+  root.querySelector('#whatsnew-btn').addEventListener('click', () => { sfx.tap(); showWhatsNew(); });
+
   const resetBtn = root.querySelector('#reset-btn');
   let armed = false, armTimer = null;
   resetBtn.addEventListener('click', () => {
