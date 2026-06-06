@@ -15,6 +15,7 @@ const ASSETS = [
   './js/views/home.js', './js/views/lesson.js', './js/views/practice.js',
   './js/views/rewards.js', './js/views/dashboard.js', './js/views/onboard.js',
   './js/views/curriculum.js', './js/views/pet.js', './js/views/adventure.js', './js/views/sprint.js',
+  './js/views/magnitude.js', './js/views/report.js',
 ];
 
 self.addEventListener('install', (e) => {

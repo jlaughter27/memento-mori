@@ -80,6 +80,14 @@ try {
     }
   };
   await dismissPopups();
+  // lesson now flows into Tutor mode (teach-first): step through the worked example, then start
+  if ($('.tutor-wrap')) {
+    let tg = 0; while ($('#t-step') && !$('#t-step').hidden && tg++ < 14) { click($('#t-step')); await wait(15); }
+    if (!$('#t-go') || $('#t-go').hidden) throw new Error('tutor teach screen did not reach "let\'s practice"');
+    click($('#t-go')); await wait(50);
+    log('tutor teach screen walked → practice');
+  }
+  await dismissPopups();
   log('lesson done; popups dismissed → practice');
 
   step = 'practice';

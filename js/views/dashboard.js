@@ -47,12 +47,26 @@ export function renderDashboard(root) {
         <button class="btn btn-danger" id="reset-btn">Reset all progress</button>
       </div>
 
+      <button class="btn btn-big" id="report-btn">📊 View full progress report</button>
+
       <h2 class="section-h">Curriculum &amp; trust</h2>
       <div class="settings card-soft">
-        <div class="trust-row"><span>✅ <b>Common Core aligned</b></span><span class="muted">${standardsCount} standards · grades 3–6</span></div>
-        <div class="trust-row"><span>🔒 <b>Private by design</b></span><span class="muted">No accounts, ads, or tracking — data stays on this device.</span></div>
-        <div class="trust-row"><span>♿ <b>Built for everyone</b></span><span class="muted">Keyboard-friendly, dyslexia font, calm mode, read-aloud.</span></div>
+        <div class="trust-row"><span>✅ <b>Common Core aligned</b></span><span class="muted">${standardsCount} standards · grades 2–7</span></div>
         <button class="btn btn-ghost" id="curric-map-btn">📚 View &amp; print curriculum map</button>
+        <details class="trust-details">
+          <summary>🔒 Our privacy promise</summary>
+          <p>MathQuest collects <b>nothing</b>. There is no server, no account, no ads, and no tracking
+          of any kind. Your child's progress is stored only in this browser, on this device, and never
+          leaves it. You can erase it any time with “Reset all progress.” Because no personal information
+          is ever collected, there is none for anyone to access, share, or sell.</p>
+        </details>
+        <details class="trust-details">
+          <summary>♿ Our accessibility promise</summary>
+          <p>MathQuest is built to meet <b>WCAG 2.2 AA</b>: full keyboard navigation, screen-reader
+          labels and live announcements, visible focus, color-blind-safe answer states, large tap
+          targets, a dyslexia-friendly font, a calm (reduced-motion) mode, and read-aloud. Toggle these
+          in Settings above. Found a barrier? It's an open project — every line of code is inspectable.</p>
+        </details>
       </div>
 
       <div class="dash-version">
@@ -95,6 +109,7 @@ export function renderDashboard(root) {
 
   root.querySelector('#set-name').addEventListener('input', (e) => { S.profile.name = e.target.value; persist(); });
   root.querySelector('#set-grade').addEventListener('change', (e) => { S.profile.grade = +e.target.value; persist(); refreshChrome(); });
+  root.querySelector('#report-btn').addEventListener('click', () => { sfx.tap(); navigate('#/report'); });
   root.querySelector('#curric-map-btn').addEventListener('click', () => { sfx.tap(); navigate('#/curriculum'); });
   root.querySelector('#whatsnew-btn').addEventListener('click', () => { sfx.tap(); showWhatsNew(); });
 

@@ -73,8 +73,8 @@ export function renderLesson(root, id) {
       completeLesson(skill.id);
       const fresh = checkNewBadges();
       refreshChrome();
-      if (fresh.length) showBadges(fresh, () => navigate(`#/practice/${skill.id}`));
-      else navigate(`#/practice/${skill.id}`);
+      if (fresh.length) showBadges(fresh, () => navigate(`#/tutor/${skill.id}`));
+      else navigate(`#/tutor/${skill.id}`);
     }
   });
   prevBtn.addEventListener('click', () => { if (idx > 0) { sfx.tap(); idx--; draw(); } });

@@ -40,6 +40,15 @@ export function addCoins(amount) {
   if (amount > 0) S.progress.stats.coinsEarned += amount;
 }
 
+// rolling per-day attempt log for the parent report (last 30 days, on-device only)
+function logDaily(correct) {
+  const h = S.progress.history;
+  const today = todayStr();
+  let e = h[h.length - 1];
+  if (!e || e.d !== today) { e = { d: today, a: 0, c: 0 }; h.push(e); if (h.length > 30) h.shift(); }
+  e.a++; if (correct) e.c++;
+}
+
 /* ---------- recording answers ---------- */
 const XP_CORRECT = 10;
 const XP_FIRST_TRY = 5;
@@ -66,6 +75,7 @@ export function recordAnswer(skillId, correct, firstTry) {
   const rec = skillRec(skillId);
   rec.attempts++;
   S.progress.stats.problemsAttempted++;
+  logDaily(correct);
   let xpGained = 0, coinsGained = 0, surprise = false, dailyReached = false;
   if (correct) {
     rec.correct++;
@@ -103,6 +113,7 @@ export function masterSkill(skillId, accuracy) {
   rec.stars = Math.max(rec.stars || 0, stars);
   if (firstTime) {
     rec.mastered = true;
+    rec.masteredAt = Date.now();
     S.progress.stats.skillsMastered++;
   }
   if (accuracy >= 0.999) S.progress.stats.perfectQuizzes++;

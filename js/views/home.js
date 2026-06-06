@@ -74,12 +74,14 @@ export function renderHome(root) {
       <button class="continue-card quest-card" id="quest-btn">
         <span class="cont-emoji">⚔️</span>
         <span class="cont-text"><b>Pet Quest</b><span>A story adventure with your pet!</span></span>
-        <span class="cont-go">▶</span>
       </button>
       <button class="continue-card sprint-card" id="sprint-btn">
         <span class="cont-emoji">⚡</span>
         <span class="cont-text"><b>Math Sprint</b><span>Beat your best in 60 seconds!</span></span>
-        <span class="cont-go">▶</span>
+      </button>
+      <button class="continue-card magnitude-card" id="magnitude-btn">
+        <span class="cont-emoji">📍</span>
+        <span class="cont-text"><b>Number Line</b><span>Guess where the number goes!</span></span>
       </button>
     </div>
 
@@ -110,11 +112,12 @@ export function renderHome(root) {
   if (warmBtn) warmBtn.addEventListener('click', () => { sfx.tap(); navigate('#/warmup'); });
   root.querySelector('#quest-btn').addEventListener('click', () => { sfx.tap(); navigate('#/adventure'); });
   root.querySelector('#sprint-btn').addEventListener('click', () => { sfx.tap(); navigate('#/sprint'); });
+  root.querySelector('#magnitude-btn').addEventListener('click', () => { sfx.tap(); navigate('#/magnitude'); });
   const contBtn = root.querySelector('#continue-btn');
   if (contBtn) contBtn.addEventListener('click', () => {
     sfx.tap();
     const rec = skillRec(cont.id);
-    navigate(rec.lessonDone ? `#/practice/${cont.id}` : `#/learn/${cont.id}`);
+    navigate(rec.mastered ? `#/practice/${cont.id}` : rec.lessonDone ? `#/tutor/${cont.id}` : `#/learn/${cont.id}`);
   });
 
   const tabs = [...root.querySelectorAll('.grade-tab')];
@@ -162,7 +165,7 @@ export function renderHome(root) {
       }
       sfx.tap();
       const rec = skillRec(id);
-      navigate(rec.lessonDone ? `#/practice/${id}` : `#/learn/${id}`);
+      navigate(rec.mastered ? `#/practice/${id}` : rec.lessonDone ? `#/tutor/${id}` : `#/learn/${id}`);
     }));
 }
 

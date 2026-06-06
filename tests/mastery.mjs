@@ -27,6 +27,8 @@ try {
   click(qa('.skill-card:not(.locked)')[0]); await wait(50);
   let lg = 0; while (q('#lesson-next') && lg++ < 12) { const last = q('#lesson-next').textContent.includes('Practice'); click(q('#lesson-next')); await wait(40); if (last) break; }
   await dismiss();
+  if (q('.tutor-wrap')) { let tg = 0; while (q('#t-step') && !q('#t-step').hidden && tg++ < 14) { click(q('#t-step')); await wait(15); } if (q('#t-go')) { click(q('#t-go')); await wait(50); } }
+  await dismiss();
   if (!q('.practice-wrap')) throw new Error('practice did not start');
 
   // answer correctly until the skill is mastered (finishSkill -> "Mastered" popup -> home)

@@ -84,6 +84,21 @@ try {
   if (!q('.practice-wrap') || !q('.problem-prompt').textContent) throw new Error('Fix-It session did not start');
   log('mistakes notebook: miss captured → Fix-It card + session work');
 
+  step = 'parent report';
+  hashTo('#/parent'); await wait(40);
+  if (!q('#report-btn')) throw new Error('report button missing in dashboard');
+  click(q('#report-btn')); await wait(50);
+  if (!q('.rpt-wrap')) throw new Error('parent report did not render');
+  log('parent efficacy report renders');
+
+  step = 'magnitude mini-game';
+  hashTo('#/magnitude'); await wait(50);
+  if (!q('#mag-start')) throw new Error('magnitude start screen did not render');
+  click(q('#mag-start')); await wait(50);
+  if (!q('.mag-wrap') || !q('#mag-svg')) throw new Error('magnitude round did not start');
+  if (q('#mag-confirm')) { click(q('#mag-confirm')); await wait(40); } // place a guess
+  log('magnitude mini-game: start → round → place works');
+
 } catch (e) {
   console.log('\n❌ V2 SMOKE FAILED at [' + step + ']:', e.message);
   if (errors.length) console.log('errors:', errors.slice(0, 5).join(' | '));

@@ -18,6 +18,59 @@ import { escapeHtml, nl2br, mdInline } from '../ui/dom.js';
 import { isUnlocked } from '../state.js';
 
 /* ---------------- entry points ---------------- */
+// Tutor mode: teach first (worked example + self-explanation), then a practice session
+// that proactively scaffolds the first problems and FADES support as the child succeeds.
+export function renderTutor(root, id) {
+  const skill = getSkill(id);
+  if (!skill) { navigate('#/'); return; }
+  const lesson = skill.lesson || {};
+  const ex = nextProblem(skill, -1); // an easy instance to demonstrate
+  let shown = 0; const steps = ex.steps || [];
+  const startNow = () => {
+    const goal = (skill.practice && skill.practice.count) || 5;
+    startSession(root, {
+      title: `🦊 ${skill.title}`, subtitle: 'Learn with Foxy', goal, tutor: true,
+      getNext: (diff) => ({ problem: nextProblem(skill, diff), skillId: skill.id }),
+      onComplete: (stats) => finishSkill(skill, stats),
+    });
+  };
+  function draw() {
+    root.innerHTML = `
+      <div class="tutor-wrap">
+        <header class="practice-top"><button class="btn-ghost" id="t-back">← Map</button>
+          <div class="prac-title">🦊 ${escapeHtml(skill.title)}<span class="prac-sub">Learn with Foxy</span></div></header>
+        <div class="teach-card card-soft">
+          <div class="teach-head">🦊 Watch me first!</div>
+          ${lesson.bigIdea ? `<p class="teach-idea">💡 ${escapeHtml(lesson.bigIdea)}</p>` : ''}
+          <div class="teach-problem">${escapeHtml(ex.prompt)}</div>
+          ${ex.visual ? `<div class="teach-visual">${renderVisual(ex.visual)}</div>` : ''}
+          <div class="teach-steps" id="t-steps"></div>
+          <div class="self-explain" id="t-se" hidden><p>🗣️ <b>Your turn to teach!</b> Tell Foxy <em>why</em> that works — say it out loud!</p></div>
+          <div class="teach-controls">
+            <button class="btn btn-ghost" id="t-step">Next step</button>
+            <button class="btn btn-big" id="t-go" hidden>I'm ready — let's practice! →</button>
+          </div>
+        </div>
+      </div>`;
+    root.querySelector('#t-back').addEventListener('click', () => navigate('#/'));
+    const list = root.querySelector('#t-steps');
+    const stepBtn = root.querySelector('#t-step');
+    const goBtn = root.querySelector('#t-go');
+    const render = () => {
+      list.innerHTML = steps.slice(0, shown).map((s, i) => `<div class="sol-step slide-in"><span class="ss-num">${i + 1}</span><span class="ss-text">${mdInline(s.text)}</span></div>`).join('');
+      if (shown >= steps.length) {
+        stepBtn.hidden = true; goBtn.hidden = false; root.querySelector('#t-se').hidden = false;
+        if (!list.querySelector('.sol-answer')) { const a = document.createElement('div'); a.className = 'sol-answer'; a.innerHTML = `✅ So the answer is <b>${escapeHtml(ex.answer)}</b>.`; list.appendChild(a); }
+      } else stepBtn.textContent = `Next step (${shown}/${steps.length})`;
+    };
+    shown = Math.max(shown, 1); render();
+    if (steps[0]) speak(steps[0].text);
+    stepBtn.addEventListener('click', () => { sfx.tap(); shown++; render(); if (steps[shown - 1]) speak(steps[shown - 1].text); });
+    goBtn.addEventListener('click', () => { sfx.tap(); startNow(); });
+  }
+  if (!steps.length) startNow(); else draw();
+}
+
 export function renderPractice(root, id) {
   const skill = getSkill(id);
   if (!skill) { navigate('#/'); return; }
@@ -101,9 +154,10 @@ export function renderFixit(root) {
 
 
 /* ---------------- the session runner ---------------- */
-function startSession(root, { title, subtitle, goal, getNext, onComplete }) {
+function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor = false }) {
   const sess = { goal, cleared: 0, distinct: 0, firstTryCorrect: 0, coins: 0, xp: 0 };
   let cur = null, curSkillId = null, wrongOnCur = 0, hintIdx = 0, solxIdx = 0, answered = false, sessionOver = false;
+  let supportLevel = tutor ? 2 : 0; // tutor scaffolding that fades as the child succeeds
   let idleTimers = [];                 // gentle nudges after inactivity (research: ~35s / ~65s)
   let consecCorrect = 0, consecWrong = 0, diff = 0; // adaptive difficulty (-2..+2)
   let navigatedAway = false;           // stop scheduled callbacks once the learner leaves
@@ -157,6 +211,14 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete }) {
     hintBtn.classList.remove('pulse'); showBtn.classList.remove('pulse');
     buildInput();
     speak(cur.prompt);
+    // tutor scaffolding: surface a starter tip while support is high, then fade it away
+    if (tutor && supportLevel >= 1 && (cur.hints || []).length) {
+      const fb = card.querySelector('#feedback');
+      if (fb) fb.innerHTML = `<span class="fb-soft">💡 ${escapeHtml(cur.hints[0])}</span>`;
+      mascot.setSay(supportLevel >= 2 ? 'Here\'s a tip to start — now you try! 🦊' : 'One more tip, then you\'ve got it solo!', 'think');
+    } else if (tutor) {
+      mascot.setSay('Your turn — I believe in you! 🦊', 'happy');
+    }
     // gentle, non-directive nudges if the child sits idle (productive struggle window)
     idleTimers.push(setTimeout(() => { if (!answered) mascot.setSay('Take your time — I know you can do this. 💛', 'idle'); }, 35000));
     idleTimers.push(setTimeout(() => { if (!answered) { mascot.setSay('Stuck? Tap 💡 Hint any time — I\'m right here!', 'think'); hintBtn.classList.add('pulse'); } }, 65000));
@@ -223,7 +285,7 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete }) {
       consecWrong = 0; consecCorrect++;
       if (consecCorrect >= 2 && diff < 2) { diff++; consecCorrect = 0; } // ramp up after a streak
       const firstTry = wrongOnCur === 0;
-      if (firstTry) { sess.firstTryCorrect++; resolveMistake(curSkillId); }
+      if (firstTry) { sess.firstTryCorrect++; resolveMistake(curSkillId); if (tutor) supportLevel = Math.max(0, supportLevel - 1); }
       sess.cleared++;
       const r = recordAnswer(curSkillId, true, firstTry);
       sess.coins += r.coinsGained; sess.xp += r.xpGained;
