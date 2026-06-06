@@ -14,7 +14,7 @@ export function renderRewards(root) {
   root.innerHTML = `
     <div class="rewards-wrap">
       <div class="rewards-coinbar card-soft">
-        <div class="rc-pet">${foxSVG('happy')}</div>
+        <div class="rc-pet rc-pet-emoji">${(rewardsData.pets.find((p) => p.id === S.profile.avatar.pet) || { emoji: '🦊' }).emoji}</div>
         <div class="rc-info">
           <div class="rc-name">${escapeHtml(S.profile.name || 'Explorer')}'s Treasures</div>
           <div class="rc-coins">🪙 <b>${S.progress.coins}</b> coins</div>

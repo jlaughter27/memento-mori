@@ -44,11 +44,12 @@ export function renderSprint(root) {
     root.innerHTML = `<div class="sprint-wrap"><div class="sprint-count" id="sprint-count">${n}</div></div>`;
     const el = root.querySelector('#sprint-count');
     sfx.tap();
+    const pop = () => { el.classList.remove('pop-in'); void el.offsetWidth; el.classList.add('pop-in'); };
     timer = setInterval(() => {
       n--;
-      if (n === 0) { el.textContent = 'GO!'; sfx.star(); }
+      if (n === 0) { el.textContent = 'GO!'; pop(); sfx.star(); }
       else if (n < 0) { clear(); play(); }
-      else { el.textContent = n; sfx.tap(); }
+      else { el.textContent = n; pop(); sfx.tap(); }
     }, 700);
   }
 
@@ -57,9 +58,9 @@ export function renderSprint(root) {
     root.innerHTML = `
       <div class="sprint-wrap sprint-game">
         <div class="sprint-hud">
-          <span class="sprint-score">⚡ <b id="s-score">0</b></span>
-          <div class="sprint-timebar"><div class="sprint-timefill" id="s-time"></div></div>
-          <span class="sprint-clock" id="s-clock">${remaining}</span>
+          <span class="sprint-score" aria-live="polite" aria-atomic="true">⚡ <b id="s-score">0</b></span>
+          <div class="sprint-timebar" aria-hidden="true"><div class="sprint-timefill" id="s-time"></div></div>
+          <span class="sprint-clock" id="s-clock" role="timer" aria-label="${remaining} seconds left">${remaining}</span>
         </div>
         <div class="sprint-problem" id="s-prob"></div>
         <div class="answer-display sprint-ans" id="s-ans" data-empty="1">?</div>
@@ -88,6 +89,7 @@ export function renderSprint(root) {
       }
     }
     pad.querySelectorAll('.key').forEach((b) => b.addEventListener('click', () => {
+      sfx.tap();
       const k = b.textContent;
       if (k === '⌫') val = val.slice(0, -1);
       else if (val.length < 4) val += k;

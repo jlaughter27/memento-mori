@@ -150,7 +150,7 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete }) {
     card.innerHTML = `
       <div class="problem-prompt">${escapeHtml(cur.prompt)}</div>
       ${cur.visual ? `<div class="problem-visual">${renderVisual(cur.visual)}</div>` : ''}
-      <div class="feedback" id="feedback" aria-live="assertive"></div>`;
+      <div class="feedback" id="feedback" role="alert" aria-atomic="true"></div>`;
     solPanel.hidden = true; solPanel.innerHTML = '';
     hintBtn.classList.remove('pulse'); showBtn.classList.remove('pulse');
     buildInput();

@@ -32,7 +32,7 @@ export function confetti(amount = 90) {
   const { innerWidth, innerHeight } = window;
   let canvas = document.getElementById('confetti-canvas');
   if (!canvas) {
-    canvas = el('<canvas id="confetti-canvas"></canvas>');
+    canvas = el('<canvas id="confetti-canvas" aria-hidden="true"></canvas>');
     document.body.appendChild(canvas);
   }
   const ctx = canvas.getContext('2d');
@@ -74,35 +74,53 @@ export function confetti(amount = 90) {
 export function popup({ emoji, title, sub, coins, confetti: doConfetti = true, sound = 'badge', hold = false, onClose }) {
   if (sound && sfx[sound]) sfx[sound]();
   if (doConfetti) confetti();
+  const tid = 'cel-' + Math.random().toString(36).slice(2, 8);
   const node = el(`
-    <div class="celebrate-overlay">
+    <div class="celebrate-overlay" role="dialog" aria-modal="true" aria-labelledby="${tid}">
       <div class="celebrate-card pop-in">
-        <div class="celebrate-emoji">${emoji || '🎉'}</div>
-        <div class="celebrate-title">${title || ''}</div>
+        <div class="celebrate-emoji" aria-hidden="true">${emoji || '🎉'}</div>
+        <div class="celebrate-title" id="${tid}">${title || ''}</div>
         ${sub ? `<div class="celebrate-sub">${sub}</div>` : ''}
         ${coins ? `<div class="celebrate-coins">+${coins} 🪙</div>` : ''}
         <button class="celebrate-btn">${hold ? 'Yay!' : 'Awesome!'}</button>
       </div>
     </div>`);
+  const prevFocus = document.activeElement;
+  setInert(true);
   document.body.appendChild(node);
+  const btn = node.querySelector('.celebrate-btn');
+  if (btn && btn.focus) btn.focus();
   let closed = false; // idempotent: a double-tap must not fire onClose twice
+  const onKey = (e) => { if (e.key === 'Escape') close(); };
   const close = () => {
     if (closed) return;
     closed = true;
+    document.removeEventListener('keydown', onKey);
+    setInert(false);
+    if (prevFocus && prevFocus.focus) prevFocus.focus();
     node.classList.add('fade-out');
     setTimeout(() => node.remove(), 250);
     if (onClose) onClose();
   };
-  node.querySelector('.celebrate-btn').addEventListener('click', close);
+  document.addEventListener('keydown', onKey);
+  btn.addEventListener('click', close);
   node.addEventListener('click', (e) => { if (e.target === node) close(); });
   if (!hold) setTimeout(close, 4200);
   return close;
 }
 
+// mark the app background inert while a modal is open (keyboard + AT focus trap)
+export function setInert(on) {
+  for (const id of ['content', 'hud', 'nav']) {
+    const elx = document.getElementById(id);
+    if (elx) { if (on) elx.setAttribute('inert', ''); else elx.removeAttribute('inert'); }
+  }
+}
+
 // small +XP / +coins floaty near a point
 export function floatText(text, x, y, cls = '') {
   if (reduce()) return;
-  const n = el(`<div class="float-text ${cls}">${text}</div>`);
+  const n = el(`<div class="float-text ${cls}" aria-hidden="true">${text}</div>`);
   n.style.left = x + 'px'; n.style.top = y + 'px';
   document.body.appendChild(n);
   setTimeout(() => n.remove(), 1100);
@@ -113,7 +131,7 @@ export function sparkle(target) {
   if (reduce() || !target) return;
   const r = target.getBoundingClientRect();
   for (let i = 0; i < 8; i++) {
-    const s = el(`<div class="sparkle">✨</div>`);
+    const s = el(`<div class="sparkle" aria-hidden="true">✨</div>`);
     s.style.left = (r.left + r.width / 2) + 'px';
     s.style.top = (r.top + r.height / 2) + 'px';
     s.style.setProperty('--dx', (Math.cos(i / 8 * 6.28) * 60) + 'px');

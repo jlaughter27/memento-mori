@@ -5,7 +5,7 @@ import decorData from '../curriculum/decor-data.js';
 import { tickCare, petMood, patPet, playPet, feedPet, buyTreats, addCoins } from '../gamification.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx, speak } from '../ui/sound.js';
-import { floatText, sparkle, popup, confetti } from '../ui/celebrations.js';
+import { floatText, sparkle, popup, confetti, toast } from '../ui/celebrations.js';
 import { escapeHtml } from '../ui/dom.js';
 
 const petById = (id) => rewardsData.pets.find((p) => p.id === id) || { emoji: '🐱', name: 'Pixel' };
@@ -32,8 +32,8 @@ export function renderPet(root) {
 
       <div class="pet-room card-soft" id="pet-room" style="background:${roomBg()}">
         <div class="pet-decor" id="pet-decor">${decorEmojis()}</div>
-        <div class="pet-bubble" id="pet-bubble"></div>
-        <div class="pet-sprite" id="pet-sprite">${pet.emoji}</div>
+        <div class="pet-bubble" id="pet-bubble" aria-live="polite" aria-atomic="true"></div>
+        <div class="pet-sprite" id="pet-sprite" aria-hidden="true">${pet.emoji}</div>
         <div class="pet-floor"></div>
       </div>
 
@@ -124,7 +124,7 @@ export function renderPet(root) {
   root.querySelectorAll('.decor-card').forEach((c) => c.addEventListener('click', () => {
     const d = decorData.decor.find((x) => x.id === c.dataset.id);
     const h = S.progress.home;
-    if (h.decor.includes(d.id)) { sfx.tap(); h.decor = h.decor.filter((x) => x !== d.id); persist(); renderPet(root); return; }
+    if (h.decor.includes(d.id)) { sfx.tap(); h.decor = h.decor.filter((x) => x !== d.id); persist(); toast(`Took down the ${d.name} 🧹`, { duration: 1600 }); renderPet(root); return; }
     if (S.progress.coins < d.cost) { sfx.wrong(); popup({ emoji: '🪙', title: 'Not enough coins yet!', sub: 'Keep learning to earn coins. 🌱', sound: false, confetti: false }); return; }
     S.progress.coins -= d.cost; h.decor.push(d.id); sfx.coin(); confetti(40); persist(); refreshChrome(); renderPet(root);
   }));
@@ -134,9 +134,16 @@ function roomBg() {
   const r = decorData.rooms.find((x) => x.id === S.progress.home.room) || decorData.rooms[0];
   return r ? r.bg : 'linear-gradient(180deg,#fff6e9,#ffe9cf)';
 }
+// preset positions around the room so decorations spread out (never stack)
+const DECOR_SLOTS = [[8, 66], [86, 70], [14, 20], [82, 22], [30, 78], [68, 80], [46, 16], [20, 44], [78, 44], [50, 84], [12, 86], [88, 40]];
 function decorEmojis() {
   const owned = S.progress.home.decor || [];
-  return owned.map((id) => { const d = decorData.decor.find((x) => x.id === id); return d ? `<span class="placed-decor">${d.emoji}</span>` : ''; }).join('');
+  return owned.map((id, i) => {
+    const d = decorData.decor.find((x) => x.id === id);
+    if (!d) return '';
+    const [x, y] = DECOR_SLOTS[i % DECOR_SLOTS.length];
+    return `<span class="placed-decor" style="left:${x}%;top:${y}%">${d.emoji}</span>`;
+  }).join('');
 }
 function roomCard(r) {
   const owned = S.progress.home.ownedRooms.includes(r.id);

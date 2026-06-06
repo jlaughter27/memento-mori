@@ -5,6 +5,7 @@ import { S, persist } from '../state.js';
 import { getSkill } from '../curriculum/index.js';
 import { rewardsData } from '../curriculum/index.js';
 import { nextProblem } from '../engine/index.js';
+import { matchMisconception } from '../engine/problemTypes.js';
 import { recordAnswer, checkNewBadges, addCoins, awardTreat, patPet, noteMistake, resolveMistake } from '../gamification.js';
 import { renderVisual } from '../ui/manipulatives.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
@@ -54,7 +55,7 @@ export function renderAdventure(root) {
         <div class="scene-path">
           ${ch.scenes.map((s) => {
             const d = isDone(s.id), isCur = cur && cur.id === s.id;
-            return `<span class="scene-node ${d ? 'done' : isCur ? 'current' : 'locked'}" title="${escapeHtml(s.art)}">${d ? '⭐' : isCur ? s.art : '•'}</span>`;
+            return `<span class="scene-node ${d ? 'done' : isCur ? 'current' : 'locked'}" title="${escapeHtml(s.art)}">${d ? '⭐' : isCur ? s.art : '🔒'}</span>`;
           }).join('<span class="scene-link"></span>')}
         </div>
         ${cur ? `<button class="btn btn-big adv-go" data-ch="${i}">${ch.scenes.some((s) => isDone(s.id)) ? 'Continue' : 'Start'} the journey →</button>`
@@ -162,7 +163,7 @@ function challengePhase(root, ch, scene) {
       <div class="challenge-tag">🧩 ${escapeHtml(skill ? skill.title : 'Challenge')}</div>
       <div class="problem-prompt">${escapeHtml(problem.prompt)}</div>
       ${problem.visual ? `<div class="problem-visual">${renderVisual(problem.visual)}</div>` : ''}
-      <div class="feedback" id="c-fb" aria-live="assertive"></div>
+      <div class="feedback" id="c-fb" role="alert" aria-atomic="true"></div>
       <div id="c-input"></div>
       <div class="challenge-actions">
         <button class="btn btn-hint" id="c-hint">💡 Hint</button>

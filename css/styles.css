@@ -608,3 +608,30 @@ body[data-bg="bg-stars"] .hud-level-badge,body[data-bg="bg-galaxy"] .hud-level-b
 .sprint-ans{max-width:340px;margin:0 auto}
 .sprint-game .keypad{max-width:340px;margin:10px auto 0}
 .sprint-final{font-size:4rem;font-weight:900;color:var(--p1)}
+
+/* ---- polish pass (audit fixes) ---- */
+button:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+.btn-link{padding:10px 6px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+.nav-btn{padding:10px 4px}
+.rc-pet-emoji{width:70px;height:70px;display:grid;place-items:center;font-size:3rem}
+.scene-node.locked{font-size:.85rem}
+/* home CTA cards: clearer "tap to play" affordance */
+.home-cta-row .continue-card{min-height:96px;position:relative}
+.home-cta-row .continue-card::after{content:'Tap to play ▶';position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:.7rem;font-weight:800;opacity:.7}
+.home-cta-row .cont-text{margin-bottom:14px}
+
+/* decorations use JS-assigned top/left; neutralize old nth-child bottoms */
+.pet-decor .placed-decor{bottom:auto;top:auto}
+.pet-decor .placed-decor[style]{}
+
+/* ---- accessibility pass (WCAG 2.2 AA audit) ---- */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.item-btn{min-height:44px}
+.toast-close{min-height:44px;min-width:44px;padding:10px 12px}
+.toast-action{min-height:44px;padding:12px 16px}
+/* full reduced-motion: also zero transitions (OS media query was incomplete) */
+@media (prefers-reduced-motion:reduce){*{animation-duration:0ms!important;animation-iteration-count:1!important;transition-duration:0ms!important}}
+/* high-contrast focus ring in low-contrast themes */
+body[data-theme="theme-candy"] :focus-visible{outline-color:#a85800}
+body[data-theme="theme-dino"] :focus-visible{outline-color:#3f4d00}
+body[data-theme="theme-superhero"] :focus-visible{outline-color:#7a0000}

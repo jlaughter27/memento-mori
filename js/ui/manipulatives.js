@@ -6,23 +6,47 @@ const PALETTE = ['#6c5ce7', '#00b894', '#e17055', '#0984e3', '#e84393', '#fdcb6e
 export function renderVisual(v) {
   if (!v || !v.type) return '';
   try {
+    let html = '';
     switch (v.type) {
-      case 'numberLine': return numberLine(v);
-      case 'array': return array(v);
-      case 'baseTen': return baseTen(v);
-      case 'fractionBar': return fractionBars(v);
-      case 'fractionCircle': return fractionCircle(v);
-      case 'groups': return groups(v);
-      case 'shape': return shapeRect(v);
-      case 'clock': return clock(v);
-      case 'money': return money(v);
-      case 'percentBar': return percentBar(v);
-      case 'tape': return tape(v);
-      case 'box3d': return box3d(v);
-      case 'dotPlot': return dotPlot(v);
+      case 'numberLine': html = numberLine(v); break;
+      case 'array': html = array(v); break;
+      case 'baseTen': html = baseTen(v); break;
+      case 'fractionBar': html = fractionBars(v); break;
+      case 'fractionCircle': html = fractionCircle(v); break;
+      case 'groups': html = groups(v); break;
+      case 'shape': html = shapeRect(v); break;
+      case 'clock': html = clock(v); break;
+      case 'money': html = money(v); break;
+      case 'percentBar': html = percentBar(v); break;
+      case 'tape': html = tape(v); break;
+      case 'box3d': html = box3d(v); break;
+      case 'dotPlot': html = dotPlot(v); break;
       default: return '';
     }
+    // make the diagram screen-reader-describable (WCAG: informative images need a name)
+    if (html) html = html.replace('<svg ', `<svg role="img" aria-label="${describeVisual(v).replace(/"/g, '&quot;')}" `);
+    return html;
   } catch (e) { return ''; }
+}
+
+function describeVisual(v) {
+  const fr = (b) => `${b.num} out of ${b.den}`;
+  switch (v.type) {
+    case 'numberLine': return `Number line from ${v.min} to ${v.max}${v.mark !== undefined ? `, marked at ${v.mark}` : ''}`;
+    case 'array': return `Array of ${v.a} rows by ${v.b}, ${v.a * v.b} dots in all`;
+    case 'baseTen': return `Base-ten blocks showing ${v.value}`;
+    case 'fractionBar': return `Fraction bars: ${(v.bars || [{ num: v.num, den: v.den }]).map(fr).join(' and ')}`;
+    case 'fractionCircle': return `Fraction circle showing ${v.num} out of ${v.den}`;
+    case 'groups': return `${v.groups} equal groups of ${v.perGroup}`;
+    case 'shape': return `Rectangle, ${v.w} by ${v.h}`;
+    case 'clock': return `Clock showing ${v.h}:${String(v.m).padStart(2, '0')}`;
+    case 'money': return `Money: ${v.cents} cents`;
+    case 'percentBar': return `Bar showing ${v.pct} percent`;
+    case 'tape': return `Tape diagram comparing ${v.a} to ${v.b}`;
+    case 'box3d': return `Three-D box, ${v.l} by ${v.w} by ${v.h}`;
+    case 'dotPlot': return `Dot plot of the data values`;
+    default: return 'math diagram';
+  }
 }
 const wrap = (inner, vb = '0 0 320 160') =>
   `<div class="manip"><svg viewBox="${vb}" class="manip-svg" preserveAspectRatio="xMidYMid meet">${inner}</svg></div>`;

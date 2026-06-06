@@ -34,27 +34,6 @@ export function renderHome(root) {
       </div>
     </section>
 
-    ${showWarmup ? `
-    <button class="continue-card warmup-card" id="warmup-btn">
-      <span class="cont-emoji">🌅</span>
-      <span class="cont-text"><b>Daily warm-up</b><span>${escapeHtml(petName)} wants to see what you remember!</span></span>
-      <span class="cont-go">▶</span>
-    </button>` : ''}
-
-    ${mistakes ? `
-    <button class="continue-card fixit-card" id="fixit-btn">
-      <span class="cont-emoji">🔧</span>
-      <span class="cont-text"><b>Fix-It time</b><span>${mistakes} tricky problem${mistakes > 1 ? 's' : ''} to master</span></span>
-      <span class="cont-go">▶</span>
-    </button>` : ''}
-
-    ${reviews.length ? `
-    <button class="continue-card review-card" id="review-btn">
-      <span class="cont-emoji">🔁</span>
-      <span class="cont-text"><b>Review time</b><span>${reviews.length} skill${reviews.length > 1 ? 's' : ''} ready for a quick refresh</span></span>
-      <span class="cont-go">▶</span>
-    </button>` : ''}
-
     ${cont ? `
     <button class="continue-card" id="continue-btn" data-id="${cont.id}">
       <span class="cont-emoji">${cont.emoji || '✏️'}</span>
@@ -67,6 +46,29 @@ export function renderHome(root) {
       <div class="goal-pips">${Array.from({ length: daily.goal }, (_, i) => `<span class="goal-pip ${i < daily.count ? 'on' : ''}"></span>`).join('')}</div>
       ${daily.reached ? '<p class="goal-done">Goal complete — you\'re a star today! 🌟</p>' : ''}
     </div>
+
+    ${(showWarmup || mistakes || reviews.length) ? `
+    <h3 class="section-h nudge-h">Quick boosts ✨</h3>
+    <div class="home-nudges">
+      ${showWarmup ? `
+      <button class="continue-card warmup-card" id="warmup-btn">
+        <span class="cont-emoji">🌅</span>
+        <span class="cont-text"><b>Daily warm-up</b><span>${escapeHtml(petName)} wants to see what you remember!</span></span>
+        <span class="cont-go">▶</span>
+      </button>` : ''}
+      ${mistakes ? `
+      <button class="continue-card fixit-card" id="fixit-btn">
+        <span class="cont-emoji">🔧</span>
+        <span class="cont-text"><b>Fix-It time</b><span>${mistakes} tricky problem${mistakes > 1 ? 's' : ''} to master</span></span>
+        <span class="cont-go">▶</span>
+      </button>` : ''}
+      ${reviews.length ? `
+      <button class="continue-card review-card" id="review-btn">
+        <span class="cont-emoji">🔁</span>
+        <span class="cont-text"><b>Review time</b><span>${reviews.length} skill${reviews.length > 1 ? 's' : ''} ready for a quick refresh</span></span>
+        <span class="cont-go">▶</span>
+      </button>` : ''}
+    </div>` : ''}
 
     <div class="home-cta-row">
       <button class="continue-card quest-card" id="quest-btn">

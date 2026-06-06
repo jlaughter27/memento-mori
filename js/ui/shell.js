@@ -18,7 +18,7 @@ export function renderHUD() {
   const st = S.progress.streak.count || 0;
   host.innerHTML = `
     <button class="hud-avatar" data-go="#/" aria-label="Home">
-      <span class="hud-pet">${petEmoji(S.profile.avatar.pet)}</span>
+      <span class="hud-pet" aria-hidden="true">${petEmoji(S.profile.avatar.pet)}</span>
     </button>
     <div class="hud-level">
       <div class="hud-level-badge">Lv ${lp.level}</div>

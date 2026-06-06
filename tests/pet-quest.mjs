@@ -74,8 +74,20 @@ try {
   click(q('#c-show')); await wait(15);
   if (!q('#c-sol .sol-answer')) throw new Error('show-me-how did not reveal the answer');
   const ans = q('#c-sol .sol-answer b').textContent.trim();
-  // answer correctly
-  if (q('.choices')) { click(qa('.choice-btn').find((b) => b.textContent.trim() === ans)); }
+  // first answer WRONG to exercise the misconception/feedback path (regression guard for the
+  // matchMisconception import bug — would crash here if missing)
+  if (q('.choices')) {
+    const wrongBtn = qa('.choice-btn').find((b) => b.textContent.trim() !== ans);
+    if (wrongBtn) { click(wrongBtn); await wait(40); if (!q('#c-fb').textContent) throw new Error('no feedback on wrong choice'); }
+  } else {
+    click(qa('#c-input .key').find((b) => b.textContent === '1')); await wait(10);
+    const disp = q('#c-disp');
+    if (Number(disp.textContent) !== Number(ans.replace(/[^\d-]/g, ''))) { click(q('#c-check')); await wait(40); if (!q('#c-fb').textContent) throw new Error('no feedback on wrong number'); }
+    // clear the wrong entry
+    click(qa('#c-input .key').find((b) => b.textContent === '⌫')); await wait(10);
+  }
+  // now answer correctly
+  if (q('.choices')) { click(qa('.choice-btn').find((b) => b.textContent.trim() === ans && !b.disabled) || qa('.choice-btn').find((b) => b.textContent.trim() === ans)); }
   else { const typ = ans.replace(/,/g, '').replace(/\s+/g, ''); for (const c of typ) click(qa('.key').find((b) => b.textContent === c)); await wait(10); click(q('#c-check')); }
   await wait(60);
   if (!q('.fb-good')) throw new Error('correct answer not accepted in challenge');
