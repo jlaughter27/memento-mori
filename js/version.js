@@ -1,10 +1,19 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.3.0';
+export const APP_VERSION = '2.4.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.4.0',
+    date: '2026-06-06',
+    title: 'Math Sprint',
+    items: [
+      '⚡ New mini-game: Math Sprint — how many can you solve in 60 seconds?',
+      '🏆 Beat your own best score (no timers-against-others, no pressure)',
+    ],
+  },
   {
     v: '2.3.0',
     date: '2026-06-06',

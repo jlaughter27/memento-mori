@@ -110,7 +110,7 @@ Every pillar below is decomposed the same way.
 | 2 | **Teaching Engine** | 8 | 10 | More problem types (multiplicative comparison, line plots, angles, symmetry, mixed-number mult); richer/animated manipulatives; CRA drag-objects layer |
 | 3 | **The Tutor** | **7** | 10 | ✅ misconception-aware feedback (Practice + Quest). Left: worked-example **fading**; step-level feedback; mastery tracing; bottom-out hint |
 | 4 | **Mastery & Memory** | **8** | 10 | ✅ Mistakes Notebook/Fix-It, daily warm-up, spaced review. Left: mastery **decay**; smarter diagnostic placement v2; mixed-review tuning |
-| 5 | **World & Story** | 5 | 10 | Quest lines for grades 2,3,5,6,7; an explorable world map; mini-games; more chapters; choices/branching |
+| 5 | **World & Story** | **6** | 10 | ✅ first mini-game (Math Sprint). Left: more mini-games; quest lines for grades 2,3,5,6,7; an explorable world map; more chapters |
 | 6 | **Companion & Care** | **7** | 10 | ✅ decoratable home/rooms + collectible decor. Left: pet **growth/evolution**; richer reactions; bonding moments tied to learning |
 | 7 | **Motivation & Economy** | 8 | 10 | Re-tune so story/pet are the core loop (not coins); collections/sets; goal-setting with the parent; anti-overjustification audit |
 | 8 | **Accessibility & Inclusion** | 7 | 10 | Formal WCAG 2.2 AA audit + statement; SVG ARIA; screen-reader passes on every view; switch support; full read-aloud of problems |

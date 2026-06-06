@@ -68,11 +68,18 @@ export function renderHome(root) {
       ${daily.reached ? '<p class="goal-done">Goal complete — you\'re a star today! 🌟</p>' : ''}
     </div>
 
-    <button class="continue-card quest-card" id="quest-btn">
-      <span class="cont-emoji">⚔️</span>
-      <span class="cont-text"><b>Pet Quest</b><span>Go on a story adventure with your pet!</span></span>
-      <span class="cont-go">▶</span>
-    </button>
+    <div class="home-cta-row">
+      <button class="continue-card quest-card" id="quest-btn">
+        <span class="cont-emoji">⚔️</span>
+        <span class="cont-text"><b>Pet Quest</b><span>A story adventure with your pet!</span></span>
+        <span class="cont-go">▶</span>
+      </button>
+      <button class="continue-card sprint-card" id="sprint-btn">
+        <span class="cont-emoji">⚡</span>
+        <span class="cont-text"><b>Math Sprint</b><span>Beat your best in 60 seconds!</span></span>
+        <span class="cont-go">▶</span>
+      </button>
+    </div>
 
     <div class="grade-tabs" role="tablist" aria-label="Choose grade">
       ${GRADES.map((g) => `<button class="grade-tab ${g === grade ? 'active' : ''}" role="tab" aria-selected="${g === grade}" data-grade="${g}">Grade ${g}</button>`).join('')}
@@ -100,6 +107,7 @@ export function renderHome(root) {
   const warmBtn = root.querySelector('#warmup-btn');
   if (warmBtn) warmBtn.addEventListener('click', () => { sfx.tap(); navigate('#/warmup'); });
   root.querySelector('#quest-btn').addEventListener('click', () => { sfx.tap(); navigate('#/adventure'); });
+  root.querySelector('#sprint-btn').addEventListener('click', () => { sfx.tap(); navigate('#/sprint'); });
   const contBtn = root.querySelector('#continue-btn');
   if (contBtn) contBtn.addEventListener('click', () => {
     sfx.tap();

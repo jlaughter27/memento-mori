@@ -580,3 +580,31 @@ body[data-bg="bg-stars"] .hud-level-badge,body[data-bg="bg-galaxy"] .hud-level-b
 .continue-card.warmup-card{background:linear-gradient(135deg,#fff,#fff7e0);border-color:#fdcb6e;box-shadow:0 5px 0 #ffe9b3}
 .continue-card.warmup-card .cont-text b{color:#b97e00}
 .continue-card.warmup-card .cont-go{color:#f0a500}
+
+/* home CTA row (quest + sprint) */
+.home-cta-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.home-cta-row .continue-card{margin-bottom:0;flex-direction:column;text-align:center;gap:6px}
+.home-cta-row .cont-text{align-items:center}
+.home-cta-row .cont-go{display:none}
+.continue-card.sprint-card{background:linear-gradient(135deg,#fff,#fff8e6);border-color:#ffb300;box-shadow:0 5px 0 #ffe9b3}
+.continue-card.sprint-card .cont-text b{color:#e08a00}
+@media(max-width:380px){.home-cta-row{grid-template-columns:1fr}}
+
+/* Math Sprint */
+.sprint-wrap{display:flex;flex-direction:column;gap:14px;min-height:70dvh;justify-content:center}
+.sprint-top{display:flex}
+.sprint-intro{text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
+.sprint-emoji{font-size:4rem;animation:bounceBig .6s}
+.sprint-best{font-weight:800;color:#b97e00}
+.sprint-count{font-size:6rem;font-weight:900;color:var(--p1);text-align:center;animation:pop .4s}
+.sprint-game{justify-content:flex-start;min-height:auto}
+.sprint-hud{display:flex;align-items:center;gap:12px}
+.sprint-score{font-weight:900;font-size:1.3rem;color:#e08a00}
+.sprint-timebar{flex:1;height:14px;background:#ece7ff;border-radius:99px;overflow:hidden}
+.sprint-timefill{height:100%;width:100%;background:linear-gradient(90deg,#6bcB77,#ffd56b,#ff7043);border-radius:99px;transition:width 1s linear}
+.sprint-clock{font-weight:900;font-size:1.2rem;min-width:32px;text-align:right}
+.sprint-clock.low{color:var(--bad);animation:pulse .6s infinite}
+.sprint-problem{font-size:clamp(2rem,9vw,3rem);font-weight:900;text-align:center;margin:18px 0}
+.sprint-ans{max-width:340px;margin:0 auto}
+.sprint-game .keypad{max-width:340px;margin:10px auto 0}
+.sprint-final{font-size:4rem;font-weight:900;color:var(--p1)}

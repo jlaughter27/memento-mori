@@ -14,6 +14,7 @@ import { renderDashboard } from './views/dashboard.js';
 import { renderCurriculum } from './views/curriculum.js';
 import { renderPet } from './views/pet.js';
 import { renderAdventure } from './views/adventure.js';
+import { renderSprint } from './views/sprint.js';
 import { renderOnboard } from './views/onboard.js';
 
 const content = () => document.getElementById('content');
@@ -48,6 +49,7 @@ function route() {
     case 'review': renderReview(root); break;
     case 'fixit': renderFixit(root); break;
     case 'warmup': renderWarmup(root); break;
+    case 'sprint': renderSprint(root); break;
     case 'rewards': renderRewards(root); break;
     case 'parent': renderDashboard(root); break;
     case 'curriculum': renderCurriculum(root); break;

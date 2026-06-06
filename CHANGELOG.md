@@ -4,6 +4,15 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.4.0] — 2026-06-06 — "Math Sprint"
+### Added
+- **Math Sprint** mini-game (`js/views/sprint.js`, `#/sprint`) — a 60-second fact-fluency game
+  (multiplication facts + add/sub within 100). **Beat-your-own-best** framing (a depleting time
+  bar, no countdown penalty, no social comparison) per `docs/research/minigames.md`. Auto-advances
+  on a correct answer; awards coins; stores a personal best. Reachable from a home CTA card.
+### Tests
+- `tests/sprint.mjs` drives start → countdown → solving → scoring.
+
 ## [2.3.0] — 2026-06-06 — "Make It Stick"
 ### Added
 - **Mistakes Notebook / Fix-It loop** — a first-try miss notes the skill; a clean first-try-correct
