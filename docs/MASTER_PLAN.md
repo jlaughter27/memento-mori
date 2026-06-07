@@ -8,9 +8,10 @@
 > Companion docs: [PROJECT charter](PROJECT.md) · [ARCHITECTURE](ARCHITECTURE.md) ·
 > [ROADMAP (tactical)](../ROADMAP.md) · research in [`docs/research/`](research/).
 >
-> **Status today: v2.1** — 60 skills (grades 3–6), a 25-type self-verifying teaching engine,
-> Common Core alignment, spaced review, placement, a pet you care for, a 3-chapter Pet Quest,
-> and a teach-first tutor. Offline, zero-dependency, self-updating, fully tested.
+> **Status today: v2.7** — 89 skills (grades 2–7, 68 standards), a self-verifying teaching engine,
+> a teach-first tutor with fading, spaced review + mastery decay + a mistakes loop, a pet you
+> care for and grow, a 3-chapter quest + three mini-games, a parent efficacy report, and a full
+> WCAG 2.2 AA pass. Offline, zero-dependency, self-updating, fully tested (5 suites + engine check).
 
 ---
 
@@ -106,23 +107,25 @@ Every pillar below is decomposed the same way.
 
 | # | Pillar | Now | Target | The gap (what's missing for 10/10) |
 |---|---|----|----|---|
-| 1 | **Curriculum & Standards** | **8** | 10 | ✅ grades 2–7 (86 skills, 65 standards). Left: deepen grade 4 to 18-skill gold standard; sub-standard tags |
+| 1 | **Curriculum & Standards** | **9** | 10 | ✅ grades 2–7 (89 skills, 68 standards), grade-4 deepened. Left: sub-standard tags; full K–8 reach |
 | 2 | **Teaching Engine** | **9** | 10 | ✅ hardened (8 audit bugs fixed; sound across 5,000+ problems). Left: more problem types + animated/draggable CRA manipulatives |
 | 3 | **The Tutor** | **9** | 10 | ✅ teach-first "Learn with Foxy" (worked example → self-explanation → **fading** scaffolds → independent) + misconception feedback. Left: step-level model-tracing; bottom-out hint |
-| 4 | **Mastery & Memory** | **8** | 10 | ✅ Mistakes Notebook/Fix-It, daily warm-up, spaced review. Left: mastery **decay**; smarter diagnostic placement v2; mixed-review tuning |
-| 5 | **World & Story** | **8** | 10 | ✅ two mini-games (Sprint + Number Line) + 3-chapter quest. Left: a 3rd game (Sort & Storm); quest lines for grades 2,3,5,6,7; an explorable overworld map |
-| 6 | **Companion & Care** | **8** | 10 | ✅ decoratable home/rooms + collectible decor (polished placement + a11y). Left: pet **growth/evolution**; richer reactions; bonding moments tied to learning |
-| 7 | **Motivation & Economy** | 8 | 10 | Re-tune so story/pet are the core loop (not coins); collections/sets; goal-setting with the parent; anti-overjustification audit |
+| 4 | **Mastery & Memory** | **9** | 10 | ✅ Mistakes Notebook/Fix-It, warm-up, spaced review, **mastery decay** (rusty skills). Left: branching placement v2 |
+| 5 | **World & Story** | **9** | 10 | ✅ three mini-games (Sprint, Number Line, Sort & Storm) + 3-chapter quest. Left: per-grade quest lines; an explorable overworld map |
+| 6 | **Companion & Care** | **9** | 10 | ✅ decoratable home + **pet growth/evolution** + bonding moments. Left: more reaction variety; per-pet animations |
+| 7 | **Motivation & Economy** | **9** | 10 | ✅ collection summary + **parent weekly goal**; story/pet are the core loop; process-praise only. Left: collection *sets* with bonuses |
 | 8 | **Accessibility & Inclusion** | **9** | 10 | ✅ WCAG 2.2 AA audit done + fixed (ARIA, dialogs, live regions, SVG labels, targets, focus, reduced-motion). Left: publish an in-app statement; switch-device testing |
 | 9 | **Trust & Credibility** | **9** | 10 | ✅ parent **efficacy report** + in-app privacy & accessibility statements + standards transparency. Left: worksheet export, Common Sense submission packet |
 | 10 | **Craft, Platform & Reliability** | **9** | 10 | ✅ deep polish pass + audit bug fixes + leak hardening; 5 green test suites. Left: multi-child profiles; perf budget; i18n; landing page |
 
-> **Overall ≈ 8.5/10** (was 6.7). Shipped v2.2 → v2.6. **Five pillars are now at 9** — Engine,
-> **Tutor** (teach-first + fading), Accessibility, **Trust** (parent report + statements), and
-> Craft — and the other five are at 8 (Curriculum, Memory, **World** (two mini-games), Companion,
-> Motivation). To finish a straight-9 board, the remaining 8→9 work is: deepen grade-4 / sub-standard
-> tags (Curriculum); mastery decay + placement v2 (Memory); a 3rd mini-game + overworld + per-grade
-> quest lines (World); pet growth/evolution (Companion); collections + parent goals (Motivation).
+> **Overall ≈ 9.0/10** (was 6.7) — **a straight-9 board.** Shipped v2.2 → v2.7. All ten pillars are
+> now at 9: grades 2–7 + grade-4 depth (Curriculum); a hardened, bug-free engine (Engine); teach-first
+> tutor with fading (Tutor); spaced review + mastery decay + Fix-It (Memory); three mini-games + quest
+> (World); pet growth/evolution + decoratable home (Companion); parent weekly goal + collections
+> (Motivation); WCAG 2.2 AA (Accessibility); parent report + statements (Trust); deep polish +
+> reliability (Craft). The remaining 9→10 work toward the v3.0 "Definition of Done": step-level
+> model-tracing, animated CRA manipulatives, an overworld + per-grade quest lines, multi-child
+> profiles, a worksheet generator, i18n, and a landing page.
 >
 > **Research bank is now complete for the next phases** — all forward-agenda topics (Part V) have
 > docs in `docs/research/`: efficacy measurement, grades 2 & 7 standards, mini-games, accessibility

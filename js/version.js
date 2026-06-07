@@ -1,10 +1,21 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.6.0';
+export const APP_VERSION = '2.7.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.7.0',
+    date: '2026-06-06',
+    title: 'Grow Together',
+    items: [
+      '🐣 Your pet grows up as you master skills — watch it evolve!',
+      '🌪️ New game: Sort & Storm — tap the numbers that fit the rule',
+      '🔄 "Rusty" skills come back so your learning never fades',
+      '📅 Grown-ups can set a weekly goal · 🎀 collect it all in Rewards',
+    ],
+  },
   {
     v: '2.6.0',
     date: '2026-06-06',

@@ -4,6 +4,19 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.7.0] — 2026-06-06 — "Grow Together"
+### Added
+- **Pet growth/evolution** — the pet advances through 4 stages (Little → Growing → Grown → Super)
+  as skills are mastered, with a scale/glow, a stage badge, an evolution celebration, and bonding
+  lines that reference the child's real history.
+- **Mastery decay** — mastered skills that go long-overdue become "rusty" (a 🔄 flag on the map)
+  and are weighted more heavily in review so decay is actively reversed.
+- **Parent weekly goal** (practice days/week) shown as a ring on home; **collection summary** in
+  Rewards (badges / pets / items owned vs. total).
+- **Sort & Storm** mini-game (`#/sort`) — tap the numbers matching a rule; a new rule each round.
+- **+3 grade-4 skills** (multiplicative comparison 4.OA.A.1, multi-step word problems 4.OA.A.3,
+  fraction × whole 4.NF.B.4) → **89 skills, 68 standards**.
+
 ## [2.6.0] — 2026-06-06 — "Learn with Foxy"
 ### Added
 - **Tutor mode (`#/tutor`)** — a teach-first "Learn with Foxy" flow is now the default learning
