@@ -35,20 +35,34 @@ try {
 
   step = 'interactive fraction tap';
   hashTo('#/practice/g3-fractions-shade'); await wait(60);
-  if (!q('.ftap')) throw new Error('interactive tap bar did not render');
+  if (!q('.ftap')) throw new Error('interactive tap input did not render');
   const promptTxt = q('.problem-prompt').textContent;
   const m = promptTxt.match(/(\d+)\/(\d+)/);
   if (!m) throw new Error('could not read fraction from prompt: ' + promptTxt);
   const target = +m[1], den = +m[2];
-  const cells = qa('.ftap-cell');
-  if (cells.length !== den) throw new Error(`expected ${den} tap cells, got ${cells.length}`);
+  const shape = /circle/.test(promptTxt) ? 'circle' : 'bar';
+  const cells = qa('.ftap-part'); // works for both bar (button) and circle (svg path)
+  if (cells.length !== den) throw new Error(`expected ${den} ${shape} parts, got ${cells.length}`);
   for (let i = 0; i < target; i++) click(cells[i]); // shade exactly the numerator
   await wait(10);
   if (!q('.ftap-read').textContent.includes(`${target} of ${den}`)) throw new Error('live region did not announce the count');
-  if (qa('.ftap-cell.on').length !== target) throw new Error('wrong number of shaded cells');
+  if (qa('.ftap-part.on').length !== target) throw new Error('wrong number of shaded parts');
   click(q('#check-btn')); await wait(60);
   if (!q('.fb-good')) throw new Error('shading the correct fraction was not accepted');
-  log(`interactive tap: shaded ${target}/${den} by tapping → accepted`);
+  log(`interactive tap: shaded ${target}/${den} (${shape}) by tapping → accepted`);
+  // deterministically exercise BOTH shapes' component (incl. SVG classList path)
+  const { mountFractionTap } = await import('../js/ui/interactive.js');
+  for (const sh of ['bar', 'circle']) {
+    const div = window.document.createElement('div'); window.document.body.appendChild(div);
+    const t = mountFractionTap(div, { den: 5, shape: sh });
+    const ps = [...div.querySelectorAll('.ftap-part')];
+    if (ps.length !== 5) throw new Error(`${sh}: expected 5 parts, got ${ps.length}`);
+    click(ps[0]); click(ps[2]); click(ps[4]);
+    if (t.getCount() !== 3) throw new Error(`${sh}: getCount wrong after 3 taps`);
+    if (div.querySelectorAll('.ftap-part.on').length !== 3) throw new Error(`${sh}: .on class not applied`);
+    div.remove();
+  }
+  log('interactive component: bar + circle both shade + count correctly');
 
   step = 'dashboard settings';
   hashTo('#/parent'); await wait(50);

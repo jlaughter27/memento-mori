@@ -287,7 +287,7 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
     ansArea.innerHTML = `
       <div class="tap-host" id="tap-host"></div>
       <button class="btn btn-big btn-check" id="check-btn">Check ✓</button>`;
-    const tap = mountFractionTap(ansArea.querySelector('#tap-host'), { den: (cur.tap && cur.tap.den) || 4 });
+    const tap = mountFractionTap(ansArea.querySelector('#tap-host'), { den: (cur.tap && cur.tap.den) || 4, shape: (cur.tap && cur.tap.shape) || 'bar' });
     ansArea.querySelector('#check-btn').addEventListener('click', () => { if (!answered) check(String(tap.getCount())); });
     cur._getVal = () => String(tap.getCount());
   }

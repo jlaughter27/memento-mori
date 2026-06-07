@@ -40,7 +40,8 @@ try {
   click(qa('.grade-choice')[0]); await wait(20); click(q('#ob-start')); await wait(800);
   const sk = qa('.skill-card')[0]?.dataset?.id || 'g4-place-value';
 
-  const routes = ['#/onboard', '#/', `#/learn/${sk}`, `#/tutor/${sk}`, `#/practice/${sk}`, '#/play',
+  const routes = ['#/onboard', '#/', `#/learn/${sk}`, `#/tutor/${sk}`, `#/practice/${sk}`,
+    '#/practice/g3-fractions-shade', '#/play',
     '#/sprint', '#/magnitude', '#/sort', '#/rewards', '#/pet', '#/adventure', '#/parent', '#/report', '#/curriculum'];
 
   for (const r of routes) {

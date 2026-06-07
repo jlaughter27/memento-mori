@@ -1,10 +1,19 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.17.0';
+export const APP_VERSION = '2.18.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.18.0',
+    date: '2026-06-07',
+    title: 'Pizza Fractions',
+    items: [
+      '🍕 "Show the Fraction" now uses bars AND circles — shade a pizza!',
+      '✋ Tap the pie slices or bar parts to build your fraction',
+    ],
+  },
   {
     v: '2.17.0',
     date: '2026-06-07',

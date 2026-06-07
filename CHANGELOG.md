@@ -4,6 +4,14 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.18.0] — 2026-06-07 — "Pizza Fractions"
+### Added
+- **Tappable fraction *circle*** — `mountFractionTap` now renders a bar **or** a pie
+  (SVG wedges as `role="button"`, keyboard + screen-reader operable). "Show the Fraction"
+  randomly picks a bar or a circle each problem, reinforcing that a fraction is parts of
+  *any* whole. Flows test deterministically exercises both shapes; a11y route list now
+  scans the interactive skill.
+
 ## [2.17.0] — 2026-06-07 — "Hands-On Fractions"
 The first **interactive manipulative** — kicks off the v3.0 hands-on-learning track.
 ### Added

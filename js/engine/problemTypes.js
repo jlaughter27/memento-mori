@@ -533,14 +533,15 @@ function makeEquivFraction(params = {}, rng) {
 function makeFractionShade(params = {}, rng) {
   const den = randInt(rng, 2, params.maxDenom || 6);
   const num = randInt(rng, 1, den - 1);
+  const shape = params.shape || (rng() < 0.5 ? 'circle' : 'bar');
   return P({
     type: 'fractionShade',
-    prompt: `Tap to shade ${num}/${den} of the bar.`,
+    prompt: `Tap to shade ${num}/${den} of the ${shape}.`,
     answer: String(num),
     inputKind: 'tap',
-    tap: { den },
+    tap: { den, shape },
     steps: [
-      { text: `The bottom number, ${den}, splits the whole bar into **${den} equal parts**.` },
+      { text: `The bottom number, ${den}, splits the whole ${shape} into **${den} equal parts**.` },
       { text: `The top number, ${num}, tells you how many parts to shade.` },
       { text: `So shade **${num}** of the ${den} parts — that's ${num}/${den}. ✨` },
     ],

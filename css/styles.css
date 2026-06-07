@@ -862,15 +862,20 @@ body[data-bg="bg-stars"] .goal-pip,body[data-bg="bg-galaxy"] .goal-pip,body[data
   :focus-visible{outline:3px solid CanvasText;outline-offset:3px}
 }
 
-/* ---- interactive tappable fraction bar (inputKind:'tap') ---- */
+/* ---- interactive tappable fraction (inputKind:'tap' — bar or circle) ---- */
 .tap-host{width:100%;display:flex;flex-direction:column;align-items:center;gap:6px}
-.ftap{display:flex;gap:6px;width:100%;max-width:420px}
+.ftap-bar{display:flex;gap:6px;width:100%;max-width:420px}
 .ftap-cell{flex:1;min-height:64px;border:3px solid var(--p2);border-radius:12px;background:#fff;cursor:pointer;
   box-shadow:inset 0 2px 6px rgba(108,92,231,.08);
   transition:transform var(--t-fast) var(--ease),background var(--t-fast) var(--ease),box-shadow var(--t-fast) var(--ease);touch-action:manipulation}
 .ftap-cell.on{background:linear-gradient(180deg,var(--accent2),var(--accent));border-color:var(--accent);box-shadow:0 3px 0 rgba(0,0,0,.08)}
 .ftap-cell:active{transform:translateY(2px)}
 .ftap-cell:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.ftap-circle{width:100%;max-width:240px}
+.ftap-svg{width:100%;height:auto;display:block;overflow:visible}
+.ftap-wedge{fill:#fff;stroke:var(--p2);stroke-width:2.5;cursor:pointer;transition:fill var(--t-fast) var(--ease)}
+.ftap-wedge.on{fill:var(--accent)}
+.ftap-wedge:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .ftap-read{font-weight:800;color:var(--ink-soft);margin:2px 0 0}
 
 /* reusable empty-state (no badges yet, no data, etc.) */
