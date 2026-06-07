@@ -318,7 +318,7 @@ body[data-bg="bg-stars"] .muted,body[data-bg="bg-galaxy"] .muted,body[data-bg="b
 /* visible keyboard focus everywhere (WCAG 2.4.11) */
 :focus{outline:none}
 :focus-visible{outline:4px solid var(--accent);outline-offset:3px;border-radius:14px}
-.skill-card:focus-visible,.choice-btn:focus-visible,.key:focus-visible{outline-offset:2px}
+.skill-card:focus-visible,.choice-btn:focus-visible,.key:focus-visible{outline-offset:3px}
 
 /* non-color answer states on choice buttons (color-blind safe) */
 .choice-btn.correct::after{content:" ✓";font-weight:900}
@@ -640,6 +640,8 @@ button:disabled{opacity:.5;filter:grayscale(.6);cursor:not-allowed;pointer-event
 body[data-theme="theme-candy"] :focus-visible{outline-color:#a85800}
 body[data-theme="theme-dino"] :focus-visible{outline-color:#3f4d00}
 body[data-theme="theme-superhero"] :focus-visible{outline-color:#7a0000}
+body[data-theme="theme-robot"] :focus-visible{outline-color:#10242e}
+body[data-theme="theme-magic"] :focus-visible{outline-color:#3a0d52}
 
 /* ---- v2.6: tutor mode, games row, parent report, magnitude ---- */
 .tutor-wrap{display:flex;flex-direction:column;gap:14px}
@@ -830,3 +832,32 @@ body[data-bg="bg-stars"] .scene-node,body[data-bg="bg-galaxy"] .scene-node,body[
 
 /* reduced-motion: prefer 0s (clearer than 0.001ms) */
 @media (prefers-reduced-motion:reduce){*{animation-duration:0s!important;transition-duration:0s!important}}
+
+/* ============================================================
+   v2.10 — final polish: forced-colors, dark-bg legibility,
+   reusable empty state.
+   ============================================================ */
+
+/* dark decorative backgrounds: the yellow idea boxes, faint connectors,
+   and progress pips need lifting so they don't vanish */
+body[data-bg="bg-stars"] .big-idea,body[data-bg="bg-galaxy"] .big-idea,body[data-bg="bg-aurora"] .big-idea,
+body[data-bg="bg-stars"] .teach-idea,body[data-bg="bg-galaxy"] .teach-idea,body[data-bg="bg-aurora"] .teach-idea{
+  background:rgba(255,205,90,.18);color:#fff8e6;
+}
+body[data-bg="bg-stars"] .scene-link,body[data-bg="bg-galaxy"] .scene-link,body[data-bg="bg-aurora"] .scene-link{background:rgba(255,255,255,.35)}
+body[data-bg="bg-stars"] .pip,body[data-bg="bg-galaxy"] .pip,body[data-bg="bg-aurora"] .pip,
+body[data-bg="bg-stars"] .goal-pip,body[data-bg="bg-galaxy"] .goal-pip,body[data-bg="bg-aurora"] .goal-pip{background:rgba(255,255,255,.3)}
+
+/* Windows High Contrast / forced-colors: the look leans on box-shadow + fill,
+   both stripped in this mode — restore visible borders + keep meters colored. */
+@media (forced-colors: active){
+  .btn,.btn-ghost,.key,.choice-btn,.nav-btn,.tab,.grade-tab,.grade-choice,.pet-btn,.ss-tile,
+  .skill-card,.card-soft,.continue-card,.answer-display,.place-opt,.room-card,.badge,.shop-item{border:1px solid CanvasText}
+  .nav-btn.active,.tab.active,.grade-tab.active,.skill-card.mastered{border:2px solid Highlight}
+  .progress-fill,.hud-xp-fill,.meter-fill,.sprint-timefill,.ss-timer-fill,.goal-pip.on,.pip.done{forced-color-adjust:none}
+  :focus-visible{outline:3px solid CanvasText;outline-offset:3px}
+}
+
+/* reusable empty-state (no badges yet, no data, etc.) */
+.empty-state{text-align:center;padding:var(--s-6) var(--s-4);color:var(--ink-soft);font-weight:700;line-height:var(--lh-body)}
+.empty-state .es-emoji{font-size:2.4rem;display:block;margin-bottom:var(--s-2)}

@@ -200,7 +200,7 @@ export function renderReport(root) {
     .sort((a, b) => (S.progress.skills[b.id].masteredAt || 0) - (S.progress.skills[a.id].masteredAt || 0));
 
   const recentMasteredHtml = recentMastered.length === 0
-    ? `<p class="muted rpt-no-data">No new skills mastered in the last 14 days — keep practicing to unlock the first one!</p>`
+    ? `<div class="empty-state rpt-no-data"><span class="es-emoji" aria-hidden="true">🌱</span>No new skills mastered in the last 14 days — keep practicing to unlock the first one!</div>`
     : recentMastered.map((s) => {
         const r = S.progress.skills[s.id];
         const daysBack = daysAgo(r.masteredAt);
@@ -244,7 +244,7 @@ export function renderReport(root) {
       <!-- ③ Mastery by topic -->
       <h2 class="section-h">Mastery by topic — Grade ${grade}</h2>
       <div class="card-soft">
-        ${masteryRows || '<p class="muted" style="margin:0">No skills started yet for this grade.</p>'}
+        ${masteryRows || '<div class="empty-state"><span class="es-emoji" aria-hidden="true">📚</span>No skills started yet for this grade.</div>'}
       </div>
 
       <!-- ④ Accuracy trend -->

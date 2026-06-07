@@ -4,6 +4,21 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.10.0] — 2026-06-07 — "Readable Everywhere"
+Final polish from the five-agent audit.
+### Added
+- **Forced-colors / Windows High Contrast support** — the UI leans on box-shadow +
+  fills (both stripped in that mode); a `@media (forced-colors:active)` block restores
+  visible borders on cards/buttons, keeps progress meters colored
+  (`forced-color-adjust:none`), and uses system focus outlines.
+- **Reusable empty state** (`.empty-state`) with an icon — applied to the parent
+  report's "no skills yet / nothing mastered" messages so they read as intentional.
+### Fixed
+- **Dark-background legibility** — yellow "big idea" boxes, adventure scene-link
+  connectors, and progress pips were near-invisible on stars/galaxy/aurora; now lifted.
+- **Focus-ring contrast** — bumped card/choice/key outline offset to 3px and added
+  high-contrast focus colors for the robot and magic themes (all 9 now covered).
+
 ## [2.9.0] — 2026-06-07 — "Crisp & Consistent"
 A deep UI/UX + design polish pass driven by **five parallel audit agents**
 (spacing/layout, text-overflow, accessibility, theming/states, and a PWA
