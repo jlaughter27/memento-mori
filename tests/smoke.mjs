@@ -96,6 +96,21 @@ try {
   log('problem: ' + $('.problem-prompt').textContent);
   if ($$('.pip').length < 1) throw new Error('no progress pips');
   if (!$('.keypad') && !$('.choices')) throw new Error('no input control');
+  // v2.8 long-answer regression: hammering the keypad must cap the value and
+  // keep it inside the display (no overflow), then clear cleanly.
+  if ($('.keypad') && $('#ans-display')) {
+    const nine = $$('.key').find((b) => b.textContent === '9');
+    for (let i = 0; i < 48; i++) click(nine);
+    await wait(10);
+    const shown = $('#ans-display').textContent;
+    if (shown.length > 40) throw new Error('answer display not length-capped (' + shown.length + ' chars)');
+    if ($('#ans-display').dataset.empty !== '0') throw new Error('answer display empty flag wrong after typing');
+    const back = $$('.key').find((b) => b.getAttribute('aria-label') === 'delete' || b.textContent === '⌫');
+    for (let i = 0; i < 45; i++) click(back);
+    await wait(10);
+    if ($('#ans-display').textContent !== '?') throw new Error('answer display did not clear back to empty');
+    log('long-answer input capped + cleared cleanly (no overflow)');
+  }
   // hint ladder
   click($('#hint-btn')); await wait(20);
   if (!$('.mascot-bubble')) throw new Error('hint did not show mascot bubble');
@@ -139,6 +154,14 @@ try {
   window.location.hash = '#/rewards'; window.dispatchEvent(new window.Event('hashchange')); await wait(40);
   for (const t of $$('.tab')) { click(t); await wait(25); }
   log('rewards tabs all rendered');
+
+  step = 'text-fit helpers';
+  const { promptLen, fitText } = await import('../js/ui/dom.js');
+  if (promptLen('2+2') !== '') throw new Error('promptLen: short prompt should bucket to ""');
+  if (promptLen('x'.repeat(50)) !== 'long') throw new Error('promptLen: 50 chars should be "long"');
+  if (promptLen('x'.repeat(90)) !== 'xlong') throw new Error('promptLen: 90 chars should be "xlong"');
+  fitText(undefined); fitText(null); fitText($('#hud')); // must be no-op-safe, never throw
+  log('text-fit helpers: promptLen buckets correct + fitText no-op safe');
 
 } catch (e) {
   console.log('\n❌ SMOKE FAILED at step [' + step + ']:', e.message);

@@ -14,7 +14,7 @@ import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx, speak } from '../ui/sound.js';
 import { confetti, popup, floatText, sparkle } from '../ui/celebrations.js';
 import { showBadges } from './rewards.js';
-import { escapeHtml, nl2br, mdInline } from '../ui/dom.js';
+import { escapeHtml, nl2br, mdInline, fitText, promptLen } from '../ui/dom.js';
 import { isUnlocked } from '../state.js';
 
 /* ---------------- entry points ---------------- */
@@ -42,7 +42,7 @@ export function renderTutor(root, id) {
         <div class="teach-card card-soft">
           <div class="teach-head">🦊 Watch me first!</div>
           ${lesson.bigIdea ? `<p class="teach-idea">💡 ${escapeHtml(lesson.bigIdea)}</p>` : ''}
-          <div class="teach-problem">${escapeHtml(ex.prompt)}</div>
+          <div class="teach-problem" data-len="${promptLen(ex.prompt)}">${escapeHtml(ex.prompt)}</div>
           ${ex.visual ? `<div class="teach-visual">${renderVisual(ex.visual)}</div>` : ''}
           <div class="teach-steps" id="t-steps"></div>
           <div class="self-explain" id="t-se" hidden><p>🗣️ <b>Your turn to teach!</b> Tell Foxy <em>why</em> that works — say it out loud!</p></div>
@@ -206,7 +206,7 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
     drawPips();
     card.classList.remove('pop-in'); void card.offsetWidth; card.classList.add('pop-in');
     card.innerHTML = `
-      <div class="problem-prompt">${escapeHtml(cur.prompt)}</div>
+      <div class="problem-prompt" data-len="${promptLen(cur.prompt)}">${escapeHtml(cur.prompt)}</div>
       ${cur.visual ? `<div class="problem-visual">${renderVisual(cur.visual)}</div>` : ''}
       <div class="feedback" id="feedback" role="alert" aria-atomic="true"></div>`;
     solPanel.hidden = true; solPanel.innerHTML = '';
@@ -248,13 +248,15 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
     keypad.innerHTML = keyDefs.map((k) =>
       `<button class="key ${k.cls || ''}"${k.aria ? ` aria-label="${k.aria}"` : ''}>${k.l}</button>`).join('');
     let val = '';
-    const sync = () => { display.textContent = val || '?'; display.dataset.empty = val ? '0' : '1'; };
+    const MAXLEN = 40; // generous — fits expanded form / equations; just a sanity guard
+    // keep long answers inside the box by shrinking the text as it grows
+    const sync = () => { display.textContent = val || '?'; display.dataset.empty = val ? '0' : '1'; fitText(display); };
     keypad.querySelectorAll('.key').forEach((b, i) => b.addEventListener('click', () => {
       if (answered) return;
       sfx.tap();
       const v = keyDefs[i].v;
       if (v === 'BACK') val = val.slice(0, -1);
-      else val += v;
+      else if (val.length < MAXLEN) val += v;
       sync();
     }));
     ansArea.querySelector('#check-btn').addEventListener('click', () => check(val));
@@ -264,7 +266,7 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
       if (answered) return;
       if (e.key === 'Enter') { check(val); }
       else if (e.key === 'Backspace') { val = val.slice(0, -1); sync(); }
-      else if (/^[0-9./\- :,+r]$/.test(e.key)) { val += e.key; sync(); }
+      else if (/^[0-9./\- :,+r]$/.test(e.key) && val.length < MAXLEN) { val += e.key; sync(); }
     };
     document.addEventListener('keydown', ansArea._keyHandler);
     cur._getVal = () => val;

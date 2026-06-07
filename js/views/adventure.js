@@ -12,7 +12,7 @@ import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx, speak } from '../ui/sound.js';
 import { confetti, popup, sparkle, floatText } from '../ui/celebrations.js';
 import { showBadges } from './rewards.js';
-import { escapeHtml, mdInline } from '../ui/dom.js';
+import { escapeHtml, mdInline, fitText, promptLen } from '../ui/dom.js';
 
 const CHAPTERS = (adventures && adventures.chapters) || [];
 const petName = () => (rewardsData.pets.find((p) => p.id === S.profile.avatar.pet) || { name: 'your pet' }).name;
@@ -114,7 +114,7 @@ function teachPhase(root, ch, scene) {
       <div class="teach-card card-soft">
         <div class="teach-head">🦊 Let me show you!</div>
         ${lesson.bigIdea ? `<p class="teach-idea">💡 ${escapeHtml(lesson.bigIdea)}</p>` : ''}
-        <div class="teach-problem">${escapeHtml(example.prompt)}</div>
+        <div class="teach-problem" data-len="${promptLen(example.prompt)}">${escapeHtml(example.prompt)}</div>
         ${example.visual ? `<div class="teach-visual">${renderVisual(example.visual)}</div>` : ''}
         <div class="teach-steps" id="teach-steps"></div>
         <div class="self-explain" id="self-explain" hidden>
@@ -161,7 +161,7 @@ function challengePhase(root, ch, scene) {
     <div class="scene-pet small">${petEmoji()}</div>
     <div class="challenge-card card-soft">
       <div class="challenge-tag">🧩 ${escapeHtml(skill ? skill.title : 'Challenge')}</div>
-      <div class="problem-prompt">${escapeHtml(problem.prompt)}</div>
+      <div class="problem-prompt" data-len="${promptLen(problem.prompt)}">${escapeHtml(problem.prompt)}</div>
       ${problem.visual ? `<div class="problem-visual">${renderVisual(problem.visual)}</div>` : ''}
       <div class="feedback" id="c-fb" role="alert" aria-atomic="true"></div>
       <div id="c-input"></div>
@@ -272,9 +272,10 @@ function buildAnswer(host, problem, onSubmit) {
     <button class="btn btn-big btn-check" id="c-check">Check ✓</button>`;
   const disp = host.querySelector('#c-disp');
   let val = '';
-  const sync = () => { disp.textContent = val || '?'; disp.dataset.empty = val ? '0' : '1'; };
+  const sync = () => { disp.textContent = val || '?'; disp.dataset.empty = val ? '0' : '1'; fitText(disp); };
   host.querySelectorAll('.key').forEach((b, i) => b.addEventListener('click', () => {
-    sfx.tap(); const v = keyDefs[i].v; val = v === 'BACK' ? val.slice(0, -1) : val + v; sync();
+    sfx.tap(); const v = keyDefs[i].v;
+    val = v === 'BACK' ? val.slice(0, -1) : (val.length < 40 ? val + v : val); sync();
   }));
   host.querySelector('#c-check').addEventListener('click', () => onSubmit(val, disp));
 }

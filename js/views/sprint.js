@@ -7,7 +7,7 @@ import { addCoins } from '../gamification.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx, speak } from '../ui/sound.js';
 import { confetti, popup, sparkle } from '../ui/celebrations.js';
-import { escapeHtml } from '../ui/dom.js';
+import { escapeHtml, fitText } from '../ui/dom.js';
 
 const DURATION = 60; // seconds
 // quick mental-math pool, lightly tuned to the child's grade (fact fluency, not busywork)
@@ -88,7 +88,7 @@ export function renderSprint(root) {
       val = ''; ansEl.textContent = '?'; ansEl.dataset.empty = '1';
       probEl.textContent = cur.prompt.replace(/\s*=\s*\?$/, '');
     }
-    function sync() { ansEl.textContent = val || '?'; ansEl.dataset.empty = val ? '0' : '1'; }
+    function sync() { ansEl.textContent = val || '?'; ansEl.dataset.empty = val ? '0' : '1'; fitText(ansEl); }
     function tryAnswer() {
       if (val !== '' && Number(val) === answerNum()) {
         score++; scoreEl.textContent = score; sfx.correct(); sparkle(ansEl);

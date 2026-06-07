@@ -4,6 +4,27 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.8.0] — 2026-06-07 — "Polished to Fit"
+A focused UI/UX + design-consistency pass.
+### Added
+- **Auto-fitting answers** — a new `fitText()` helper (`js/ui/dom.js`) shrinks the
+  answer display's font to a floor as the child types, so long answers (decimals,
+  times like `12:30`, remainders like `12 r 5`, mixed numbers) **stay inside the box**
+  instead of overflowing. Wired into Practice, Pet Quest, and Math Sprint. Inputs are
+  also length-capped (16 chars).
+- **Long-prompt tiers** — `promptLen()` buckets a prompt by length and CSS scales/wraps
+  it via `[data-len]`, so big **word problems** read as a paragraph (smaller, wrapped,
+  left-aligned) while short math facts stay big and bold.
+- **Design-token scale** — a 4px spacing ramp (`--s-1…--s-7`), a type ramp, and shared
+  shadow/line tokens in `:root`, plus overflow guard-rails (`overflow-wrap:anywhere`)
+  on every variable-length surface (choices, titles, bubbles, toasts, story text).
+- **[docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)** — the new single reference for tokens,
+  the text-fit pattern, layout/responsiveness, accessibility, and common UI roadblocks.
+### Why
+- `fitText` and `promptLen` are **no-op-safe** where layout can't be measured (jsdom),
+  so they're called unconditionally without breaking tests. The answer box also pairs
+  with `white-space:nowrap; overflow:hidden` for a clean fallback.
+
 ## [2.7.0] — 2026-06-06 — "Grow Together"
 ### Added
 - **Pet growth/evolution** — the pet advances through 4 stages (Little → Growing → Grown → Super)

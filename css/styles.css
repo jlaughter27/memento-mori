@@ -169,7 +169,10 @@ p{line-height:1.5}
 .answer-area{width:100%;display:flex;flex-direction:column;align-items:center;gap:10px}
 .answer-display{
   width:100%;max-width:420px;min-height:62px;background:#fff;border:3px solid var(--p2);border-radius:16px;
-  display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:900;color:var(--p1);box-shadow:inset 0 2px 6px rgba(108,92,231,.1)
+  display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:900;color:var(--p1);box-shadow:inset 0 2px 6px rgba(108,92,231,.1);
+  /* long answers (expanded form, equations) wrap + grow; fitText() shrinks any
+     unbreakable overflow. Either way the text never spills out of the box. */
+  padding:8px 18px;line-height:1.15;text-align:center;white-space:normal;overflow-wrap:anywhere;
 }
 .answer-display[data-empty="1"]{color:#cfc7e6}
 .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:420px}
@@ -747,3 +750,39 @@ body[data-theme="theme-superhero"] :focus-visible{outline-color:#7a0000}
 .coll-label{font-weight:800;color:var(--ink-soft);font-size:.82rem;margin-right:auto}
 .coll-cell{font-weight:800;font-size:.95rem}
 .coll-cell b{color:var(--p1)}
+
+/* ============================================================
+   v2.8 — design tokens + text-fit / overflow safety
+   A single spacing + type scale so new work stays consistent,
+   and guard-rails so long answers / prompts never break layout.
+   See docs/DESIGN_SYSTEM.md.
+   ============================================================ */
+:root{
+  /* spacing scale (4px base) — use these instead of magic numbers */
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px; --s-6:32px; --s-7:48px;
+  /* type ramp (rem) */
+  --fs-xs:.72rem; --fs-sm:.85rem; --fs-md:1rem; --fs-lg:1.15rem; --fs-xl:1.5rem; --fs-2xl:2rem;
+  /* shared shadow + line tokens */
+  --shadow-key:#e0d9ff;        /* the "chunky button" drop shadow color */
+  --shadow-key-good:#c7f5e7;
+  --line:#f0ecff;              /* hairline divider */
+  --lh-tight:1.2; --lh-body:1.5;
+}
+
+/* ---- long-prompt tiers (set via data-len from promptLen()) ---- */
+/* word problems and multi-clause prompts scale down + wrap instead of
+   rendering as a wall of huge text. Short prompts keep the big, bold look. */
+.problem-prompt,.teach-problem{overflow-wrap:anywhere}
+.problem-prompt[data-len="med"]{font-size:clamp(1.4rem,5.4vw,1.95rem)}
+.problem-prompt[data-len="long"]{font-size:clamp(1.2rem,4.6vw,1.6rem);line-height:1.35}
+.problem-prompt[data-len="xlong"]{font-size:clamp(1.05rem,4vw,1.35rem);line-height:1.42;text-align:left;text-wrap:pretty}
+.teach-problem[data-len="med"]{font-size:1.5rem}
+.teach-problem[data-len="long"]{font-size:1.3rem;line-height:1.35}
+.teach-problem[data-len="xlong"]{font-size:1.12rem;line-height:1.42;text-align:left;text-wrap:pretty}
+
+/* ---- overflow guard-rails: long content wraps, never spills ---- */
+.choice-btn{white-space:normal;overflow-wrap:anywhere;max-width:100%}
+.skill-title,.cont-text span,.prac-title,.badge-name,.item-name,.room-name{overflow-wrap:anywhere}
+.mascot-bubble,.pet-bubble,.toast-msg,.scene-story{overflow-wrap:anywhere}
+/* the answer display floor: even mid-shrink, keep a readable minimum */
+.answer-display{font-variant-numeric:tabular-nums}
