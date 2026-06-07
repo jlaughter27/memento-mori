@@ -4,6 +4,25 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.11.0] — 2026-06-07 — "Modern & Clean"
+A modern-feel pass from three parallel audits (motion, navigation/IA, visual design).
+### Added
+- **View transitions** — the router now plays a subtle GPU-friendly enter animation
+  (`viewEnter`, transform+opacity) on every route instead of an instant innerHTML
+  swap, so screens glide in. Reduced-motion safe.
+- **Motion token scale** — `--t-fast/-base/-slow` durations + a single `--ease` and
+  `--ease-spring`; press feedback and modal entrances now share one easing language.
+  Celebrations/what's-new spring in gently. Documented in `docs/DESIGN_SYSTEM.md`.
+- **Home "Play & explore" shelf** — the four games now sit under a labeled section
+  header for clearer information architecture.
+### Changed (cleaner, calmer surfaces)
+- Reduced visual noise: flattened the gradient hero/mastered-card backgrounds, swapped
+  the **dashed** "big idea" boxes for solid soft borders, and unified grid cards
+  (skill/badge/shop) to a consistent **2px** border + `--radius-md` + lighter shadow.
+- More breathing room: larger section spacing and symmetric content padding.
+- The bottom-nav **Grown-ups** (utility) item is now visually set apart from the kid
+  destinations.
+
 ## [2.10.0] — 2026-06-07 — "Readable Everywhere"
 Final polish from the five-agent audit.
 ### Added

@@ -65,6 +65,8 @@ function route() {
     case 'adventure': renderAdventure(root); break;
     default: location.hash = '#/'; return;
   }
+  // subtle modern view-enter transition (transform+opacity only; reduced-motion safe)
+  root.classList.remove('view-enter'); void root.offsetWidth; root.classList.add('view-enter');
   refreshChrome();
 }
 

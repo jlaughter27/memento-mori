@@ -77,6 +77,7 @@ export function renderHome(root) {
       </button>` : ''}
     </div>` : ''}
 
+    <h3 class="section-h">Play &amp; explore 🎮</h3>
     <div class="home-cta-row">
       <button class="continue-card quest-card" id="quest-btn">
         <span class="cont-emoji">⚔️</span>

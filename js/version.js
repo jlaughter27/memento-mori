@@ -1,10 +1,21 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.10.0';
+export const APP_VERSION = '2.11.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.11.0',
+    date: '2026-06-07',
+    title: 'Modern & Clean',
+    items: [
+      '✨ Screens now glide in smoothly instead of snapping',
+      '🧹 Cleaner, calmer cards with more breathing room',
+      '🎮 Home has a tidy "Play & explore" shelf for the games',
+      '💫 Friendlier pop animations on celebrations',
+    ],
+  },
   {
     v: '2.10.0',
     date: '2026-06-07',

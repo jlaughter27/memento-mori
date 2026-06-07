@@ -32,6 +32,16 @@ Defined in `css/styles.css :root`. When you write new CSS, reach for a token fir
 `--fs-xs .72` · `--fs-sm .85` · `--fs-md 1` · `--fs-lg 1.15` · `--fs-xl 1.5` ·
 `--fs-2xl 2` (rem). Headings use `clamp()` so they scale with viewport.
 
+### Motion
+One easing language, a few durations — don't invent ad-hoc values.
+- **Durations:** `--t-fast .15s` (press/hover) · `--t-base .25s` (view enter, most
+  transitions) · `--t-slow .4s` (modals, big moments).
+- **Easing:** `--ease` (smooth modern default) · `--ease-spring` (gentle overshoot
+  for delight — popups, celebrations). Use **transform + opacity only** (GPU) — never
+  animate `width`/`box-shadow`/`filter` in hot paths.
+- **View transitions:** the router toggles `.view-enter` on `#content` each route
+  (`viewEnter` keyframe). All motion is zeroed under `prefers-reduced-motion`.
+
 ### Color & elevation
 - **Brand:** `--p1`/`--p2` (purple), `--accent` (pink). Overridden per theme via
   `body[data-theme]` — **never hard-code a brand hex**; use the variable so all 9
