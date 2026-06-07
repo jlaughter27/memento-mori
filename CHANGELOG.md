@@ -4,6 +4,13 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.20.0] — 2026-06-07 — "Polish Pass"
+### Fixed
+- **Interactive inputs:** tapping **Check** before shading/building sent `0`, which
+  slipped past the keypad's empty-guard and counted as a wrong attempt (noting a
+  mistake). Both the tap and build inputs now prompt the child to interact first.
+  Found during a dynamic bug-test sweep; regression-tested.
+
 ## [2.19.0] — 2026-06-07 — "Building Blocks"
 ### Added
 - **Interactive base-ten blocks** (`mountBaseTenBuild`, `inputKind:'build'`) — a child

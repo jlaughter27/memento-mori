@@ -43,6 +43,9 @@ try {
   const shape = /circle/.test(promptTxt) ? 'circle' : 'bar';
   const cells = qa('.ftap-part'); // works for both bar (button) and circle (svg path)
   if (cells.length !== den) throw new Error(`expected ${den} ${shape} parts, got ${cells.length}`);
+  // empty submit (nothing shaded) must be prompted, not accepted or counted as wrong
+  click(q('#check-btn')); await wait(20);
+  if (q('.fb-good')) throw new Error('empty tap submit was wrongly accepted');
   for (let i = 0; i < target; i++) click(cells[i]); // shade exactly the numerator
   await wait(10);
   if (!q('.ftap-read').textContent.includes(`${target} of ${den}`)) throw new Error('live region did not announce the count');

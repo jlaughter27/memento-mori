@@ -289,7 +289,12 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
       <div class="tap-host" id="tap-host"></div>
       <button class="btn btn-big btn-check" id="check-btn">Check ✓</button>`;
     const tap = mountFractionTap(ansArea.querySelector('#tap-host'), { den: (cur.tap && cur.tap.den) || 4, shape: (cur.tap && cur.tap.shape) || 'bar' });
-    ansArea.querySelector('#check-btn').addEventListener('click', () => { if (!answered) check(String(tap.getCount())); });
+    ansArea.querySelector('#check-btn').addEventListener('click', () => {
+      if (answered) return;
+      const n = tap.getCount();
+      if (n === 0) { mascot.setSay('Tap the parts to shade them first! 😊', 'idle'); return; }
+      check(String(n));
+    });
     cur._getVal = () => String(tap.getCount());
   }
   // interactive: build a number from place-value blocks, then Check.
@@ -298,7 +303,12 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
       <div class="build-host" id="build-host"></div>
       <button class="btn btn-big btn-check" id="check-btn">Check ✓</button>`;
     const b = mountBaseTenBuild(ansArea.querySelector('#build-host'), { places: (cur.build && cur.build.places) || 3 });
-    ansArea.querySelector('#check-btn').addEventListener('click', () => { if (!answered) check(String(b.getValue())); });
+    ansArea.querySelector('#check-btn').addEventListener('click', () => {
+      if (answered) return;
+      const v = b.getValue();
+      if (v === 0) { mascot.setSay('Tap ＋ to add blocks and build the number first! 😊', 'idle'); return; }
+      check(String(v));
+    });
     cur._getVal = () => String(b.getValue());
   }
 
