@@ -4,6 +4,19 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.15.0] — 2026-06-07 — "Tested & True"
+Continued hardening of the less-tested flows.
+### Added
+- **`tests/flows.mjs`** — a new integration suite driving the real UI through:
+  dashboard settings (calm-mode + easy-font toggles apply the body class immediately;
+  name/grade/weekly-goal persist; reset *arms* on one tap and only wipes on two),
+  rewards (buy an item → owned +1 & coins deducted; buy + auto-equip a pet; equip a
+  theme; an unaffordable buy shows a kind popup and makes no purchase), pet treats with
+  0 coins, and adventure chapter unlock. All green — no bugs found in these paths.
+### Hardened
+- `rewards.js` `drawStyle` theme buttons now guard against a missing element (same
+  defensive fix already applied to the shop grid).
+
 ## [2.14.0] — 2026-06-07 — "Bug Hunt"
 A dedicated bug-testing pass: three parallel static audit agents (navigation/lifecycle,
 engine/state/gamification, views/render/a11y) + dynamic fuzzing. Every finding was

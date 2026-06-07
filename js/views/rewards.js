@@ -139,7 +139,9 @@ function drawStyle(host) {
   tHost.innerHTML = themes.map((t) => itemCard(t)).join('');
   tHost.querySelectorAll('.shop-item').forEach((c) => {
     const t = themes.find((x) => x.id === c.dataset.id);
-    c.querySelector('.item-btn').addEventListener('click', () => {
+    const btn = c.querySelector('.item-btn');
+    if (!t || !btn) return;
+    btn.addEventListener('click', () => {
       sfx.tap(); equip(t); applyBodyClasses(); drawStyle(host);
     });
   });
