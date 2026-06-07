@@ -1,7 +1,7 @@
 // views/home.js — the learning map: continue card, daily goal, grade tabs, strands.
 import { S, persist, isUnlocked, isMastered, skillRec } from '../state.js';
 import { groupedByStrand, getSkill, GRADES } from '../curriculum/index.js';
-import { gradeCompletion, recommendedSkill, dailyStatus, dueReviews, mistakeCount, warmupDue } from '../gamification.js';
+import { gradeCompletion, recommendedSkill, dailyStatus, dueReviews, mistakeCount, warmupDue, isRusty, weeklyProgress } from '../gamification.js';
 import { rewardsData } from '../curriculum/index.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { navigate } from '../ui/shell.js';
@@ -19,6 +19,7 @@ export function renderHome(root) {
   const reviews = dueReviews();
   const mistakes = mistakeCount();
   const showWarmup = warmupDue();
+  const weekly = weeklyProgress();
   const petName = (rewardsData.pets.find((p) => p.id === S.profile.avatar.pet) || { name: 'Your pet' }).name;
   const greeting = streak > 1
     ? `You've practiced ${streak} days in a row — keep it up! 🔥`
@@ -46,6 +47,12 @@ export function renderHome(root) {
       <div class="goal-pips">${Array.from({ length: daily.goal }, (_, i) => `<span class="goal-pip ${i < daily.count ? 'on' : ''}"></span>`).join('')}</div>
       ${daily.reached ? '<p class="goal-done">Goal complete — you\'re a star today! 🌟</p>' : ''}
     </div>
+
+    ${weekly.goal ? `
+    <div class="card-soft weekly-goal">
+      <div class="wg-ring" style="--p:${Math.min(100, Math.round(weekly.days / weekly.goal * 100))}"><span>${Math.min(weekly.days, weekly.goal)}/${weekly.goal}</span></div>
+      <div class="wg-text">📅 <b>This week's goal</b><br><span class="muted">${weekly.met ? 'Goal met this week — amazing! 🎉' : `${weekly.days} of ${weekly.goal} practice days`}</span></div>
+    </div>` : ''}
 
     ${(showWarmup || mistakes || reviews.length) ? `
     <h3 class="section-h nudge-h">Quick boosts ✨</h3>
@@ -83,6 +90,10 @@ export function renderHome(root) {
         <span class="cont-emoji">📍</span>
         <span class="cont-text"><b>Number Line</b><span>Guess where the number goes!</span></span>
       </button>
+      <button class="continue-card sort-card" id="sort-btn">
+        <span class="cont-emoji">🌪️</span>
+        <span class="cont-text"><b>Sort &amp; Storm</b><span>Tap the numbers that fit the rule!</span></span>
+      </button>
     </div>
 
     <div class="grade-tabs" role="tablist" aria-label="Choose grade">
@@ -113,6 +124,7 @@ export function renderHome(root) {
   root.querySelector('#quest-btn').addEventListener('click', () => { sfx.tap(); navigate('#/adventure'); });
   root.querySelector('#sprint-btn').addEventListener('click', () => { sfx.tap(); navigate('#/sprint'); });
   root.querySelector('#magnitude-btn').addEventListener('click', () => { sfx.tap(); navigate('#/magnitude'); });
+  root.querySelector('#sort-btn').addEventListener('click', () => { sfx.tap(); navigate('#/sort'); });
   const contBtn = root.querySelector('#continue-btn');
   if (contBtn) contBtn.addEventListener('click', () => {
     sfx.tap();
@@ -172,9 +184,11 @@ export function renderHome(root) {
 function skillCard(s) {
   const unlocked = isUnlocked(s);
   const rec = S.progress.skills[s.id] || { stars: 0, mastered: false };
+  const rusty = isRusty(rec);
   return `
-    <button class="skill-card ${unlocked ? '' : 'locked'} ${rec.mastered ? 'mastered' : ''}" data-id="${s.id}"
-      aria-label="${escapeHtml(s.title)}${unlocked ? '' : ' (locked)'}${rec.mastered ? ' (mastered)' : ''}">
+    <button class="skill-card ${unlocked ? '' : 'locked'} ${rec.mastered ? 'mastered' : ''} ${rusty ? 'rusty' : ''}" data-id="${s.id}"
+      aria-label="${escapeHtml(s.title)}${unlocked ? '' : ' (locked)'}${rec.mastered ? ' (mastered)' : ''}${rusty ? ' (needs a refresh)' : ''}">
+      ${rusty ? '<span class="rusty-flag" title="Time for a refresh!">🔄</span>' : ''}
       <span class="skill-emoji">${s.emoji || '✏️'}</span>
       <span class="skill-title">${escapeHtml(s.title)}</span>
       ${unlocked ? stars(rec.stars || 0) : '<span class="lock">🔒</span>'}

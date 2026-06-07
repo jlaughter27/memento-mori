@@ -2,7 +2,7 @@
 import { S, persist } from '../state.js';
 import { rewardsData } from '../curriculum/index.js';
 import decorData from '../curriculum/decor-data.js';
-import { tickCare, petMood, patPet, playPet, feedPet, buyTreats, addCoins } from '../gamification.js';
+import { tickCare, petMood, patPet, playPet, feedPet, buyTreats, addCoins, petStage } from '../gamification.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx, speak } from '../ui/sound.js';
 import { floatText, sparkle, popup, confetti, toast } from '../ui/celebrations.js';
@@ -22,6 +22,7 @@ export function renderPet(root) {
   tickCare();
   const pet = petById(S.profile.avatar.pet);
   const c = S.progress.care;
+  const stage = petStage();
 
   root.innerHTML = `
     <div class="pet-wrap">
@@ -33,7 +34,10 @@ export function renderPet(root) {
       <div class="pet-room card-soft" id="pet-room" style="background:${roomBg()}">
         <div class="pet-decor" id="pet-decor">${decorEmojis()}</div>
         <div class="pet-bubble" id="pet-bubble" aria-live="polite" aria-atomic="true"></div>
-        <div class="pet-sprite" id="pet-sprite" aria-hidden="true">${pet.emoji}</div>
+        <div class="pet-sprite-wrap ${stage.glow ? 'glow' : ''}" style="--pet-scale:${stage.scale}">
+          <div class="pet-sprite" id="pet-sprite" aria-hidden="true">${pet.emoji}</div>
+        </div>
+        <span class="pet-stage-badge" title="Your pet grows as you master skills">⭐ ${stage.name} pet</span>
         <div class="pet-floor"></div>
       </div>
 
@@ -82,7 +86,18 @@ export function renderPet(root) {
     root.querySelector('#treat-count').textContent = `${S.progress.care.treats} treats`;
     root.querySelector('#pet-coins').textContent = S.progress.coins;
   }
-  say(line(petMood()));
+  // bonding moment: occasionally the pet reflects on the child's real learning history
+  const st = S.progress.stats;
+  const bond = st.problemsCorrect > 25 && Math.random() < 0.35
+    ? `We've solved ${st.problemsCorrect} problems together — what a team! 💞`
+    : (st.skillsMastered >= 3 && Math.random() < 0.35 ? `You've mastered ${st.skillsMastered} skills. I'm so proud of you! 🌟` : null);
+  say(bond || line(petMood()));
+
+  // evolution celebration when the pet grows to a new stage (driven by skills mastered)
+  if (stage.i > (c.stageSeen || 0)) {
+    c.stageSeen = stage.i; persist();
+    setTimeout(() => popup({ emoji: '✨', title: `${pet.name} grew up!`, sub: `Your pet is now a ${stage.name} pet! Keep learning to help it grow even more. 🌱`, sound: 'level', hold: true }), 500);
+  }
 
   root.querySelector('#act-pat').addEventListener('click', () => {
     sfx.tap(); const before = S.progress.care.happiness; patPet();

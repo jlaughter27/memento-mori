@@ -696,3 +696,54 @@ body[data-theme="theme-superhero"] :focus-visible{outline-color:#7a0000}
 .mag-pts-good{color:var(--p1)}
 .mag-pts-ok{color:var(--ink-soft)}
 .mag-confirm-btn{margin-top:4px}
+
+/* ---- v2.7: pet growth, rusty skills, weekly goal ---- */
+.pet-sprite-wrap{display:flex;justify-content:center;transform:scale(var(--pet-scale,1));transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.pet-sprite-wrap.glow{filter:drop-shadow(0 0 10px rgba(255,200,60,.75))}
+.pet-stage-badge{position:absolute;top:10px;right:12px;background:rgba(255,255,255,.88);border-radius:99px;padding:3px 11px;font-weight:800;font-size:.74rem;color:var(--p1);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+/* rusty (mastered but long overdue) skill cards */
+.skill-card.rusty .skill-check{background:#e8a33d}
+.skill-card .rusty-flag{position:absolute;top:-8px;left:-8px;background:#e8a33d;color:#fff;border-radius:50%;width:24px;height:24px;display:grid;place-items:center;font-size:.8rem;box-shadow:0 2px 5px rgba(0,0,0,.2)}
+/* weekly goal ring on home */
+.weekly-goal{display:flex;align-items:center;gap:14px}
+.wg-ring{--p:0;width:56px;height:56px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;
+  background:conic-gradient(var(--good) calc(var(--p)*1%), #ece7ff 0);font-weight:900;color:var(--good-d);font-size:.8rem}
+.wg-ring span{background:#fff;width:42px;height:42px;border-radius:50%;display:grid;place-items:center}
+.wg-text b{color:var(--good-d)}
+
+.continue-card.sort-card{background:linear-gradient(135deg,#fff,#f3f0ff);border-color:#a29bfe;box-shadow:0 5px 0 #d9d2ff}
+.continue-card.sort-card .cont-text b{color:#6c5ce7}
+
+/* Sort & Storm */
+.ss-best{margin:.5rem 0 1rem;font-size:1.1rem}
+.ss-final-score{font-size:3.5rem;font-weight:900;line-height:1;margin:.5rem 0;color:var(--p1)}
+.ss-rule-banner{background:linear-gradient(180deg,var(--p2),var(--p1));color:#fff;border-radius:16px;padding:.75rem 1.25rem;margin:.5rem 0;text-align:center}
+.ss-round-label{font-size:.75rem;opacity:.85;display:block}
+.ss-rule-text{font-size:1.25rem;font-weight:800}
+.ss-timer-bar{height:8px;background:#ece7ff;border-radius:4px;margin:.25rem 0 0}
+.ss-timer-fill{height:100%;background:linear-gradient(90deg,#6bcB77,#ffd56b,#ff7043);border-radius:4px;transition:width .9s linear}
+.ss-timer-label{display:block;text-align:right;font-size:.75rem;color:var(--ink-soft);margin:0 0 .25rem}
+.ss-progress{display:flex;gap:6px;align-items:center}
+.ss-dot{width:10px;height:10px;border-radius:50%;background:#e0d9ff}
+.ss-dot-done{background:var(--p1)}
+.ss-dot-cur{background:var(--warn)}
+.ss-score-hud{font-size:1rem;font-weight:800;color:#b97e00}
+.ss-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;width:100%;max-width:420px;margin:0 auto}
+.ss-tile{min-height:60px;font-size:1.3rem;font-weight:800;border-radius:14px;border:2px solid #efeaff;background:#fff;cursor:pointer;position:relative;transition:transform .1s,background .15s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:0 4px 0 #ece7ff;font-family:inherit}
+.ss-tile:active{transform:translateY(3px);box-shadow:0 1px 0 #ece7ff}
+.ss-tile:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ss-tile-sel{background:#e7e2ff;border-color:var(--p1)}
+.ss-tile-correct{background:#d4f7dc;border-color:#4caf50}
+.ss-tile-missed{background:#ffe0e0;border-color:#e05252}
+.ss-tile-missed-match{background:#fff3cd;border-color:#e6a817}
+.ss-tile-icon{font-size:.72rem;line-height:1}
+@keyframes ss-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.ss-tile-wrong-shake{animation:ss-shake .5s ease}
+.ss-actions{display:flex;justify-content:center;padding:.5rem 0 1rem}
+.ss-submit{width:100%;max-width:280px}
+
+/* collection summary bar */
+.collection-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding:12px 16px}
+.coll-label{font-weight:800;color:var(--ink-soft);font-size:.82rem;margin-right:auto}
+.coll-cell{font-weight:800;font-size:.95rem}
+.coll-cell b{color:var(--p1)}

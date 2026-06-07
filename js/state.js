@@ -8,6 +8,7 @@ function defaultState() {
       grade: 3,
       createdAt: Date.now(),
       mascotName: 'Foxy',
+      weeklyGoal: 3, // parent-set practice days/week (0 = off)
       avatar: { pet: 'pet-cat', accessories: [], theme: 'default', background: 'default' },
     },
     progress: {
@@ -20,8 +21,9 @@ function defaultState() {
       warmup: { date: null }, // last day the open-session warm-up was offered
       sprintBest: 0, // best Math Sprint score (beat-your-own-best, no social comparison)
       magnitudeBest: 0, // best Magnitude Match score
+      sortBest: 0, // best Sort & Storm score
       history: [], // rolling daily log [{ d:'YYYY-M-D', a:attempted, c:correct }] (last ~30 days)
-      care: { happiness: 85, fullness: 70, lastTick: Date.now(), treats: 3, feeds: 0, plays: 0, pats: 0 },
+      care: { happiness: 85, fullness: 70, lastTick: Date.now(), treats: 3, feeds: 0, plays: 0, pats: 0, stageSeen: 0 },
       home: { room: 'room-cozy', ownedRooms: ['room-cozy'], decor: [] }, // pet room + placed decorations
       adventure: { chapter: 0, scene: 0, completed: [] }, // pet story progress
       skills: {}, // id -> {attempts, correct, mastered, stars, lastSeen}

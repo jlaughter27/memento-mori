@@ -44,6 +44,9 @@ export function renderDashboard(root) {
         <label class="set-row">Starting grade
           <select id="set-grade">${GRADES.map((g)=>`<option value="${g}" ${g===S.profile.grade?'selected':''}>Grade ${g}</option>`).join('')}</select>
         </label>
+        <label class="set-row">Weekly goal (practice days)
+          <select id="set-weekly">${[0,2,3,4,5,6,7].map((d)=>`<option value="${d}" ${d===(S.profile.weeklyGoal||0)?'selected':''}>${d===0?'Off':d+' days'}</option>`).join('')}</select>
+        </label>
         <button class="btn btn-danger" id="reset-btn">Reset all progress</button>
       </div>
 
@@ -109,6 +112,7 @@ export function renderDashboard(root) {
 
   root.querySelector('#set-name').addEventListener('input', (e) => { S.profile.name = e.target.value; persist(); });
   root.querySelector('#set-grade').addEventListener('change', (e) => { S.profile.grade = +e.target.value; persist(); refreshChrome(); });
+  root.querySelector('#set-weekly').addEventListener('change', (e) => { S.profile.weeklyGoal = +e.target.value; persist(); });
   root.querySelector('#report-btn').addEventListener('click', () => { sfx.tap(); navigate('#/report'); });
   root.querySelector('#curric-map-btn').addEventListener('click', () => { sfx.tap(); navigate('#/curriculum'); });
   root.querySelector('#whatsnew-btn').addEventListener('click', () => { sfx.tap(); showWhatsNew(); });

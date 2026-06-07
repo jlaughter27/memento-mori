@@ -15,6 +15,7 @@ import { renderCurriculum } from './views/curriculum.js';
 import { renderPet } from './views/pet.js';
 import { renderAdventure } from './views/adventure.js';
 import { renderSprint } from './views/sprint.js';
+import { renderSortStorm } from './views/sortstorm.js';
 import { renderMagnitude } from './views/magnitude.js';
 import { renderReport } from './views/report.js';
 import { renderOnboard } from './views/onboard.js';
@@ -54,6 +55,7 @@ function route() {
     case 'warmup': renderWarmup(root); break;
     case 'sprint': renderSprint(root); break;
     case 'magnitude': renderMagnitude(root); break;
+    case 'sort': renderSortStorm(root); break;
     case 'report': renderReport(root); break;
     case 'rewards': renderRewards(root); break;
     case 'parent': renderDashboard(root); break;

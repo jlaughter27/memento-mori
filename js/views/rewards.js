@@ -20,6 +20,16 @@ export function renderRewards(root) {
           <div class="rc-coins">🪙 <b>${S.progress.coins}</b> coins</div>
         </div>
       </div>
+      <div class="collection-bar card-soft">
+        ${(() => {
+          const ownedSet = new Set(S.progress.owned);
+          const badgesGot = S.progress.badges.length, badgesTot = rewardsData.badges.length;
+          const petsGot = rewardsData.pets.filter((p) => ownedSet.has(p.id)).length, petsTot = rewardsData.pets.length;
+          const itemsGot = rewardsData.shop.filter((i) => ownedSet.has(i.id)).length, itemsTot = rewardsData.shop.length;
+          const cell = (emoji, got, tot) => `<span class="coll-cell">${emoji} <b>${got}</b>/${tot}</span>`;
+          return `<span class="coll-label">My collection</span>${cell('🏅', badgesGot, badgesTot)}${cell('🐾', petsGot, petsTot)}${cell('🎀', itemsGot, itemsTot)}`;
+        })()}
+      </div>
       <div class="tabbar">
         ${['badges', 'shop', 'pets', 'style'].map((t) =>
           `<button class="tab ${t === activeTab ? 'active' : ''}" data-tab="${t}">${tabLabel(t)}</button>`).join('')}

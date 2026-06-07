@@ -99,6 +99,13 @@ try {
   if (q('#mag-confirm')) { click(q('#mag-confirm')); await wait(40); } // place a guess
   log('magnitude mini-game: start → round → place works');
 
+  step = 'sort & storm mini-game';
+  hashTo('#/sort'); await wait(50);
+  if (!q('#ss-start')) throw new Error('sort & storm start did not render');
+  click(q('#ss-start')); await wait(60);
+  if (!q('.ss-tile')) throw new Error('sort & storm round did not start');
+  log('sort & storm mini-game: start → round works');
+
 } catch (e) {
   console.log('\n❌ V2 SMOKE FAILED at [' + step + ']:', e.message);
   if (errors.length) console.log('errors:', errors.slice(0, 5).join(' | '));

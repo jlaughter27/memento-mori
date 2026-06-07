@@ -6,7 +6,7 @@ import { matchMisconception } from '../engine/problemTypes.js';
 import {
   recordAnswer, masterSkill, checkNewBadges, PRAISE, pickPraise, DAILY_GOAL,
   dueReviews, scheduleReview, noteMistake, resolveMistake, mistakeSkills, mistakeCount,
-  warmupPool, markWarmupDone,
+  warmupPool, markWarmupDone, rustySkills,
 } from '../gamification.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { renderVisual } from '../ui/manipulatives.js';
@@ -106,13 +106,15 @@ export function renderPlay(root) {
 export function renderReview(root) {
   const due = dueReviews();
   if (!due.length) { navigate('#/'); return; }
+  // weight "rusty" (long-overdue) skills more heavily so decay is actively reversed
+  const pool = [...due, ...rustySkills()];
   const goal = Math.min(8, Math.max(4, due.length * 2));
   startSession(root, {
     title: '🔁 Review Time',
     subtitle: `${due.length} skill${due.length > 1 ? 's' : ''} to refresh`,
     goal,
     getNext: (diff) => {
-      const s = due[Math.floor(Math.random() * due.length)];
+      const s = pool[Math.floor(Math.random() * pool.length)];
       return { problem: nextProblem(s, diff), skillId: s.id };
     },
     onComplete: (stats) => finishReview(due, stats),
