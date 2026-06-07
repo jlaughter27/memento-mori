@@ -225,7 +225,6 @@ export function renderReport(root) {
           </div>
         </div>
         <div class="rpt-btn-row no-print">
-          <button class="btn btn-ghost" id="rpt-back-btn" aria-label="Back to parent dashboard">← Back</button>
           <button class="btn btn-ghost" id="rpt-print-btn" aria-label="Print this report">🖨️ Print</button>
         </div>
       </div>
@@ -294,10 +293,6 @@ export function renderReport(root) {
     </div>`;
 
   // ── Event listeners ─────────────────────────────────────────────────────
-  root.querySelector('#rpt-back-btn').addEventListener('click', () => {
-    sfx.tap();
-    navigate('#/parent');
-  });
   root.querySelector('#rpt-print-btn').addEventListener('click', () => {
     sfx.tap();
     window.print();

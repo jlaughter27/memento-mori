@@ -34,7 +34,6 @@ export function renderLesson(root, id) {
   root.innerHTML = `
     <div class="lesson-wrap">
       <header class="lesson-top">
-        <button class="btn-ghost" id="lesson-back">← Map</button>
         <span class="lesson-title">${skill.emoji || ''} ${escapeHtml(skill.title)}</span>
       </header>
       ${(() => { const st = getStandard(skill.id); return st ? `<div class="lesson-standard"><span class="std-tag" title="${escapeHtml(st.domain)}"><span class="std-code">${escapeHtml(st.code)}</span><span class="std-text">${escapeHtml(st.text)}</span></span></div>` : ''; })()}
@@ -52,7 +51,6 @@ export function renderLesson(root, id) {
   const dots = root.querySelector('#lesson-dots');
   const prevBtn = root.querySelector('#lesson-prev');
   const nextBtn = root.querySelector('#lesson-next');
-  root.querySelector('#lesson-back').addEventListener('click', () => navigate('#/'));
 
   function draw() {
     const c = cards[idx];

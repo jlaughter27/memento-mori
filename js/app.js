@@ -21,7 +21,9 @@ import { renderReport } from './views/report.js';
 import { renderOnboard } from './views/onboard.js';
 
 const content = () => document.getElementById('content');
-const TOP_LEVEL = new Set(['', 'adventure', 'pet', 'rewards', 'parent']);
+// Top-level hubs show the kid HUD + bottom nav. Everything else is a "sub-screen"
+// that gets a slim back bar (see shell.renderSubhead) and hides the kid chrome.
+const TOP_LEVEL = new Set(['', 'adventure', 'pet', 'rewards']);
 
 function parseHash() {
   const h = (location.hash || '#/').replace(/^#\//, '');
@@ -40,9 +42,10 @@ function route() {
   window.scrollTo(0, 0);
 
   document.body.dataset.route = route || 'home';
-  const showChrome = TOP_LEVEL.has(route) && S.onboarded;
-  document.getElementById('nav').style.display = showChrome ? '' : 'none';
-  document.getElementById('hud').style.display = (route === 'onboard') ? 'none' : '';
+  // top-level hubs: kid HUD + bottom nav. sub-screens: slim back bar (renderSubhead).
+  const top = TOP_LEVEL.has(route) && S.onboarded;
+  document.getElementById('nav').style.display = top ? '' : 'none';
+  document.getElementById('hud').style.display = top ? '' : 'none';
 
   switch (route) {
     case '': renderHome(root); break;

@@ -97,9 +97,12 @@ export function renderHome(root) {
       </button>
     </div>
 
-    <div class="grade-tabs" role="tablist" aria-label="Choose grade">
-      ${GRADES.map((g) => `<button class="grade-tab ${g === grade ? 'active' : ''}" role="tab" aria-selected="${g === grade}" data-grade="${g}">Grade ${g}</button>`).join('')}
-    </div>
+    <details class="grade-switch">
+      <summary><span>📚 Grade ${grade}</span><span class="gs-hint">tap to switch grade</span></summary>
+      <div class="grade-tabs" role="tablist" aria-label="Choose grade">
+        ${GRADES.map((g) => `<button class="grade-tab ${g === grade ? 'active' : ''}" role="tab" aria-selected="${g === grade}" data-grade="${g}">Grade ${g}</button>`).join('')}
+      </div>
+    </details>
 
     <div class="grade-progress card-soft">
       <div class="gp-row">

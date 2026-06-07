@@ -1,4 +1,4 @@
-// ui/shell.js — persistent top HUD + bottom nav + navigation helper.
+// ui/shell.js — persistent top HUD + bottom nav + sub-screen header + nav helper.
 import { S } from '../state.js';
 import { levelProgress } from '../gamification.js';
 import { rewardsData } from '../curriculum/index.js';
@@ -10,6 +10,25 @@ export function navigate(hash) {
 }
 
 const petEmoji = (id) => (rewardsData.pets.find((p) => p.id === id) || { emoji: '🦊' }).emoji;
+
+// Sub-screens (everything that isn't a top-level hub) get a consistent back bar.
+// title = the label shown; back = where the ← button goes.
+const SCREENS = {
+  learn:     { title: 'Lesson',          back: '#/' },
+  practice:  { title: 'Practice',        back: '#/' },
+  tutor:     { title: 'Learn with Foxy', back: '#/' },
+  play:      { title: 'Daily Challenge', back: '#/' },
+  review:    { title: 'Review',          back: '#/' },
+  fixit:     { title: 'Fix-It',          back: '#/' },
+  warmup:    { title: 'Warm-Up',         back: '#/' },
+  sprint:    { title: 'Math Sprint',     back: '#/' },
+  magnitude: { title: 'Number Line',     back: '#/' },
+  sort:      { title: 'Sort & Storm',    back: '#/' },
+  parent:    { title: 'Grown-ups',       back: '#/' },
+  report:    { title: 'Progress Report', back: '#/parent' },
+  curriculum:{ title: 'Curriculum Map',  back: '#/parent' },
+};
+export function screenFor(route) { return SCREENS[route] || null; }
 
 export function renderHUD() {
   const host = document.getElementById('hud');
@@ -29,8 +48,27 @@ export function renderHUD() {
     <div class="hud-stats">
       <span class="hud-coins" aria-label="${S.progress.coins} coins">🪙 <b>${S.progress.coins}</b></span>
       <span class="hud-streak ${st > 0 ? 'lit' : ''}" aria-label="${st} day streak">🔥 <b>${st}</b></span>
-    </div>`;
-  host.querySelector('[data-go]').addEventListener('click', () => navigate('#/'));
+    </div>
+    <button class="hud-gear" data-go="#/parent" aria-label="Grown-ups area">⚙️</button>`;
+  host.querySelectorAll('[data-go]').forEach((b) =>
+    b.addEventListener('click', () => { sfx.tap(); navigate(b.dataset.go); }));
+}
+
+// Slim back bar shown on sub-screens (replaces the kid HUD/nav so the task is the focus).
+export function renderSubhead() {
+  const host = document.getElementById('subhead');
+  if (!host) return;
+  const route = (location.hash || '#/').split('/')[1] || '';
+  const sc = SCREENS[route];
+  if (!sc) { host.hidden = true; host.innerHTML = ''; return; }
+  host.hidden = false;
+  host.innerHTML = `
+    <button class="sub-back" data-go="${sc.back}" aria-label="Back">
+      <span aria-hidden="true">←</span> Back
+    </button>
+    <span class="sub-title">${sc.title}</span>
+    <span class="sub-coins" aria-label="${S.progress.coins} coins">🪙 <b>${S.progress.coins}</b></span>`;
+  host.querySelector('[data-go]').addEventListener('click', () => { sfx.tap(); navigate(sc.back); });
 }
 
 export function renderNav() {
@@ -42,7 +80,6 @@ export function renderNav() {
     { hash: '#/adventure', icon: '⚔️', label: 'Quest', key: 'adventure' },
     { hash: '#/pet', icon: '🐾', label: 'Pet', key: 'pet' },
     { hash: '#/rewards', icon: '🏆', label: 'Rewards', key: 'rewards' },
-    { hash: '#/parent', icon: '👨‍👩‍👧', label: 'Grown-ups', key: 'parent' },
   ];
   host.innerHTML = items.map((it) =>
     `<button class="nav-btn ${route === it.key ? 'active' : ''}" data-hash="${it.hash}">
@@ -56,4 +93,4 @@ export function renderNav() {
 export let renderRouteFromHash = () => {};
 export function setRouter(fn) { renderRouteFromHash = fn; }
 
-export function refreshChrome() { renderHUD(); renderNav(); }
+export function refreshChrome() { renderHUD(); renderNav(); renderSubhead(); }

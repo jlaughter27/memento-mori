@@ -67,9 +67,6 @@ export function renderMagnitude(root) {
     const best = S.progress.magnitudeBest || 0;
     root.innerHTML = `
       <div class="sprint-wrap">
-        <header class="sprint-top">
-          <button class="btn-ghost" id="mag-back">← Map</button>
-        </header>
         <div class="sprint-intro card-soft">
           <div class="sprint-emoji" aria-hidden="true">📏</div>
           <h1>Magnitude Match</h1>
@@ -81,7 +78,6 @@ export function renderMagnitude(root) {
           <button class="btn btn-big btn-play" id="mag-start">Let's go! 🚀</button>
         </div>
       </div>`;
-    root.querySelector('#mag-back').addEventListener('click', () => navigate('#/'));
     root.querySelector('#mag-start').addEventListener('click', () => { sfx.tap(); playRound(); });
   }
 
@@ -96,7 +92,6 @@ export function renderMagnitude(root) {
     root.innerHTML = `
       <div class="mag-wrap" id="mag-root">
         <header class="sprint-top">
-          <button class="btn-ghost" id="mag-quit">← Map</button>
           <span class="mag-round-badge" aria-label="Round ${roundIdx + 1} of ${ROUNDS}">
             Round ${roundIdx + 1} / ${ROUNDS}
           </span>
@@ -321,11 +316,9 @@ export function renderMagnitude(root) {
 
     confirmBtn.addEventListener('click', confirmPlacement);
 
-    // ── Back button ────────────────────────────────────────────────────────────
-    root.querySelector('#mag-quit').addEventListener('click', () => {
-      cleanup();
-      navigate('#/');
-    });
+    // back lives in the shared sub-header now; ensure we still drop the global
+    // keydown handler when the learner navigates away
+    window.addEventListener('hashchange', cleanup, { once: true });
 
     // ── Initial pin at midpoint ───────────────────────────────────────────────
     movePinToFrac(0.5);

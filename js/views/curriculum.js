@@ -10,7 +10,6 @@ export function renderCurriculum(root) {
   root.innerHTML = `
     <div class="curric-wrap">
       <header class="curric-top no-print">
-        <button class="btn-ghost" id="curric-back">← Back</button>
         <button class="btn" id="curric-print">🖨️ Print</button>
       </header>
       <div class="curric-doc">
@@ -38,6 +37,5 @@ export function renderCurriculum(root) {
         <p class="curric-foot">Aligned to the Common Core State Standards for Mathematics. MathQuest is private by design — all progress stays on this device.</p>
       </div>
     </div>`;
-  root.querySelector('#curric-back').addEventListener('click', () => { sfx.tap(); navigate('#/parent'); });
   root.querySelector('#curric-print').addEventListener('click', () => { sfx.tap(); window.print(); });
 }

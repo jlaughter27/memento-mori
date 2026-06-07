@@ -32,7 +32,6 @@ export function renderSprint(root) {
     clear();
     root.innerHTML = `
       <div class="sprint-wrap">
-        <header class="sprint-top"><button class="btn-ghost" id="sprint-back">← Map</button></header>
         <div class="sprint-intro card-soft">
           <div class="sprint-emoji">⚡</div>
           <h1>Math Sprint</h1>
@@ -41,7 +40,6 @@ export function renderSprint(root) {
           <button class="btn btn-big btn-play" id="sprint-start">Start! 🚀</button>
         </div>
       </div>`;
-    root.querySelector('#sprint-back').addEventListener('click', () => { clear(); navigate('#/'); });
     root.querySelector('#sprint-start').addEventListener('click', () => { sfx.tap(); countdown(); });
   }
 

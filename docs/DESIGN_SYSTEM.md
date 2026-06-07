@@ -98,6 +98,23 @@ Any element that can receive user/generated text gets `overflow-wrap:anywhere`
 
 ---
 
+## 2b. Navigation & wayfinding
+
+Two screen classes, one consistent pattern:
+- **Top-level hubs** (`#/`, `#/adventure`, `#/pet`, `#/rewards`) show the kid **HUD**
+  (avatar=home, level, coins, streak, ⚙️ gear) + the **4-item bottom nav**
+  (Learn · Quest · Pet · Rewards). The **Grown-ups** area lives behind the HUD **gear**
+  (`#/parent`), kept out of the kid nav.
+- **Sub-screens** (lessons, practice, tutor, games, review/fix-it/warm-up, report,
+  curriculum, grown-ups) hide the kid chrome and show one slim, sticky **back bar**
+  (`renderSubhead`): `← Back · screen title · coins`. Back goes to the right parent
+  (most → home; report/curriculum → grown-ups). Views must **not** add their own back
+  button — the sub-header is the single, consistent escape. The router (`app.js`) and
+  `SCREENS` map in `shell.js` own this; add a route's title/back there.
+
+> Any view with a global listener/timer must clean up on `hashchange` (not just on a
+> back click), since the child can leave via the shared back bar.
+
 ## 3. Layout & responsiveness
 
 - **One column, max 760px**, centered (`.content`). Mobile-first; the 8-year-old's

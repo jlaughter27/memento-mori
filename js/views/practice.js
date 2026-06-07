@@ -37,7 +37,7 @@ export function renderTutor(root, id) {
   function draw() {
     root.innerHTML = `
       <div class="tutor-wrap">
-        <header class="practice-top"><button class="btn-ghost" id="t-back">← Map</button>
+        <header class="practice-top">
           <div class="prac-title">🦊 ${escapeHtml(skill.title)}<span class="prac-sub">Learn with Foxy</span></div></header>
         <div class="teach-card card-soft">
           <div class="teach-head">🦊 Watch me first!</div>
@@ -52,7 +52,6 @@ export function renderTutor(root, id) {
           </div>
         </div>
       </div>`;
-    root.querySelector('#t-back').addEventListener('click', () => navigate('#/'));
     const list = root.querySelector('#t-steps');
     const stepBtn = root.querySelector('#t-step');
     const goBtn = root.querySelector('#t-go');
@@ -169,7 +168,6 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
   root.innerHTML = `
     <div class="practice-wrap">
       <header class="practice-top">
-        <button class="btn-ghost" id="prac-back">← Map</button>
         <div class="prac-title">${title}<span class="prac-sub">${subtitle}</span></div>
         <div class="prac-progress" id="prac-pips"></div>
       </header>
@@ -190,7 +188,9 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
   const hintBtn = root.querySelector('#hint-btn');
   const showBtn = root.querySelector('#show-btn');
   const solPanel = root.querySelector('#solution-panel');
-  root.querySelector('#prac-back').addEventListener('click', () => { leave(); navigate('#/'); });
+  // the back bar lives in the shared sub-header now; clean up our global keydown
+  // handler + scheduled nudges whenever the learner navigates away.
+  window.addEventListener('hashchange', leave, { once: true });
 
   function drawPips() {
     pips.innerHTML = Array.from({ length: goal }, (_, i) =>

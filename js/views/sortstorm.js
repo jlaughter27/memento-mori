@@ -253,9 +253,6 @@ export function renderSortStorm(root) {
     const best = (S && S.progress && S.progress.sortBest) ? S.progress.sortBest : 0;
     root.innerHTML = `
       <div class="sprint-wrap ss-wrap">
-        <header class="sprint-top">
-          <button class="btn-ghost" id="ss-back" aria-label="Back to map">← Map</button>
-        </header>
         <div class="sprint-intro card-soft ss-intro">
           <div class="sprint-emoji">🌩️</div>
           <h1>Sort &amp; Storm</h1>
@@ -265,7 +262,6 @@ export function renderSortStorm(root) {
           <button class="btn btn-big btn-play" id="ss-start">Let's go! 🌩️</button>
         </div>
       </div>`;
-    root.querySelector('#ss-back').addEventListener('click', () => { clear(); navigate('#/'); });
     root.querySelector('#ss-start').addEventListener('click', () => { sfx.tap(); play(); });
   }
 
@@ -297,7 +293,6 @@ export function renderSortStorm(root) {
       root.innerHTML = `
         <div class="sprint-wrap ss-wrap">
           <header class="sprint-top">
-            <button class="btn-ghost" id="ss-quit" aria-label="Quit game">← Map</button>
             <div class="ss-progress" aria-label="Round ${roundIdx + 1} of ${TOTAL_ROUNDS}">
               ${Array.from({ length: TOTAL_ROUNDS }, (_, i) =>
                 `<span class="ss-dot${i < roundIdx ? ' ss-dot-done' : i === roundIdx ? ' ss-dot-cur' : ''}" aria-hidden="true"></span>`
@@ -341,7 +336,7 @@ export function renderSortStorm(root) {
         grid.appendChild(btn);
       });
 
-      root.querySelector('#ss-quit').addEventListener('click', () => { clear(); navigate('#/'); });
+      window.addEventListener('hashchange', clear, { once: true }); // stop timers if they leave via the back bar
       root.querySelector('#ss-submit').addEventListener('click', () => {
         if (!roundOver) endRound();
       });

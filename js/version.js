@@ -1,10 +1,21 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.11.0';
+export const APP_VERSION = '2.12.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.12.0',
+    date: '2026-06-07',
+    title: 'Easy to Get Around',
+    items: [
+      '↩️ One clear "Back" bar on every screen — never get lost',
+      '🧭 Simpler bottom menu with your 4 favorite places',
+      '⚙️ Grown-up tools tucked behind a gear, out of your way',
+      '🏠 Tidier home — tap "Grade" only when you want to switch',
+    ],
+  },
   {
     v: '2.11.0',
     date: '2026-06-07',

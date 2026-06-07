@@ -155,6 +155,19 @@ try {
   if (speechCancels <= cancelsBefore) throw new Error('route change did not stop speech (stopSpeech not wired)');
   log('navigation stops read-aloud (speechSynthesis.cancel fired)');
 
+  step = 'navigation chrome';
+  // bottom nav is the 4 kid hubs; Grown-ups moved to the HUD gear
+  if ($$('.nav-btn').length !== 4) throw new Error('expected 4 bottom-nav items, got ' + $$('.nav-btn').length);
+  if (!$('.hud-gear')) throw new Error('HUD gear (grown-ups) missing');
+  // sub-screens show the slim back bar and hide the kid HUD/nav
+  window.location.hash = '#/sprint'; window.dispatchEvent(new window.Event('hashchange')); await wait(50);
+  if ($('#subhead').hidden || !$('.sub-back')) throw new Error('sub-header back bar not shown on a sub-screen');
+  if ($('#hud').style.display !== 'none') throw new Error('kid HUD should be hidden on a sub-screen');
+  click($('.sub-back')); await wait(50);
+  if (!$('.home-hero')) throw new Error('sub-header back did not return home');
+  if (!$('#subhead').hidden) throw new Error('sub-header should hide on a top-level hub');
+  log('nav chrome: 4 hubs + HUD gear; sub-header back bar works');
+
   step = 'rewards-tabs';
   window.location.hash = '#/rewards'; window.dispatchEvent(new window.Event('hashchange')); await wait(40);
   for (const t of $$('.tab')) { click(t); await wait(25); }

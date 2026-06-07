@@ -4,6 +4,24 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.12.0] — 2026-06-07 — "Easy to Get Around"
+A navigation / information-architecture overhaul (from the IA audit).
+### Changed
+- **One consistent back bar on every sub-screen.** A new router-managed sticky
+  sub-header (`← Back · screen title · coins`, `shell.renderSubhead`) replaces the
+  eight different bespoke in-view back buttons. Back always goes to the right parent
+  (most → home; report/curriculum → grown-ups), so a child can never get stuck.
+- **Bottom nav slimmed to the 4 kid hubs** (Learn · Quest · Pet · Rewards). The
+  **Grown-ups** area moved to a **⚙️ gear in the HUD** and is now a sub-screen, so the
+  kid nav is no longer mixed with parent tools.
+- **Tidier home** — the grade switcher (noise for a single learner) collapses into a
+  `<details>`; tap "Grade N" only when you actually want to switch.
+- Sub-screens now hide the kid HUD/nav and focus on the task with the slim back bar.
+### Internal
+- Views with global listeners/timers (practice keydown, magnitude keydown, sort timer)
+  now clean up on `hashchange`, since the child can leave via the shared back bar.
+- New smoke coverage asserts the 4-hub nav, the HUD gear, and the working sub-header.
+
 ## [2.11.0] — 2026-06-07 — "Modern & Clean"
 A modern-feel pass from three parallel audits (motion, navigation/IA, visual design).
 ### Added
