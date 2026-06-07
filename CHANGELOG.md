@@ -4,6 +4,17 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.13.0] — 2026-06-07 — "Clear Next Steps"
+### Changed
+- **Locked skills now name their prerequisite** — a tooltip + richer aria-label
+  ("🔒 Master "X" first") answers "why is this locked?" without a tap.
+### Verified
+- Full DOM-snapshot visual QA at phone width (390px) across all 14 routes confirmed
+  the new chrome: hubs show HUD + 4-item nav (subheader hidden); every sub-screen shows
+  the slim back bar with the correct title and hides the kid HUD/nav; no leftover empty
+  headers. (Real-browser screenshots weren't possible — the Chromium download is
+  firewalled in the build sandbox.)
+
 ## [2.12.0] — 2026-06-07 — "Easy to Get Around"
 A navigation / information-architecture overhaul (from the IA audit).
 ### Changed

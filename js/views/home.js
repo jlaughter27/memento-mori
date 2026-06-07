@@ -189,9 +189,15 @@ function skillCard(s) {
   const unlocked = isUnlocked(s);
   const rec = S.progress.skills[s.id] || { stars: 0, mastered: false };
   const rusty = isRusty(rec);
+  // for locked cards, name the prerequisite so "why is this locked?" is answerable
+  // without tapping (tooltip + richer aria-label)
+  const prereq = unlocked ? null
+    : (s.prereq || []).map((p) => getSkill(p)).find((x) => x && !isMastered(x.id));
+  const lockHint = prereq ? `Master "${prereq.title}" first` : 'Finish the earlier skills first';
   return `
     <button class="skill-card ${unlocked ? '' : 'locked'} ${rec.mastered ? 'mastered' : ''} ${rusty ? 'rusty' : ''}" data-id="${s.id}"
-      aria-label="${escapeHtml(s.title)}${unlocked ? '' : ' (locked)'}${rec.mastered ? ' (mastered)' : ''}${rusty ? ' (needs a refresh)' : ''}">
+      ${unlocked ? '' : `title="🔒 ${escapeHtml(lockHint)}"`}
+      aria-label="${escapeHtml(s.title)}${unlocked ? '' : ` (locked — ${lockHint})`}${rec.mastered ? ' (mastered)' : ''}${rusty ? ' (needs a refresh)' : ''}">
       ${rusty ? '<span class="rusty-flag" title="Time for a refresh!">🔄</span>' : ''}
       <span class="skill-emoji">${s.emoji || '✏️'}</span>
       <span class="skill-title">${escapeHtml(s.title)}</span>
