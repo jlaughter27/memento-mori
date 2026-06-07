@@ -1,6 +1,6 @@
 // service-worker.js — offline-first caching with a controlled update flow.
 // Bump CACHE on every release (mirrors APP_VERSION in js/version.js).
-const CACHE = 'mathquest-2.16.0';
+const CACHE = 'mathquest-2.17.0';
 const ASSETS = [
   './', './index.html', './manifest.json', './assets/icon.svg',
   './css/styles.css',
@@ -11,7 +11,7 @@ const ASSETS = [
   './js/curriculum/grade7.js', './js/curriculum/wordbank.js', './js/curriculum/rewards-data.js',
   './js/curriculum/standards.js', './js/curriculum/adventures.js', './js/curriculum/decor-data.js',
   './js/ui/dom.js', './js/ui/shell.js', './js/ui/sound.js', './js/ui/mascot.js',
-  './js/ui/manipulatives.js', './js/ui/celebrations.js', './js/ui/whatsnew.js',
+  './js/ui/manipulatives.js', './js/ui/interactive.js', './js/ui/celebrations.js', './js/ui/whatsnew.js',
   './js/views/home.js', './js/views/lesson.js', './js/views/practice.js',
   './js/views/rewards.js', './js/views/dashboard.js', './js/views/onboard.js',
   './js/views/curriculum.js', './js/views/pet.js', './js/views/adventure.js', './js/views/sprint.js',

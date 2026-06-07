@@ -76,6 +76,7 @@ Content may ONLY use these `type` ids. `params` shapes per type:
 | `rounding`      | `{digits:2..6, to:10|100|1000}`                                    | 3–5    |
 | `compare`       | `{digits:2..6}`                                                    | 3–4    |
 | `fractionCompare`| `{maxDenom:2..12}`                                                | 3–5    |
+| `fractionShade` | `{maxDenom:2..8}` · **interactive** (`inputKind:'tap'` — child shades a bar) | 3–4    |
 | `equivFraction` | `{maxDenom:2..12}`                                                 | 3–5    |
 | `fractionAddSub`| `{maxDenom:2..12, like:bool, op:'+'|'-'|'mix'}`                   | 4–6    |
 | `fractionOfNum` | `{maxDenom:2..10, op:'mix'}`                                       | 4–6    |

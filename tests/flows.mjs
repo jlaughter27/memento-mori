@@ -33,6 +33,23 @@ try {
   q('#ob-name').value = 'Flo'; click(q('#ob-next')); await wait(40);
   click(qa('.grade-choice')[0]); await wait(20); click(q('#ob-start')); await wait(700);
 
+  step = 'interactive fraction tap';
+  hashTo('#/practice/g3-fractions-shade'); await wait(60);
+  if (!q('.ftap')) throw new Error('interactive tap bar did not render');
+  const promptTxt = q('.problem-prompt').textContent;
+  const m = promptTxt.match(/(\d+)\/(\d+)/);
+  if (!m) throw new Error('could not read fraction from prompt: ' + promptTxt);
+  const target = +m[1], den = +m[2];
+  const cells = qa('.ftap-cell');
+  if (cells.length !== den) throw new Error(`expected ${den} tap cells, got ${cells.length}`);
+  for (let i = 0; i < target; i++) click(cells[i]); // shade exactly the numerator
+  await wait(10);
+  if (!q('.ftap-read').textContent.includes(`${target} of ${den}`)) throw new Error('live region did not announce the count');
+  if (qa('.ftap-cell.on').length !== target) throw new Error('wrong number of shaded cells');
+  click(q('#check-btn')); await wait(60);
+  if (!q('.fb-good')) throw new Error('shading the correct fraction was not accepted');
+  log(`interactive tap: shaded ${target}/${den} by tapping → accepted`);
+
   step = 'dashboard settings';
   hashTo('#/parent'); await wait(50);
   if (!q('#settings')) throw new Error('settings did not render');

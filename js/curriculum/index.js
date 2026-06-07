@@ -17,8 +17,14 @@ export { wordbank, rewardsData, standards };
 
 const byId = new Map(ALL_SKILLS.map((s) => [s.id, s]));
 export const getSkill = (id) => byId.get(id);
-// prefer the curated standards map; fall back to a `cc` field on the skill (grades 2 & 7)
-export const getStandard = (id) => standards[id] || (byId.get(id) && byId.get(id).cc) || null;
+// prefer the curated standards map; fall back to a `cc` field on the skill (grades 2 & 7).
+// Always return the full {code, domain, text} shape so consumers never hit an
+// undefined .text (the bare-string fallback used to crash the doc generator).
+export const getStandard = (id) => {
+  if (standards[id]) return standards[id];
+  const cc = byId.get(id) && byId.get(id).cc;
+  return cc ? { code: cc, domain: '', text: '' } : null;
+};
 export const standardsCount = new Set(
   ALL_SKILLS.map((s) => (getStandard(s.id) || {}).code).filter(Boolean)
 ).size;

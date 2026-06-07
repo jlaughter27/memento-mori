@@ -8,7 +8,7 @@
 //   steps: [{text}],         full worked solution (revealed on "Show me how")
 //   hints: [string],          progressive nudges (revealed one at a time)
 //   visual: descriptor|null,  optional manipulative for THIS problem
-//   inputKind: 'number'|'fraction'|'choice'|'text',
+//   inputKind: 'number'|'fraction'|'choice'|'text'|'tap',
 //   choices: [..]|undefined,  for choice questions (<,>,=, yes/no, multiple choice)
 //   check(raw) -> bool
 // }
@@ -524,6 +524,32 @@ function makeEquivFraction(params = {}, rng) {
     hints: [`Equivalent fractions are the same amount cut into more pieces.`, `Multiply top AND bottom by the same number.`, `${den} × ? = ${tDen}`],
     visual: { type: 'fractionBar', bars: [{ num, den }, { num: tNum, den: tDen }] },
     check: checkInt(tNum),
+  });
+}
+
+/* =====================================================================
+   FRACTIONS — shade it (interactive: tap parts of a bar to build the fraction)
+===================================================================== */
+function makeFractionShade(params = {}, rng) {
+  const den = randInt(rng, 2, params.maxDenom || 6);
+  const num = randInt(rng, 1, den - 1);
+  return P({
+    type: 'fractionShade',
+    prompt: `Tap to shade ${num}/${den} of the bar.`,
+    answer: String(num),
+    inputKind: 'tap',
+    tap: { den },
+    steps: [
+      { text: `The bottom number, ${den}, splits the whole bar into **${den} equal parts**.` },
+      { text: `The top number, ${num}, tells you how many parts to shade.` },
+      { text: `So shade **${num}** of the ${den} parts — that's ${num}/${den}. ✨` },
+    ],
+    hints: [
+      `The bottom (${den}) is how many equal parts there are in all.`,
+      `The top (${num}) is how many parts to color in.`,
+      `Tap exactly ${num} part${num > 1 ? 's' : ''}.`,
+    ],
+    check: checkInt(num),
   });
 }
 
@@ -1090,6 +1116,7 @@ export const TYPES = {
   add: makeAdd, sub: makeSub, mult: makeMult, div: makeDiv,
   placeValue: makePlaceValue, rounding: makeRounding, compare: makeCompare,
   fractionCompare: makeFractionCompare, equivFraction: makeEquivFraction,
+  fractionShade: makeFractionShade,
   fractionAddSub: makeFractionAddSub, fractionOfNum: makeFractionOfNum,
   decimalAddSub: makeDecimalAddSub, decimalCompare: makeDecimalCompare,
   factors: makeFactors, patterns: makePatterns, order: makeOrder,

@@ -67,6 +67,12 @@ export default {
     text: 'Understand a fraction 1/b as one equal part when a whole is divided into b equal parts.'
   },
 
+  'g3-fractions-shade': {
+    code: '3.NF.A.1',
+    domain: 'Number & Operations—Fractions',
+    text: 'Build a fraction a/b by shading a equal parts of a whole divided into b equal parts.'
+  },
+
   'g3-fractions-compare': {
     code: '3.NF.A.3',
     domain: 'Number & Operations—Fractions',

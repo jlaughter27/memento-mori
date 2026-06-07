@@ -4,6 +4,24 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.17.0] — 2026-06-07 — "Hands-On Fractions"
+The first **interactive manipulative** — kicks off the v3.0 hands-on-learning track.
+### Added
+- **Tappable fraction bar** (`js/ui/interactive.js`, `mountFractionTap`) — a new
+  `inputKind:'tap'` where the child **shades parts of a bar by tapping** instead of
+  typing. Every part is a real `<button>` (Tab + Enter/Space), with `aria-pressed` and a
+  live region announcing the running count — fully screen-reader friendly.
+- **New engine type `fractionShade`** ("Tap to shade N/D of the bar"; `check` = shaded
+  count equals the numerator) and a new grade-3 skill **"Show the Fraction"**
+  (`g3-fractions-shade`, CCSS 3.NF.A.1) that teaches concrete → abstract fraction sense.
+  Wired into the practice loop. **90 skills · 74 standards.**
+### Fixed
+- `getStandard` no longer returns a bare `cc` string in the fallback path — it always
+  returns the full `{code, domain, text}` shape, so a skill with only a `cc` field can't
+  crash the curriculum-doc generator or render "undefined" in a lesson's standard tag.
+- Practice now drops a previous problem's keypad `keydown` handler when switching input
+  kinds (keypad → choice/tap) within a mixed session (daily challenge / review).
+
 ## [2.16.0] — 2026-06-07 — "Accessible by Default"
 ### Added
 - **`tests/a11y.mjs`** — codifies invariant #7 as a CI gate: scans every interactive

@@ -10,6 +10,7 @@ import {
 } from '../gamification.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { renderVisual } from '../ui/manipulatives.js';
+import { mountFractionTap } from '../ui/interactive.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx, speak } from '../ui/sound.js';
 import { confetti, popup, floatText, sparkle } from '../ui/celebrations.js';
@@ -228,8 +229,12 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
 
   /* ---- input controllers ---- */
   function buildInput() {
+    // drop any keypad keydown handler from a previous problem (mixed sessions can
+    // switch between keypad / choice / tap inputs)
+    if (ansArea._keyHandler) { document.removeEventListener('keydown', ansArea._keyHandler); ansArea._keyHandler = null; }
     const kind = cur.inputKind || 'number';
     if (kind === 'choice') return buildChoice();
+    if (kind === 'tap') return buildTap();
     ansArea.innerHTML = `
       <div class="answer-display" id="ans-display" data-empty="1">?</div>
       <div class="keypad" id="keypad"></div>
@@ -276,6 +281,15 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
       `<button class="choice-btn" data-c="${escapeHtml(c)}">${escapeHtml(c)}</button>`).join('')}</div>`;
     ansArea.querySelectorAll('.choice-btn').forEach((b) =>
       b.addEventListener('click', () => { if (!answered) check(b.dataset.c, b); }));
+  }
+  // interactive: tap parts of a bar to build the fraction, then Check.
+  function buildTap() {
+    ansArea.innerHTML = `
+      <div class="tap-host" id="tap-host"></div>
+      <button class="btn btn-big btn-check" id="check-btn">Check ✓</button>`;
+    const tap = mountFractionTap(ansArea.querySelector('#tap-host'), { den: (cur.tap && cur.tap.den) || 4 });
+    ansArea.querySelector('#check-btn').addEventListener('click', () => { if (!answered) check(String(tap.getCount())); });
+    cur._getVal = () => String(tap.getCount());
   }
 
   /* ---- checking ---- */

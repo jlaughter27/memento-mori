@@ -425,6 +425,48 @@ export default [
   },
 
   {
+    id: 'g3-fractions-shade',
+    grade: 3,
+    strand: 'Fractions',
+    title: 'Show the Fraction',
+    emoji: '🎨',
+    cc: '3.NF.A.1',
+    blurb: 'Shade parts of a bar to build a fraction with your own hands.',
+    prereq: ['g3-fractions-unit'],
+
+    lesson: {
+      hook: 'If a candy bar has 4 equal pieces and you eat 3, what fraction did you eat?',
+      bigIdea: 'A fraction tells you how many equal parts to shade: the bottom is the total parts, the top is how many to color in.',
+      steps: [
+        {
+          title: 'Bottom = total parts',
+          text: 'The denominator (bottom) says how many equal pieces the whole is split into.',
+          example: { problem: '3/4', show: 'The 4 means the bar has 4 equal parts.' }
+        },
+        {
+          title: 'Top = parts to shade',
+          text: 'The numerator (top) says how many of those parts you color in.',
+          example: { problem: '3/4', show: 'The 3 means shade 3 of the 4 parts.' }
+        },
+        {
+          title: 'Tap to build it',
+          text: 'Now YOU make the fraction — tap the parts of the bar until the right number are shaded!',
+          example: { problem: 'Show 2/3', show: 'Tap 2 of the 3 parts.' }
+        }
+      ],
+      visual: { type: 'fractionBar', num: 3, denom: 4 },
+      tryThis: 'Tap to shade the fraction I ask for!'
+    },
+
+    practice: {
+      type: 'fractionShade',
+      params: { maxDenom: 6 },
+      count: 5
+    },
+    wordProblemTags: ['baking', 'art']
+  },
+
+  {
     id: 'g3-fractions-compare',
     grade: 3,
     strand: 'Fractions',
