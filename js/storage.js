@@ -12,11 +12,18 @@ export function load() {
 }
 
 let saveTimer = null;
+let warnedSaveFail = false;
 export function save(state) {
   try {
     localStorage.setItem(KEY, JSON.stringify(state));
   } catch (e) {
     console.warn('save failed', e);
+    // quota exceeded or private-mode block: tell the grown-up once, gently,
+    // so lost progress isn't a silent surprise.
+    if (!warnedSaveFail) {
+      warnedSaveFail = true;
+      try { window.dispatchEvent(new CustomEvent('mathquest:save-error')); } catch (_) {}
+    }
   }
 }
 // debounced save for hot paths

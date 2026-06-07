@@ -4,6 +4,46 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.9.0] — 2026-06-07 — "Crisp & Consistent"
+A deep UI/UX + design polish pass driven by **five parallel audit agents**
+(spacing/layout, text-overflow, accessibility, theming/states, and a PWA
+best-practices research pass), integrated sequentially with tests after each wave.
+### Fixed (real bugs)
+- **Read-aloud kept playing after navigation** — `speak()` only cancelled on the
+  next utterance; a long line continued after leaving the view. Added `stopSpeech()`
+  and call it on every route change (`js/app.js`). Regression test added.
+- **`apple-touch-icon` pointed at a non-existent `icon-192.png`** (404 on install).
+  Now references the existing icon; added a proper `rel="icon"`.
+- **Magnitude number-line**: a global keydown handler could persist after leaving the
+  round — now self-cleans; the pin announces its value (`aria-valuetext`).
+### Accessibility (WCAG 2.2 AA contrast)
+- Answer-choice **correct/incorrect** colors now pass AA (white-on-green was 2.54:1 →
+  `#047857`; error red darkened to `#b3261e`). Check button, `.std-tag`, streak, and
+  the answer placeholder all darkened to meet contrast. Low-contrast theme `--p1`
+  values (ocean/candy/dino/ice) darkened. Locked-badge fade no longer crushes text.
+- `prefers-reduced-motion` now zeroes durations with `0s` (animations **and**
+  transitions).
+### Theming & consistency
+- The chunky button shadow is now a per-theme token (`--p-shadow`) instead of a
+  hard-coded purple — buttons/tabs match all 9 themes. The blue worked-solution panel
+  + self-explain box recolor to the active theme (`--p1`).
+- Added `--radius-md/-lg` and `--shadow-modal` tokens; modals use the token (visible
+  on dark backgrounds). Dark decorative backgrounds (stars/galaxy/aurora) **frost**
+  white cards/solution panels/scene-nodes so they stay legible.
+- `:hover` affordance on pointer devices; stronger `:disabled` state.
+### PWA hardening
+- `touch-action:manipulation` on tap targets (kills the 300ms double-tap delay
+  without disabling pinch-zoom). `<meta name="color-scheme" content="light">` so
+  native form controls don't render dark-on-white in device dark mode. HUD respects
+  `env(safe-area-inset-top)` (no more tucking under the notch in standalone mode).
+- localStorage save failures (quota / private mode) now surface a gentle one-time
+  notice instead of failing silently.
+- **New `tests/precache.mjs`** guards invariant #5: every shipped JS/CSS file must be
+  in the service-worker precache (catches "added a file, forgot the SW list").
+### More text-overflow guard-rails
+- `overflow-wrap:anywhere` extended to `.feedback`, `.stat-val`, `.mr-name`,
+  `.ach-blurb`, `.rpt-mastered-name`, and curriculum-table descriptions.
+
 ## [2.8.0] — 2026-06-07 — "Polished to Fit"
 A focused UI/UX + design-consistency pass.
 ### Added

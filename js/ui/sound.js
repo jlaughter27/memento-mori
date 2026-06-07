@@ -53,3 +53,9 @@ export function speak(text) {
     speechSynthesis.speak(u);
   } catch (e) {}
 }
+
+// stop any in-flight read-aloud — called on navigation so a long utterance
+// doesn't keep talking after the child leaves the view.
+export function stopSpeech() {
+  if ('speechSynthesis' in window) { try { speechSynthesis.cancel(); } catch (e) {} }
+}

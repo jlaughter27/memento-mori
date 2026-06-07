@@ -34,12 +34,19 @@ Defined in `css/styles.css :root`. When you write new CSS, reach for a token fir
 
 ### Color & elevation
 - **Brand:** `--p1`/`--p2` (purple), `--accent` (pink). Overridden per theme via
-  `body[data-theme]` — never hard-code a brand hex; use the variable so themes work.
-- **Semantic:** `--good`, `--warn`, `--bad`, `--coin`, `--ink`, `--ink-soft`.
+  `body[data-theme]` — **never hard-code a brand hex**; use the variable so all 9
+  themes work. The chunky button shadow is its own per-theme token **`--p-shadow`**
+  (a darker shade of `--p1`) — use it, not a literal like `#5a4bd0`.
+- **Semantic:** `--good`, `--warn`, `--bad`, `--coin` are bright **fills**. For text/icon
+  on white use the **contrast-safe aliases** `--good-text`, `--bad-text`, `--coin-text`
+  (the bright versions fail WCAG AA as small text). `--ink`, `--ink-soft` for body copy.
 - **Elevation:** the signature look is a **chunky bottom shadow** (`box-shadow:0 Ypx 0 <color>`)
-  that compresses on `:active` (`translateY`). Shadow colors: `--shadow-key`,
-  `--shadow-key-good`. Hairline dividers: `--line`.
-- **Radii:** `--radius` (22) cards · `--radius-sm` (14) controls.
+  that compresses on `:active` (`translateY`). Shadow colors: `--p-shadow` (themed),
+  `--shadow-key`, `--shadow-key-good`. Modals use `--shadow-modal`. Hairline: `--line`.
+- **Radii:** `--radius` (22) cards · `--radius-md` (18) mid cards · `--radius-lg` (20)
+  nav/large · `--radius-sm` (14) controls.
+- **Dark backgrounds** (`data-bg=stars/galaxy/aurora`): frost white surfaces
+  (`background:rgba(255,255,255,.94)`) so they stay legible — see the v2.9 block.
 
 ---
 

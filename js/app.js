@@ -2,7 +2,7 @@
 import { S, applyBodyClasses, persist } from './state.js';
 import { updateStreakOnOpen, checkNewBadges } from './gamification.js';
 import { renderHUD, renderNav, setRouter, refreshChrome } from './ui/shell.js';
-import { primeAudio } from './ui/sound.js';
+import { primeAudio, stopSpeech } from './ui/sound.js';
 import { popup, toast } from './ui/celebrations.js';
 import { APP_VERSION } from './version.js';
 import { showWhatsNew } from './ui/whatsnew.js';
@@ -35,6 +35,7 @@ function route() {
 
   const { route, param } = parseHash();
   const root = content();
+  stopSpeech(); // silence any read-aloud from the view we're leaving
   root.scrollTop = 0;
   window.scrollTo(0, 0);
 
@@ -89,6 +90,10 @@ function boot() {
   }
   setRouter(route);
   window.addEventListener('hashchange', route);
+  // if the device can't persist (quota / private mode), let the grown-up know once
+  window.addEventListener('mathquest:save-error', () => {
+    toast("Heads up: this device isn't saving progress right now. 💛", { actionLabel: 'OK' });
+  }, { once: true });
   primeAudio();
   renderHUD(); renderNav();
   route();

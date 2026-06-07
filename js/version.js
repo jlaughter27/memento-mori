@@ -1,10 +1,22 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.8.0';
+export const APP_VERSION = '2.9.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.9.0',
+    date: '2026-06-07',
+    title: 'Crisp & Consistent',
+    items: [
+      '🎨 Buttons & worked-examples now match every color theme (not just purple)',
+      '👀 Clearer, higher-contrast colors so answers are easy to read',
+      '🌙 Star, galaxy & aurora backgrounds keep everything readable',
+      '🔇 Read-aloud now stops when you change screens',
+      '⚡ Snappier taps and tidier spacing all around',
+    ],
+  },
   {
     v: '2.8.0',
     date: '2026-06-07',

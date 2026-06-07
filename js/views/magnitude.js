@@ -184,8 +184,9 @@ export function renderMagnitude(root) {
       [pinCircle, pinShadow].forEach(el => el.setAttribute('cx', cx));
       pinLabel.setAttribute('x', cx);
       pinLabel.textContent = String(val);
-      // sync the accessible slider
+      // sync the accessible slider + announce the current value to screen readers
       slider.value = val;
+      slider.setAttribute('aria-valuetext', `Pin at ${val}`);
     }
 
     function getClientXFromEvent(e) {
@@ -249,6 +250,8 @@ export function renderMagnitude(root) {
 
     // ── Keyboard: arrow keys on the whole round (even when btn focused) ───────
     function onKeyDown(e) {
+      // bail + self-clean if the round was left (guards a stale global handler)
+      if (!document.body.contains(svg)) { document.removeEventListener('keydown', onKeyDown); return; }
       if (confirmed) return;
       // Focus the slider first if user hits arrow keys outside it
       if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {

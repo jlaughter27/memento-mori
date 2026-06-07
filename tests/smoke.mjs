@@ -19,7 +19,8 @@ class FakeOsc { constructor(){this.frequency={setValueAtTime(){}};} connect(){} 
 class FakeGain { constructor(){this.gain={setValueAtTime(){},linearRampToValueAtTime(){},exponentialRampToValueAtTime(){}};} connect(){} }
 g.AudioContext = class { constructor(){this.currentTime=0;this.destination={};this.state='running';} resume(){} createOscillator(){return new FakeOsc();} createGain(){return new FakeGain();} };
 g.SpeechSynthesisUtterance = class {};
-g.speechSynthesis = { cancel(){}, speak(){} };
+let speechCancels = 0;
+g.speechSynthesis = { cancel(){ speechCancels++; }, speak(){} };
 window.HTMLCanvasElement.prototype.getContext = () => ({ scale(){}, clearRect(){}, save(){}, restore(){}, translate(){}, rotate(){}, fillRect(){}, set fillStyle(v){}, set globalAlpha(v){}, beginPath(){}, arc(){}, fill(){} });
 
 // expose globals the ES modules expect (they reference bare document/window/etc.)
@@ -142,6 +143,7 @@ try {
   await dismissPopups();
 
   step = 'routes';
+  const cancelsBefore = speechCancels;
   for (const r of ['#/play', '#/rewards', '#/parent', '#/']) {
     window.location.hash = r;
     window.dispatchEvent(new window.Event('hashchange'));
@@ -149,6 +151,9 @@ try {
     if (!$('#content').children.length) throw new Error('empty content at ' + r);
     log('route ' + r + ' ok');
   }
+  // navigation must stop any in-flight read-aloud (regression: TTS kept playing)
+  if (speechCancels <= cancelsBefore) throw new Error('route change did not stop speech (stopSpeech not wired)');
+  log('navigation stops read-aloud (speechSynthesis.cancel fired)');
 
   step = 'rewards-tabs';
   window.location.hash = '#/rewards'; window.dispatchEvent(new window.Event('hashchange')); await wait(40);
