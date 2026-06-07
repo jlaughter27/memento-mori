@@ -21,7 +21,10 @@ export function showWhatsNew() {
   const btn = node.querySelector('.wn-close');
   if (btn && btn.focus) btn.focus();
   const onKey = (e) => { if (e.key === 'Escape') close(); };
+  let closed = false; // idempotent: a double close must not unbalance the inert ref-count
   const close = () => {
+    if (closed) return;
+    closed = true;
     document.removeEventListener('keydown', onKey);
     setInert(false);
     if (prevFocus && prevFocus.focus) prevFocus.focus();

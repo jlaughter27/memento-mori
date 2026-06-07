@@ -4,6 +4,16 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.16.0] — 2026-06-07 — "Accessible by Default"
+### Added
+- **`tests/a11y.mjs`** — codifies invariant #7 as a CI gate: scans every interactive
+  control (buttons, links, inputs, custom roles) across all 15 routes and fails if any
+  lacks an accessible name, or uses a positive `tabindex`. Currently green — a future
+  icon-button with no `aria-label` can no longer ship silently.
+### Fixed
+- The "What's New" modal's `close()` is now idempotent (a `closed` guard), so a fast
+  double-tap can't unbalance the reference-counted `inert` focus-trap.
+
 ## [2.15.0] — 2026-06-07 — "Tested & True"
 Continued hardening of the less-tested flows.
 ### Added
