@@ -193,6 +193,24 @@ try {
   if ($('#content').getAttribute('inert') !== null) throw new Error('inert not removed after last modal closed');
   log('modal inert is reference-counted (stacked popups keep focus trap)');
 
+  step = 'popup/toast escape dynamic content';
+  // popup + toast must escape strings (the child's name is free-text input) — no
+  // element injection. Deterministic: an unescaped title would create a real <img>.
+  const { popup, toast } = await import('../js/ui/celebrations.js');
+  popup({ title: '<img src=x onerror="window.__pwn=1">', sub: '<b>hi</b>', sound: false, confetti: false });
+  await wait(20);
+  const titleEl = $('.celebrate-title');
+  if (titleEl && titleEl.querySelector('img')) throw new Error('popup title not escaped — an <img> was injected');
+  if (titleEl && !titleEl.textContent.includes('<img')) throw new Error('popup title text lost during escaping');
+  if (window.__pwn) throw new Error('popup executed injected HTML');
+  if ($('.celebrate-btn')) click($('.celebrate-btn'));
+  await wait(20);
+  toast('<img src=x onerror="window.__pwn=1">');
+  await wait(10);
+  if ($('.toast-msg') && $('.toast-msg').querySelector('img')) throw new Error('toast message not escaped');
+  const tc = $('.toast-close'); if (tc) click(tc);
+  log('popup + toast escape dynamic content (no HTML injection)');
+
 } catch (e) {
   console.log('\n❌ SMOKE FAILED at step [' + step + ']:', e.message);
   if (errors.length) console.log('captured page errors:\n', errors.join('\n'));

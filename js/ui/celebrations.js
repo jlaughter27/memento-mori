@@ -1,6 +1,6 @@
 // ui/celebrations.js — confetti + popup moments (respects reduced-motion).
 import { S } from '../state.js';
-import { el } from './dom.js';
+import { el, escapeHtml } from './dom.js';
 import { sfx } from './sound.js';
 
 const reduce = () => S.progress.settings.reducedMotion;
@@ -11,8 +11,8 @@ export function toast(message, { actionLabel, onAction, duration = 0 } = {}) {
   if (existing) existing.remove();
   const node = el(`
     <div class="app-toast" role="status">
-      <span class="toast-msg">${message}</span>
-      ${actionLabel ? `<button class="toast-action">${actionLabel}</button>` : ''}
+      <span class="toast-msg">${escapeHtml(message)}</span>
+      ${actionLabel ? `<button class="toast-action">${escapeHtml(actionLabel)}</button>` : ''}
       <button class="toast-close" aria-label="Dismiss">✕</button>
     </div>`);
   document.body.appendChild(node);
@@ -78,9 +78,9 @@ export function popup({ emoji, title, sub, coins, confetti: doConfetti = true, s
   const node = el(`
     <div class="celebrate-overlay" role="dialog" aria-modal="true" aria-labelledby="${tid}">
       <div class="celebrate-card pop-in">
-        <div class="celebrate-emoji" aria-hidden="true">${emoji || '🎉'}</div>
-        <div class="celebrate-title" id="${tid}">${title || ''}</div>
-        ${sub ? `<div class="celebrate-sub">${sub}</div>` : ''}
+        <div class="celebrate-emoji" aria-hidden="true">${escapeHtml(emoji || '🎉')}</div>
+        <div class="celebrate-title" id="${tid}">${escapeHtml(title || '')}</div>
+        ${sub ? `<div class="celebrate-sub">${escapeHtml(sub)}</div>` : ''}
         ${coins ? `<div class="celebrate-coins">+${coins} 🪙</div>` : ''}
         <button class="celebrate-btn">${hold ? 'Yay!' : 'Awesome!'}</button>
       </div>

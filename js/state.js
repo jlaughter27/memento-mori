@@ -78,7 +78,7 @@ export function resetAll() {
 /* ---- skill progress helpers ---- */
 export function skillRec(id) {
   if (!S.progress.skills[id]) {
-    S.progress.skills[id] = { attempts: 0, correct: 0, mastered: false, stars: 0, lastSeen: 0 };
+    S.progress.skills[id] = { attempts: 0, correct: 0, mastered: false, stars: 0, lastSeen: 0, lessonDone: false };
   }
   return S.progress.skills[id];
 }

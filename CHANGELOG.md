@@ -4,6 +4,23 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.21.0] — 2026-06-07 — "Safe & Sound"
+Bug-test pass (two parallel hunters: interactive/input-wiring + a broad regression
+sweep) — every finding verified against the code before acting.
+### Fixed
+- **Escape dynamic strings in `popup()` and `toast()`.** Both injected `title`/`sub`/
+  `emoji`/`message` into innerHTML without `escapeHtml`. The child's name is free-text
+  input and the project convention is to escape everywhere — now hardened (no caller
+  passes intentional HTML, so nothing changes visually). Regression-tested.
+- `skillRec()` default now initializes `lessonDone:false` for consistency with the
+  other fields (was relying on `undefined` being falsy).
+### Verified clean (no fixes needed)
+- The interactive manipulatives are sound across every den (2–12, bar + circle) and
+  places (1–4, 20-cap, clamp); hint/show-me/solution + reward/replay all work for the
+  non-keypad inputs; the wrong-answer path is null-safe (`#ans-display` guarded).
+- State hydration/migration, router/chrome, reference-counted `inert`, and the
+  gamification math (streak/XP/Leitner/pet-care clamping) all checked out.
+
 ## [2.20.0] — 2026-06-07 — "Polish Pass"
 ### Fixed
 - **Interactive inputs:** tapping **Check** before shading/building sent `0`, which
