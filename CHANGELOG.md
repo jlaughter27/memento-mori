@@ -4,6 +4,16 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.19.0] — 2026-06-07 — "Building Blocks"
+### Added
+- **Interactive base-ten blocks** (`mountBaseTenBuild`, `inputKind:'build'`) — a child
+  builds a multi-digit number by tapping ＋/－ in the Hundreds / Tens / Ones columns;
+  the blocks render at place-appropriate sizes and a live region announces the running
+  value. New engine type `baseTenBuild` + a grade-3 skill **"Build the Number"**
+  (`g3-build-number`, CCSS 2.NBT.A.1). **91 skills · 75 standards.**
+- Flows test drives the build (constructs the exact target from blocks → accepted);
+  a11y route list scans the build controls.
+
 ## [2.18.0] — 2026-06-07 — "Pizza Fractions"
 ### Added
 - **Tappable fraction *circle*** — `mountFractionTap` now renders a bar **or** a pie

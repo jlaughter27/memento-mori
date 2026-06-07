@@ -64,6 +64,28 @@ try {
   }
   log('interactive component: bar + circle both shade + count correctly');
 
+  step = 'interactive base-ten build';
+  hashTo('#/practice/g3-build-number'); await wait(60);
+  if (!q('.bt-build')) throw new Error('base-ten build input did not render');
+  const bn = q('.problem-prompt').textContent.match(/(\d+)/);
+  if (!bn) throw new Error('no target number in prompt');
+  const targetNum = +bn[1];
+  const digits = String(targetNum).split('').map(Number).reverse(); // [ones, tens, hundreds]
+  const addBtns = qa('.bt-add'); // ordered hundreds, tens, ones (left→right)
+  // map each add button to its place index via aria-label
+  const placeIdx = { one: 0, ten: 1, hundred: 2, thousand: 3 };
+  for (const btn of addBtns) {
+    const lbl = btn.getAttribute('aria-label').toLowerCase();
+    const place = Object.keys(placeIdx).find((p) => lbl.includes(p));
+    const n = digits[placeIdx[place]] || 0;
+    for (let k = 0; k < n; k++) click(btn);
+  }
+  await wait(10);
+  if (!q('.bt-read').textContent.includes(`Built: ${targetNum}`)) throw new Error('built value ≠ target: ' + q('.bt-read').textContent);
+  click(q('#check-btn')); await wait(60);
+  if (!q('.fb-good')) throw new Error('correctly built number was not accepted');
+  log(`interactive build: built ${targetNum} from blocks → accepted`);
+
   step = 'dashboard settings';
   hashTo('#/parent'); await wait(50);
   if (!q('#settings')) throw new Error('settings did not render');

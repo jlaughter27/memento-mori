@@ -13,6 +13,12 @@ export default {
     text: 'Understand place value for hundreds, tens, and ones to read and write numbers up to 1,000.'
   },
 
+  'g3-build-number': {
+    code: '2.NBT.A.1',
+    domain: 'Number & Operations in Base Ten',
+    text: 'Compose a three-digit number from hundreds, tens, and ones using place-value blocks.'
+  },
+
   'g3-compare-numbers': {
     code: '3.NBT.A.1',
     domain: 'Number & Operations in Base Ten',

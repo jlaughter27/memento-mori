@@ -48,6 +48,48 @@ export default [
   },
 
   {
+    id: 'g3-build-number',
+    grade: 3,
+    strand: 'Numbers & Place Value',
+    title: 'Build the Number',
+    emoji: '🧱',
+    cc: '2.NBT.A.1',
+    blurb: 'Use hundreds, tens, and ones blocks to build numbers with your own hands.',
+    prereq: ['g3-place-value-100s'],
+
+    lesson: {
+      hook: 'How many hundred-blocks, ten-blocks, and one-blocks make 243?',
+      bigIdea: 'A number is just a pile of place-value blocks: hundreds, tens, and ones added together.',
+      steps: [
+        {
+          title: 'Each place is a block',
+          text: 'A ones block is tiny (1). A tens block is a rod (10). A hundreds block is a flat square (100). 🧱',
+          example: { problem: 'Build 243', show: '2 hundreds, 4 tens, 3 ones' }
+        },
+        {
+          title: 'Match the digits',
+          text: 'Each digit tells you how many blocks of that place to grab.',
+          example: { problem: 'The 4 in 243', show: '4 tens = 40' }
+        },
+        {
+          title: 'Tap to build',
+          text: 'Now YOU build it — tap ＋ to add blocks and － to take one back until you match the number!',
+          example: { problem: 'Build 305', show: '3 hundreds, 0 tens, 5 ones' }
+        }
+      ],
+      visual: { type: 'baseTen', value: 243 },
+      tryThis: 'Tap to build the number I ask for!'
+    },
+
+    practice: {
+      type: 'baseTenBuild',
+      params: { places: 3 },
+      count: 5
+    },
+    wordProblemTags: ['animals', 'building']
+  },
+
+  {
     id: 'g3-compare-numbers',
     grade: 3,
     strand: 'Numbers & Place Value',

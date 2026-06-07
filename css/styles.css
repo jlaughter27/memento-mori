@@ -878,6 +878,25 @@ body[data-bg="bg-stars"] .goal-pip,body[data-bg="bg-galaxy"] .goal-pip,body[data
 .ftap-wedge:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .ftap-read{font-weight:800;color:var(--ink-soft);margin:2px 0 0}
 
+/* ---- interactive base-ten blocks (inputKind:'build') ---- */
+.build-host{width:100%;display:flex;flex-direction:column;align-items:center;gap:8px}
+.bt-build{display:flex;gap:10px;justify-content:center;width:100%;max-width:440px}
+.bt-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;background:#fff;border:2px solid var(--line);border-radius:var(--radius-sm);padding:8px 6px}
+.bt-col-name{font-weight:800;font-size:.78rem;color:var(--p1)}
+.bt-stack{min-height:64px;display:flex;flex-wrap:wrap;gap:2px;align-items:flex-end;justify-content:center}
+.bt-count{font-weight:900;font-size:1.25rem;color:var(--ink)}
+.bt-btns{display:flex;gap:6px}
+.bt-add,.bt-sub{font-family:inherit;font-weight:900;font-size:1.15rem;width:44px;height:44px;border:none;border-radius:12px;cursor:pointer;color:var(--p1);background:#fff;box-shadow:0 3px 0 var(--shadow-key);touch-action:manipulation;transition:transform var(--t-fast) var(--ease)}
+.bt-add{background:linear-gradient(180deg,var(--p2),var(--p1));color:#fff;box-shadow:0 3px 0 var(--p-shadow)}
+.bt-add:active,.bt-sub:active{transform:translateY(2px)}
+.bt-add:focus-visible,.bt-sub:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.bt-block{display:inline-block;border-radius:2px}
+.bt-one{width:9px;height:9px;background:var(--accent)}
+.bt-ten{width:9px;height:28px;background:#00b894}
+.bt-hundred{width:28px;height:28px;border-radius:3px;background:#4d96ff}
+.bt-thousand{width:30px;height:30px;border-radius:4px;background:#6c5ce7}
+.bt-read{font-weight:800;color:var(--ink-soft);margin:0}
+
 /* reusable empty-state (no badges yet, no data, etc.) */
 .empty-state{text-align:center;padding:var(--s-6) var(--s-4);color:var(--ink-soft);font-weight:700;line-height:var(--lh-body)}
 .empty-state .es-emoji{font-size:2.4rem;display:block;margin-bottom:var(--s-2)}

@@ -8,7 +8,7 @@
 //   steps: [{text}],         full worked solution (revealed on "Show me how")
 //   hints: [string],          progressive nudges (revealed one at a time)
 //   visual: descriptor|null,  optional manipulative for THIS problem
-//   inputKind: 'number'|'fraction'|'choice'|'text'|'tap',
+//   inputKind: 'number'|'fraction'|'choice'|'text'|'tap'|'build',
 //   choices: [..]|undefined,  for choice questions (<,>,=, yes/no, multiple choice)
 //   check(raw) -> bool
 // }
@@ -365,6 +365,35 @@ function longDivisionSteps(dividend, divisor, q, r) {
 /* =====================================================================
    PLACE VALUE
 ===================================================================== */
+// interactive: build a multi-digit number from place-value blocks (inputKind:'build')
+function makeBaseTenBuild(params = {}, rng) {
+  const places = Math.max(2, Math.min(4, params.places || 3));
+  const lo = Math.pow(10, places - 1), hi = Math.pow(10, places) - 1;
+  const target = randInt(rng, lo, hi); // a `places`-digit number (leading digit ≥ 1)
+  const names = ['ones', 'tens', 'hundreds', 'thousands'];
+  let t = target; const digs = [];
+  for (let i = 0; i < places; i++) { digs.push(t % 10); t = Math.floor(t / 10); }
+  const breakdown = digs.map((dd, i) => `${dd} ${names[i]}`).reverse().join(', ');
+  return P({
+    type: 'baseTenBuild',
+    prompt: `Build the number ${target} with blocks.`,
+    answer: String(target),
+    inputKind: 'build',
+    build: { places },
+    steps: [
+      { text: `Break ${target} into its place values: ${breakdown}.` },
+      { text: `In each column, add that many blocks — tap ＋ to add, － to take one away.` },
+      { text: `All the blocks together make **${target}**. ✨` },
+    ],
+    hints: [
+      `The last digit is the ones, the next is the tens, then hundreds…`,
+      `${target} = ${breakdown}.`,
+      `Match each column to the matching digit of ${target}.`,
+    ],
+    check: checkInt(target),
+  });
+}
+
 function makePlaceValue(params = {}, rng) {
   const d = params.digits || 3;
   const ask = params.ask || 'value';
@@ -1115,7 +1144,7 @@ function makeMean(params = {}, rng) {
 /* ---------- registry + generic fallback ---------- */
 export const TYPES = {
   add: makeAdd, sub: makeSub, mult: makeMult, div: makeDiv,
-  placeValue: makePlaceValue, rounding: makeRounding, compare: makeCompare,
+  placeValue: makePlaceValue, baseTenBuild: makeBaseTenBuild, rounding: makeRounding, compare: makeCompare,
   fractionCompare: makeFractionCompare, equivFraction: makeEquivFraction,
   fractionShade: makeFractionShade,
   fractionAddSub: makeFractionAddSub, fractionOfNum: makeFractionOfNum,

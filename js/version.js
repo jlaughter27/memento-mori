@@ -1,10 +1,19 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.18.0';
+export const APP_VERSION = '2.19.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.19.0',
+    date: '2026-06-07',
+    title: 'Building Blocks',
+    items: [
+      '🧱 New "Build the Number" skill — tap blocks to make hundreds, tens & ones!',
+      '➕ Add and remove place-value blocks to build any number',
+    ],
+  },
   {
     v: '2.18.0',
     date: '2026-06-07',

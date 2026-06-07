@@ -41,7 +41,7 @@ try {
   const sk = qa('.skill-card')[0]?.dataset?.id || 'g4-place-value';
 
   const routes = ['#/onboard', '#/', `#/learn/${sk}`, `#/tutor/${sk}`, `#/practice/${sk}`,
-    '#/practice/g3-fractions-shade', '#/play',
+    '#/practice/g3-fractions-shade', '#/practice/g3-build-number', '#/play',
     '#/sprint', '#/magnitude', '#/sort', '#/rewards', '#/pet', '#/adventure', '#/parent', '#/report', '#/curriculum'];
 
   for (const r of routes) {

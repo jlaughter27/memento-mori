@@ -10,7 +10,7 @@ import {
 } from '../gamification.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { renderVisual } from '../ui/manipulatives.js';
-import { mountFractionTap } from '../ui/interactive.js';
+import { mountFractionTap, mountBaseTenBuild } from '../ui/interactive.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx, speak } from '../ui/sound.js';
 import { confetti, popup, floatText, sparkle } from '../ui/celebrations.js';
@@ -235,6 +235,7 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
     const kind = cur.inputKind || 'number';
     if (kind === 'choice') return buildChoice();
     if (kind === 'tap') return buildTap();
+    if (kind === 'build') return buildBlocks();
     ansArea.innerHTML = `
       <div class="answer-display" id="ans-display" data-empty="1">?</div>
       <div class="keypad" id="keypad"></div>
@@ -290,6 +291,15 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
     const tap = mountFractionTap(ansArea.querySelector('#tap-host'), { den: (cur.tap && cur.tap.den) || 4, shape: (cur.tap && cur.tap.shape) || 'bar' });
     ansArea.querySelector('#check-btn').addEventListener('click', () => { if (!answered) check(String(tap.getCount())); });
     cur._getVal = () => String(tap.getCount());
+  }
+  // interactive: build a number from place-value blocks, then Check.
+  function buildBlocks() {
+    ansArea.innerHTML = `
+      <div class="build-host" id="build-host"></div>
+      <button class="btn btn-big btn-check" id="check-btn">Check ✓</button>`;
+    const b = mountBaseTenBuild(ansArea.querySelector('#build-host'), { places: (cur.build && cur.build.places) || 3 });
+    ansArea.querySelector('#check-btn').addEventListener('click', () => { if (!answered) check(String(b.getValue())); });
+    cur._getVal = () => String(b.getValue());
   }
 
   /* ---- checking ---- */
