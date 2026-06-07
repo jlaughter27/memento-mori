@@ -69,7 +69,9 @@ function drawItems(host, items, mode) {
   host.querySelectorAll('.shop-item').forEach((c) => {
     const id = c.dataset.id;
     const item = items.find((x) => x.id === id);
-    c.querySelector('.item-btn').addEventListener('click', (e) => {
+    const btn = c.querySelector('.item-btn');
+    if (!item || !btn) return;
+    btn.addEventListener('click', (e) => {
       e.stopPropagation();
       handleItem(item, host);
     });

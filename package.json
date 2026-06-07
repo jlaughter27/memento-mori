@@ -11,6 +11,7 @@
     "test": "node tests/precache.mjs && node tests/smoke.mjs && node tests/smoke-v2.mjs && node tests/pet-quest.mjs && node tests/sprint.mjs && node tests/mastery.mjs",
     "pretest": "npm i --no-save jsdom@^24",
     "engine:check": "node tools/engine-check.mjs",
+    "fuzz": "node tools/fuzz.mjs && node tools/fuzz-skills.mjs && node tools/visual-check.mjs",
     "docs:curriculum": "node tools/gen-curriculum-doc.mjs"
   },
   "devDependencies": {

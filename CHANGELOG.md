@@ -4,6 +4,34 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.14.0] — 2026-06-07 — "Bug Hunt"
+A dedicated bug-testing pass: three parallel static audit agents (navigation/lifecycle,
+engine/state/gamification, views/render/a11y) + dynamic fuzzing. Every finding was
+verified against the code before fixing.
+### Fixed (real bugs)
+- **Broken fraction diagrams in lessons (P0-ish).** 18 curriculum visuals use `denom:`
+  but the renderer destructured `{ num, den }`, so every lesson fraction bar/circle
+  rendered **blank with a "3/undefined" label** (the engine uses `den`, which is why
+  *practice* visuals worked). `manipulatives.js` now accepts both `den` and `denom`,
+  and guards against a 0/negative denominator.
+- **Stacked-modal focus trap (a11y).** If a child leveled up *and* hit the daily goal on
+  the same answer, two pop-ups overlapped and the first to close removed `inert` from the
+  background while the second was still open. `setInert` is now **reference-counted**
+  (and also covers the new sub-header).
+### Hardened (defensive — agent-flagged null derefs)
+- Adventure hint button (`?.`), rewards shop item lookup, and mascot `setSay` now guard
+  against missing elements.
+### Tooling (permanent regression guards)
+- **`npm run fuzz`** — `tools/fuzz.mjs` (10k problems: empty/garbage prompts, loose
+  `check()` accepting empty/garbage, malformed choices), `tools/fuzz-skills.mjs` (19.8k:
+  every skill × 5 difficulties + word problems), `tools/visual-check.mjs` (renders all 73
+  curriculum diagrams, fails on silent-empty — would have caught the fraction bug).
+- Smoke test gains a modal-inert reference-count regression.
+### Verified clean
+- The engine is mathematically sound across ~30k generated problems (no wrong math). The
+  navigation refactor is clean — one agent's "listener leak" claim was a false positive
+  (`innerHTML =` discards the old node + its listener).
+
 ## [2.13.0] — 2026-06-07 — "Clear Next Steps"
 ### Changed
 - **Locked skills now name their prerequisite** — a tooltip + richer aria-label

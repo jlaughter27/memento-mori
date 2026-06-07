@@ -181,6 +181,18 @@ try {
   fitText(undefined); fitText(null); fitText($('#hud')); // must be no-op-safe, never throw
   log('text-fit helpers: promptLen buckets correct + fitText no-op safe');
 
+  step = 'modal inert ref-count';
+  // two stacked modals (e.g. level-up + daily-goal) must keep the background inert
+  // until the LAST closes — regression guard for the focus-trap bug.
+  const { setInert } = await import('../js/ui/celebrations.js');
+  setInert(true); setInert(true);
+  if ($('#content').getAttribute('inert') === null) throw new Error('inert not applied while modal open');
+  setInert(false); // first of two closes
+  if ($('#content').getAttribute('inert') === null) throw new Error('inert removed too early (focus trap broke with a 2nd modal still open)');
+  setInert(false); // last closes
+  if ($('#content').getAttribute('inert') !== null) throw new Error('inert not removed after last modal closed');
+  log('modal inert is reference-counted (stacked popups keep focus trap)');
+
 } catch (e) {
   console.log('\n❌ SMOKE FAILED at step [' + step + ']:', e.message);
   if (errors.length) console.log('captured page errors:\n', errors.join('\n'));

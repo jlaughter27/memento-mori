@@ -78,7 +78,11 @@ export function mountMascot(container, { mood = 'idle', say = '', size = 120 } =
     },
     setSay(text, m) {
       let b = container.querySelector('.mascot-bubble');
-      if (!b) { b = document.createElement('div'); b.className = 'mascot-bubble'; b.setAttribute('aria-live', 'polite'); b.setAttribute('aria-atomic', 'true'); container.querySelector('.mascot').appendChild(b); }
+      if (!b) {
+        const host = container.querySelector('.mascot');
+        if (!host) return; // mascot was torn down (view changed) — nothing to say into
+        b = document.createElement('div'); b.className = 'mascot-bubble'; b.setAttribute('aria-live', 'polite'); b.setAttribute('aria-atomic', 'true'); host.appendChild(b);
+      }
       b.textContent = text;
       b.classList.remove('bubble-pop'); void b.offsetWidth; b.classList.add('bubble-pop');
       if (m) this.setMood(m);

@@ -109,11 +109,16 @@ export function popup({ emoji, title, sub, coins, confetti: doConfetti = true, s
   return close;
 }
 
-// mark the app background inert while a modal is open (keyboard + AT focus trap)
+// mark the app background inert while a modal is open (keyboard + AT focus trap).
+// Reference-counted so stacked modals (e.g. level-up + daily-goal on the same
+// answer) keep the background inert until the LAST one closes.
+let inertDepth = 0;
 export function setInert(on) {
-  for (const id of ['content', 'hud', 'nav']) {
+  inertDepth = Math.max(0, inertDepth + (on ? 1 : -1));
+  const active = inertDepth > 0;
+  for (const id of ['content', 'hud', 'nav', 'subhead']) {
     const elx = document.getElementById(id);
-    if (elx) { if (on) elx.setAttribute('inert', ''); else elx.removeAttribute('inert'); }
+    if (elx) { if (active) elx.setAttribute('inert', ''); else elx.removeAttribute('inert'); }
   }
 }
 
