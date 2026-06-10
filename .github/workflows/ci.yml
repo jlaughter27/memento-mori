@@ -1,0 +1,26 @@
+name: CI
+
+# Runs the full MathQuest gate on every push and PR: the 8 jsdom UI suites,
+# the engine self-check, and the fuzz/visual harnesses. Matches `npm test`
+# + `npm run engine:check` + `npm run fuzz` that we run locally before pushing.
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      # jsdom is a dev-only test dep, installed on demand by the `pretest` script
+      - name: UI test suites (jsdom)
+        run: npm test
+      - name: Engine self-check (1,600+ generated problems)
+        run: npm run engine:check
+      - name: Fuzz (engine + skills + curriculum visuals)
+        run: npm run fuzz
