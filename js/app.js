@@ -107,7 +107,9 @@ function boot() {
 
 // PWA service worker + controlled update flow
 function registerSW() {
-  if (!('serviceWorker' in navigator)) return;
+  // `navigator` is absent in non-browser runtimes (e.g. the Node test/CI env on
+  // versions before the global was added) — guard so boot never throws there.
+  if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) return;
   navigator.serviceWorker.register('./service-worker.js').then((reg) => {
     const offerUpdate = () => {
       if (!reg.waiting) return;
