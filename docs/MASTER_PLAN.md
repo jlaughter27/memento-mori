@@ -74,7 +74,7 @@ The product ships as **v3.0 "The Complete Tutor"** when:
 - ✅ A **living world**: ≥1 multi-chapter quest per grade band + a decoratable **pet home** + pet growth.
 - ✅ **Parent efficacy reports** + worksheet generator + privacy/accessibility statements published.
 - ✅ **WCAG 2.2 AA** verified; performance budget met on low-end devices.
-- ✅ **Multi-profile** (siblings) on one device; nothing ever lost; self-update flawless.
+- ✅ **Multi-profile** (siblings) on one device — *shipped v2.22*; nothing ever lost; self-update flawless.
 - ✅ A **landing page** and submission to a third-party reviewer (e.g., Common Sense) prepared.
 - ✅ Every gate in [Part IV](#part-iv--the-quality-bar) is green.
 
@@ -116,7 +116,7 @@ Every pillar below is decomposed the same way.
 | 7 | **Motivation & Economy** | **9** | 10 | ✅ collection summary + **parent weekly goal**; story/pet are the core loop; process-praise only. Left: collection *sets* with bonuses |
 | 8 | **Accessibility & Inclusion** | **9.5** | 10 | ✅ WCAG 2.2 AA pass + **automated a11y CI gate** (every control named, all routes) + forced-colors mode + in-app statement published. Left: switch-device & real-AT testing |
 | 9 | **Trust & Credibility** | **9** | 10 | ✅ parent **efficacy report** + in-app privacy & accessibility statements + standards transparency. Left: worksheet export, Common Sense submission packet |
-| 10 | **Craft, Platform & Reliability** | **9** | 10 | ✅ design tokens + motion system + nav/IA overhaul; **8 green CI suites + engine + fuzz gates**. Left: multi-child profiles; perf budget on real devices; i18n; landing page |
+| 10 | **Craft, Platform & Reliability** | **9** | 10 | ✅ design tokens + motion system + nav/IA overhaul; **8 green CI suites + engine + fuzz gates**. Left: perf budget on real devices; i18n; landing page |
 
 > **Overall ≈ 9.2/10** — updated at **v2.21** (was 9.0 at v2.7). Shipped v2.8 → v2.21 since:
 > text-fit + long-prompt handling; WCAG contrast fixes + per-theme shadows + dark-bg legibility +
@@ -130,7 +130,7 @@ Every pillar below is decomposed the same way.
 > and must be merged + deployed (GitHub Pages) before any of this reaches a child.**
 >
 > **Path to 10 (in order):** ① merge → `main` → enable Pages → verify live PWA install/update;
-> ② DoD features: multi-child profiles, worksheet generator, bottom-out hint + step-level
+> ② DoD features: worksheet generator, bottom-out hint + step-level
 > tracing, per-grade quest lines + overworld, landing page + Common Sense packet; ③ real-device
 > verification (visual QA, low-end perf, switch/AT testing) — needs a real browser, not the CI
 > sandbox; ④ i18n. The 10th point is earned, not coded: a child using it joyfully every day.

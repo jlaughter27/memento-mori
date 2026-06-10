@@ -1,10 +1,19 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.21.0';
+export const APP_VERSION = '2.22.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.22.0',
+    date: '2026-06-07',
+    title: 'Whole Family',
+    items: [
+      '👧👦 Multiple kids can share one device — each with their own pet & progress',
+      '➕ Add, switch, and manage learners in the Grown-ups Corner',
+    ],
+  },
   {
     v: '2.21.0',
     date: '2026-06-07',

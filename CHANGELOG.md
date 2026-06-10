@@ -4,6 +4,22 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.22.0] — 2026-06-07 — "Whole Family"
+Multi-child profiles — a v3.0 Definition-of-Done gate item.
+### Added
+- **Multiple learners on one device.** localStorage now holds a *container*
+  (`{ activeId, profiles }`); each child has fully independent name, grade, pet,
+  coins, mastery, streak, settings — everything. Manage them in the Grown-ups Corner:
+  a **Learners** list with **Switch**, **➕ Add a learner** (runs onboarding for the new
+  child), and a two-tap remove (the last learner is protected).
+- **Seamless migration:** an existing single-child save is automatically wrapped as the
+  first profile — no data loss, no action needed.
+### Internal
+- `state.js` switches the live `S` in place (every module imports it by reference) and
+  **deep-clones at the S ↔ container boundary** so profiles never alias each other.
+  "Reset all progress" now resets only the active learner. New `tests/profiles.mjs`
+  (migration, independent data, last-learner guard, persistence) + a `flows.mjs` UI step.
+
 ## [2.21.0] — 2026-06-07 — "Safe & Sound"
 Bug-test pass (two parallel hunters: interactive/input-wiring + a broad regression
 sweep) — every finding verified against the code before acting.

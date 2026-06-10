@@ -164,6 +164,22 @@ try {
   if (chapters[1].classList.contains('locked')) throw new Error('chapter 2 did not unlock after finishing chapter 1');
   log('adventure: finishing chapter 1 unlocks chapter 2');
 
+  step = 'learners UI (multi-profile)';
+  hashTo('#/parent'); await wait(40);
+  if (!q('#learners') || !q('.learner-row.active')) throw new Error('learners section / active row missing');
+  if (!q('#add-learner')) throw new Error('add-learner button missing');
+  const beforeRows = qa('.learner-row').length;
+  click(q('#add-learner')); await wait(50);
+  if (!q('.onboard')) throw new Error('add-learner did not start onboarding for the new learner');
+  q('#ob-name').value = 'Sib'; click(q('#ob-next')); await wait(40);
+  click(qa('.grade-choice')[0]); await wait(20); click(q('#ob-start')); await wait(700);
+  hashTo('#/parent'); await wait(40);
+  if (qa('.learner-row').length !== beforeRows + 1) throw new Error('new learner not added to the list');
+  if (!qa('.learner-switch').length) throw new Error('no Switch button for the inactive learner');
+  click(qa('.learner-switch')[0]); await wait(50);
+  if (!q('.home-hero')) throw new Error('switching learner did not return to home');
+  log('learners UI: add → onboard → list shows both → switch works');
+
 } catch (e) {
   console.log('\n❌ FLOWS FAILED at [' + step + ']:', e.message);
   if (errors.length) console.log('page errors:', errors.slice(0, 5).join(' | '));

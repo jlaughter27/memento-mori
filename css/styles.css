@@ -275,6 +275,18 @@ p{line-height:1.5}
 .set-row.toggle input{width:26px;height:26px;accent-color:var(--p1)}
 .dash-foot{margin:20px 0 10px;text-align:center;font-size:.8rem}
 
+/* multi-child learner switcher */
+.learner-row{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid var(--line)}
+.learner-row.active{background:#f7f5ff;border-radius:12px;padding:10px;border-bottom:1px solid transparent}
+.learner-emoji{font-size:1.8rem;flex:0 0 auto;width:40px;text-align:center}
+.learner-info{flex:1;display:flex;flex-direction:column;line-height:1.2;min-width:0;overflow-wrap:anywhere}
+.learner-info small{color:var(--ink-soft);font-weight:700;font-size:.78rem}
+.learner-tag{font-weight:800;color:var(--good-d);font-size:.8rem;background:#e8faf3;border-radius:99px;padding:4px 12px;flex:0 0 auto}
+.learner-switch{padding:8px 14px;min-height:40px;flex:0 0 auto}
+.learner-del{background:#ffe3e3;border:none;border-radius:10px;min-height:40px;min-width:48px;cursor:pointer;color:#b3261e;font-weight:800;font-family:inherit;flex:0 0 auto;touch-action:manipulation}
+.learner-del.armed{background:#ff6b6b;color:#fff}
+#learners #add-learner{margin-top:10px;width:100%}
+
 /* ---------- manipulatives ---------- */
 .manip{display:flex;justify-content:center;margin:6px 0}
 .manip-svg{width:100%;max-width:320px;height:auto}

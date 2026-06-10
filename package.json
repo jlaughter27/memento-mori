@@ -8,7 +8,7 @@
   "scripts": {
     "start": "python3 -m http.server 8000",
     "serve": "npx --yes serve -l 8000 .",
-    "test": "node tests/precache.mjs && node tests/smoke.mjs && node tests/smoke-v2.mjs && node tests/pet-quest.mjs && node tests/sprint.mjs && node tests/mastery.mjs && node tests/flows.mjs && node tests/a11y.mjs",
+    "test": "node tests/precache.mjs && node tests/smoke.mjs && node tests/smoke-v2.mjs && node tests/pet-quest.mjs && node tests/sprint.mjs && node tests/mastery.mjs && node tests/flows.mjs && node tests/a11y.mjs && node tests/profiles.mjs",
     "pretest": "npm i --no-save jsdom@^24",
     "engine:check": "node tools/engine-check.mjs",
     "fuzz": "node tools/fuzz.mjs && node tools/fuzz-skills.mjs && node tools/visual-check.mjs",

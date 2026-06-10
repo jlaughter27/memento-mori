@@ -1,6 +1,7 @@
 // views/dashboard.js — parent/grown-up dashboard: progress + settings.
-import { S, persist, setSetting, resetAll, applyBodyClasses } from '../state.js';
-import { STRANDS, STRAND_META, skillsForGrade, ALL_SKILLS, standardsCount, GRADES } from '../curriculum/index.js';
+import { S, persist, setSetting, resetAll, applyBodyClasses,
+  listProfiles, switchProfile, createProfile, deleteProfile, profileCount } from '../state.js';
+import { STRANDS, STRAND_META, skillsForGrade, ALL_SKILLS, standardsCount, GRADES, rewardsData } from '../curriculum/index.js';
 import { levelProgress, allBadges } from '../gamification.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx } from '../ui/sound.js';
@@ -18,6 +19,9 @@ export function renderDashboard(root) {
     <div class="dash-wrap">
       <h1 class="dash-title">👨‍👩‍👧 Grown-ups Corner</h1>
       <p class="muted">A peek at ${escapeHtml(S.profile.name || 'your learner')}'s progress.</p>
+
+      <h2 class="section-h">Learners</h2>
+      <div class="settings card-soft" id="learners"></div>
 
       <div class="stat-grid">
         ${stat('Level', lp.level, '⬆️')}
@@ -110,7 +114,35 @@ export function renderDashboard(root) {
   sh.querySelectorAll('[data-set]').forEach((cb) =>
     cb.addEventListener('change', () => { sfx.tap(); setSetting(cb.dataset.set, cb.checked); }));
 
-  root.querySelector('#set-name').addEventListener('input', (e) => { S.profile.name = e.target.value; persist(); });
+  // ---- learners (multi-child profiles): switch / add / remove ----
+  const petEmojiOf = (id) => (rewardsData.pets.find((p) => p.id === id) || { emoji: '🦊' }).emoji;
+  const lh = root.querySelector('#learners');
+  function renderLearners() {
+    const profiles = listProfiles();
+    const canDelete = profileCount() > 1;
+    lh.innerHTML = profiles.map((p) => `
+      <div class="learner-row ${p.active ? 'active' : ''}">
+        <span class="learner-emoji" aria-hidden="true">${petEmojiOf(p.pet)}</span>
+        <span class="learner-info"><b>${escapeHtml(p.name || 'New learner')}</b><small>Grade ${p.grade} · Lv ${p.level}${p.active ? ' · current' : ''}</small></span>
+        ${p.active ? '<span class="learner-tag">Active</span>' : `<button class="btn-ghost learner-switch" data-id="${p.id}">Switch</button>`}
+        ${canDelete && !p.active ? `<button class="learner-del" data-id="${p.id}" aria-label="Remove ${escapeHtml(p.name || 'learner')}">🗑️</button>` : ''}
+      </div>`).join('') +
+      `<button class="btn btn-ghost" id="add-learner">➕ Add a learner</button>`;
+    lh.querySelectorAll('.learner-switch').forEach((b) => b.addEventListener('click', () => {
+      sfx.tap(); if (switchProfile(b.dataset.id)) { refreshChrome(); navigate('#/'); }
+    }));
+    lh.querySelector('#add-learner').addEventListener('click', () => { sfx.tap(); createProfile(); refreshChrome(); navigate('#/onboard'); });
+    lh.querySelectorAll('.learner-del').forEach((b) => {
+      let armed = false, t = null;
+      b.addEventListener('click', () => {
+        if (!armed) { armed = true; b.textContent = 'Sure?'; b.classList.add('armed'); clearTimeout(t); t = setTimeout(() => { armed = false; b.textContent = '🗑️'; b.classList.remove('armed'); }, 4000); return; }
+        clearTimeout(t); deleteProfile(b.dataset.id); refreshChrome(); renderLearners();
+      });
+    });
+  }
+  renderLearners();
+
+  root.querySelector('#set-name').addEventListener('input', (e) => { S.profile.name = e.target.value; persist(); renderLearners(); });
   root.querySelector('#set-grade').addEventListener('change', (e) => { S.profile.grade = +e.target.value; persist(); refreshChrome(); });
   root.querySelector('#set-weekly').addEventListener('change', (e) => { S.profile.weeklyGoal = +e.target.value; persist(); });
   root.querySelector('#report-btn').addEventListener('click', () => { sfx.tap(); navigate('#/report'); });
