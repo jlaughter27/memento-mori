@@ -107,25 +107,33 @@ Every pillar below is decomposed the same way.
 
 | # | Pillar | Now | Target | The gap (what's missing for 10/10) |
 |---|---|----|----|---|
-| 1 | **Curriculum & Standards** | **9** | 10 | ✅ grades 2–7 (89 skills, 68 standards), grade-4 deepened. Left: sub-standard tags; full K–8 reach |
-| 2 | **Teaching Engine** | **9** | 10 | ✅ hardened (8 audit bugs fixed; sound across 5,000+ problems). Left: more problem types + animated/draggable CRA manipulatives |
+| 1 | **Curriculum & Standards** | **9** | 10 | ✅ grades 2–7 (91 skills, 75 standards), grade-4 deepened (19 skills). Left: sub-standard tags; full K–8 reach |
+| 2 | **Teaching Engine** | **9.5** | 10 | ✅ hardened + **fuzzed across 30k problems**; **3 interactive manipulatives** (tap-to-shade fraction bar & circle, base-ten number builder). Left: more interactive types (array builder, number-line plot); drag interactions |
 | 3 | **The Tutor** | **9** | 10 | ✅ teach-first "Learn with Foxy" (worked example → self-explanation → **fading** scaffolds → independent) + misconception feedback. Left: step-level model-tracing; bottom-out hint |
 | 4 | **Mastery & Memory** | **9** | 10 | ✅ Mistakes Notebook/Fix-It, warm-up, spaced review, **mastery decay** (rusty skills). Left: branching placement v2 |
 | 5 | **World & Story** | **9** | 10 | ✅ three mini-games (Sprint, Number Line, Sort & Storm) + 3-chapter quest. Left: per-grade quest lines; an explorable overworld map |
 | 6 | **Companion & Care** | **9** | 10 | ✅ decoratable home + **pet growth/evolution** + bonding moments. Left: more reaction variety; per-pet animations |
 | 7 | **Motivation & Economy** | **9** | 10 | ✅ collection summary + **parent weekly goal**; story/pet are the core loop; process-praise only. Left: collection *sets* with bonuses |
-| 8 | **Accessibility & Inclusion** | **9** | 10 | ✅ WCAG 2.2 AA audit done + fixed (ARIA, dialogs, live regions, SVG labels, targets, focus, reduced-motion). Left: publish an in-app statement; switch-device testing |
+| 8 | **Accessibility & Inclusion** | **9.5** | 10 | ✅ WCAG 2.2 AA pass + **automated a11y CI gate** (every control named, all routes) + forced-colors mode + in-app statement published. Left: switch-device & real-AT testing |
 | 9 | **Trust & Credibility** | **9** | 10 | ✅ parent **efficacy report** + in-app privacy & accessibility statements + standards transparency. Left: worksheet export, Common Sense submission packet |
-| 10 | **Craft, Platform & Reliability** | **9** | 10 | ✅ deep polish pass + audit bug fixes + leak hardening; 5 green test suites. Left: multi-child profiles; perf budget; i18n; landing page |
+| 10 | **Craft, Platform & Reliability** | **9** | 10 | ✅ design tokens + motion system + nav/IA overhaul; **8 green CI suites + engine + fuzz gates**. Left: multi-child profiles; perf budget on real devices; i18n; landing page |
 
-> **Overall ≈ 9.0/10** (was 6.7) — **a straight-9 board.** Shipped v2.2 → v2.7. All ten pillars are
-> now at 9: grades 2–7 + grade-4 depth (Curriculum); a hardened, bug-free engine (Engine); teach-first
-> tutor with fading (Tutor); spaced review + mastery decay + Fix-It (Memory); three mini-games + quest
-> (World); pet growth/evolution + decoratable home (Companion); parent weekly goal + collections
-> (Motivation); WCAG 2.2 AA (Accessibility); parent report + statements (Trust); deep polish +
-> reliability (Craft). The remaining 9→10 work toward the v3.0 "Definition of Done": step-level
-> model-tracing, animated CRA manipulatives, an overworld + per-grade quest lines, multi-child
-> profiles, a worksheet generator, i18n, and a landing page.
+> **Overall ≈ 9.2/10** — updated at **v2.21** (was 9.0 at v2.7). Shipped v2.8 → v2.21 since:
+> text-fit + long-prompt handling; WCAG contrast fixes + per-theme shadows + dark-bg legibility +
+> forced-colors; a motion-token system + view transitions; a navigation/IA overhaul (consistent
+> back bar, 4-hub kid nav, grown-ups behind a gear); **three interactive manipulatives** (the
+> start of hands-on CRA); two bug-hunt passes (broken lesson fraction visuals, stacked-modal
+> focus trap, TTS-on-navigate, escaping — all fixed + regression-locked); and a much deeper
+> safety net (8 UI suites incl. a11y + precache gates, plus 30k-problem fuzz + visual checks).
+>
+> **⚠️ The #1 gap is not a feature: `main` is at v2.4 — v2.5→v2.21 live on the working branch
+> and must be merged + deployed (GitHub Pages) before any of this reaches a child.**
+>
+> **Path to 10 (in order):** ① merge → `main` → enable Pages → verify live PWA install/update;
+> ② DoD features: multi-child profiles, worksheet generator, bottom-out hint + step-level
+> tracing, per-grade quest lines + overworld, landing page + Common Sense packet; ③ real-device
+> verification (visual QA, low-end perf, switch/AT testing) — needs a real browser, not the CI
+> sandbox; ④ i18n. The 10th point is earned, not coded: a child using it joyfully every day.
 >
 > **Research bank is now complete for the next phases** — all forward-agenda topics (Part V) have
 > docs in `docs/research/`: efficacy measurement, grades 2 & 7 standards, mini-games, accessibility
