@@ -130,7 +130,7 @@ Every pillar below is decomposed the same way.
 > and must be merged + deployed (GitHub Pages) before any of this reaches a child.**
 >
 > **Path to 10 (in order):** ① merge → `main` → enable Pages → verify live PWA install/update;
-> ② DoD features: worksheet generator, bottom-out hint + step-level
+> ② DoD features: ✅ worksheet generator (v2.23); bottom-out hint + step-level
 > tracing, per-grade quest lines + overworld, landing page + Common Sense packet; ③ real-device
 > verification (visual QA, low-end perf, switch/AT testing) — needs a real browser, not the CI
 > sandbox; ④ i18n. The 10th point is earned, not coded: a child using it joyfully every day.

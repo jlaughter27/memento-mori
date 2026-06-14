@@ -1,6 +1,6 @@
 // service-worker.js — offline-first caching with a controlled update flow.
 // Bump CACHE on every release (mirrors APP_VERSION in js/version.js).
-const CACHE = 'mathquest-2.22.0';
+const CACHE = 'mathquest-2.23.0';
 const ASSETS = [
   './', './index.html', './manifest.json', './assets/icon.svg',
   './css/styles.css',
@@ -15,7 +15,7 @@ const ASSETS = [
   './js/views/home.js', './js/views/lesson.js', './js/views/practice.js',
   './js/views/rewards.js', './js/views/dashboard.js', './js/views/onboard.js',
   './js/views/curriculum.js', './js/views/pet.js', './js/views/adventure.js', './js/views/sprint.js',
-  './js/views/magnitude.js', './js/views/report.js', './js/views/sortstorm.js',
+  './js/views/magnitude.js', './js/views/report.js', './js/views/worksheet.js', './js/views/sortstorm.js',
 ];
 
 self.addEventListener('install', (e) => {

@@ -4,6 +4,21 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.23.0] — 2026-06-07 — "Worksheet Maker"
+Printable worksheet generator — a v3.0 Definition-of-Done gate item.
+### Added
+- **`js/views/worksheet.js`** (route `#/worksheet`, reached from the Grown-ups Corner).
+  A parent picks a **grade**, a **topic** (mixed review or any strand present in that grade),
+  and a **count** (10/15/20/25), and gets a real practice sheet built from the engine —
+  problems in a two-column grid with answer blanks, plus a toggleable **answer key** that
+  prints on its own page. **Print** uses a `@media print` stylesheet (`visibility` flip)
+  that shows only the sheet — no app chrome — so it works from any browser, fully offline.
+- Paper-aware: skips the interactive (`tap`/`build`) problem kinds that can't be printed,
+  de-dupes prompts, and renders multiple-choice options inline.
+### Internal
+- New route + `SCREENS` back-bar entry (`worksheet` → back to `#/parent`); worksheet view
+  added to the service-worker precache. Smoke test now drives the generator + key toggle.
+
 ## [2.22.0] — 2026-06-07 — "Whole Family"
 Multi-child profiles — a v3.0 Definition-of-Done gate item.
 ### Added

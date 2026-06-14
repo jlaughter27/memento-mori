@@ -155,6 +155,18 @@ try {
   if (speechCancels <= cancelsBefore) throw new Error('route change did not stop speech (stopSpeech not wired)');
   log('navigation stops read-aloud (speechSynthesis.cancel fired)');
 
+  step = 'worksheet maker';
+  window.location.hash = '#/worksheet'; window.dispatchEvent(new window.Event('hashchange')); await wait(60);
+  if (!$('#ws-make')) throw new Error('worksheet controls missing');
+  click($('#ws-make')); await wait(60);
+  const probCount = $$('.ws-prob').length;
+  if (probCount === 0) throw new Error('worksheet generated no problems');
+  if ($('.ws-key')) throw new Error('answer key should be hidden until toggled');
+  click($('#ws-key')); await wait(60);
+  if (!$('.ws-key') || !$$('.ws-key-list li').length) throw new Error('answer key did not show on toggle');
+  if ($$('.ws-key-list li').length !== probCount) throw new Error('answer key count != problem count');
+  log('worksheet: generated ' + probCount + ' problems + matching answer key');
+
   step = 'navigation chrome';
   // bottom nav is the 4 kid hubs; Grown-ups moved to the HUD gear
   if ($$('.nav-btn').length !== 4) throw new Error('expected 4 bottom-nav items, got ' + $$('.nav-btn').length);

@@ -42,7 +42,7 @@ try {
 
   const routes = ['#/onboard', '#/', `#/learn/${sk}`, `#/tutor/${sk}`, `#/practice/${sk}`,
     '#/practice/g3-fractions-shade', '#/practice/g3-build-number', '#/play',
-    '#/sprint', '#/magnitude', '#/sort', '#/rewards', '#/pet', '#/adventure', '#/parent', '#/report', '#/curriculum'];
+    '#/sprint', '#/magnitude', '#/sort', '#/rewards', '#/pet', '#/adventure', '#/parent', '#/report', '#/worksheet', '#/curriculum'];
 
   for (const r of routes) {
     step = r;
@@ -66,7 +66,7 @@ try {
 }
 
 const uniq = [...new Set(problems)];
-console.log(`A11y check: scanned interactive controls across 15 routes.`);
+console.log(`A11y check: scanned interactive controls across 16 routes.`);
 if (uniq.length) {
   console.error(`\n❌ ${uniq.length} accessibility issues:`);
   uniq.slice(0, 40).forEach((p) => console.error('   • ' + p));
