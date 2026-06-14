@@ -57,7 +57,7 @@ export function foxSVG(mood = 'idle') {
 const LINES = {
   greet: ['Hi friend! Ready for some math fun? 🦊', 'Yay, you\'re here! Let\'s learn together!', 'I missed you! Let\'s do math! ✨'],
   start: ['Let\'s do this together — I\'ll help you! 🦊', 'I\'ll explain every step. You\'ve got this!'],
-  correct: ['Woohoo! 🎉', 'You\'re on fire! 🔥', 'High five! ✋', 'So smart! 🌟'],
+  correct: ['Woohoo! 🎉', 'You\'re on fire! 🔥', 'High five! ✋', 'You worked that out! 🌟', 'Your brain is growing! 🌱'],
   encourage: ['It\'s okay — mistakes help our brain grow! 🌱', 'Let\'s try a different way together.', 'Almost! Take a breath and try again. 💛'],
   think: ['Hmm, let me show you a trick... 🤔', 'Watch this — it\'s easier than it looks!'],
 };
@@ -68,7 +68,7 @@ export function mountMascot(container, { mood = 'idle', say = '', size = 120 } =
   container.innerHTML = `
     <div class="mascot" style="--mascot-size:${size}px">
       <div class="mascot-fox mood-${mood}">${foxSVG(mood)}</div>
-      ${say ? `<div class="mascot-bubble">${say}</div>` : ''}
+      ${say ? `<div class="mascot-bubble" aria-live="polite" aria-atomic="true">${say}</div>` : ''}
     </div>`;
   if (say) speak(say);
   return {
@@ -78,7 +78,11 @@ export function mountMascot(container, { mood = 'idle', say = '', size = 120 } =
     },
     setSay(text, m) {
       let b = container.querySelector('.mascot-bubble');
-      if (!b) { b = document.createElement('div'); b.className = 'mascot-bubble'; container.querySelector('.mascot').appendChild(b); }
+      if (!b) {
+        const host = container.querySelector('.mascot');
+        if (!host) return; // mascot was torn down (view changed) — nothing to say into
+        b = document.createElement('div'); b.className = 'mascot-bubble'; b.setAttribute('aria-live', 'polite'); b.setAttribute('aria-atomic', 'true'); host.appendChild(b);
+      }
       b.textContent = text;
       b.classList.remove('bubble-pop'); void b.offsetWidth; b.classList.add('bubble-pop');
       if (m) this.setMood(m);

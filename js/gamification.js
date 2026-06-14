@@ -40,6 +40,15 @@ export function addCoins(amount) {
   if (amount > 0) S.progress.stats.coinsEarned += amount;
 }
 
+// rolling per-day attempt log for the parent report (last 30 days, on-device only)
+function logDaily(correct) {
+  const h = S.progress.history;
+  const today = todayStr();
+  let e = h[h.length - 1];
+  if (!e || e.d !== today) { e = { d: today, a: 0, c: 0 }; h.push(e); if (h.length > 30) h.shift(); }
+  e.a++; if (correct) e.c++;
+}
+
 /* ---------- recording answers ---------- */
 const XP_CORRECT = 10;
 const XP_FIRST_TRY = 5;
@@ -66,6 +75,7 @@ export function recordAnswer(skillId, correct, firstTry) {
   const rec = skillRec(skillId);
   rec.attempts++;
   S.progress.stats.problemsAttempted++;
+  logDaily(correct);
   let xpGained = 0, coinsGained = 0, surprise = false, dailyReached = false;
   if (correct) {
     rec.correct++;
@@ -103,6 +113,7 @@ export function masterSkill(skillId, accuracy) {
   rec.stars = Math.max(rec.stars || 0, stars);
   if (firstTime) {
     rec.mastered = true;
+    rec.masteredAt = Date.now();
     S.progress.stats.skillsMastered++;
   }
   if (accuracy >= 0.999) S.progress.stats.perfectQuizzes++;
@@ -174,6 +185,43 @@ export function warmupDue() {
 export function markWarmupDone() {
   S.progress.warmup.date = todayStr();
   persist();
+}
+
+/* ---------- pet growth (evolution tied to learning milestones) ---------- */
+const PET_STAGES = [
+  { i: 0, name: 'Little', scale: 0.9, glow: false },
+  { i: 1, name: 'Growing', scale: 1.04, glow: false },
+  { i: 2, name: 'Grown', scale: 1.18, glow: true },
+  { i: 3, name: 'Super', scale: 1.34, glow: true },
+];
+export function petStage() {
+  const m = S.progress.stats.skillsMastered || 0;
+  const i = m >= 25 ? 3 : m >= 10 ? 2 : m >= 3 ? 1 : 0;
+  return PET_STAGES[i];
+}
+
+/* ---------- mastery decay (skills get "rusty" if long overdue) ---------- */
+export function isRusty(rec) {
+  if (!rec || !rec.mastered || !rec.reviewAt) return false;
+  const interval = (REVIEW_INTERVALS[rec.reviewStage || 0] || 3) * DAY;
+  return Date.now() - rec.reviewAt > interval; // overdue by more than a full interval
+}
+export function rustySkills() {
+  return ALL_SKILLS.filter((s) => isRusty(S.progress.skills[s.id]));
+}
+
+/* ---------- weekly goal (parent-set practice days/week) ---------- */
+export function weeklyProgress() {
+  const goal = S.profile.weeklyGoal || 0;
+  const now = new Date();
+  const days = new Set();
+  for (const e of S.progress.history) {
+    if (!e.a) continue;
+    const [y, mo, d] = e.d.split('-').map(Number);
+    const dt = new Date(y, mo - 1, d);
+    if ((now - dt) / DAY <= 6.5) days.add(e.d);
+  }
+  return { days: days.size, goal, met: goal > 0 && days.size >= goal };
 }
 
 /* ---------- streaks (grace-day, positive framing) ---------- */

@@ -2,23 +2,28 @@
 import { S, applyBodyClasses, persist } from './state.js';
 import { updateStreakOnOpen, checkNewBadges } from './gamification.js';
 import { renderHUD, renderNav, setRouter, refreshChrome } from './ui/shell.js';
-import { primeAudio } from './ui/sound.js';
+import { primeAudio, stopSpeech } from './ui/sound.js';
 import { popup, toast } from './ui/celebrations.js';
 import { APP_VERSION } from './version.js';
 import { showWhatsNew } from './ui/whatsnew.js';
 import { renderHome } from './views/home.js';
 import { renderLesson } from './views/lesson.js';
-import { renderPractice, renderPlay, renderReview, renderFixit, renderWarmup } from './views/practice.js';
+import { renderPractice, renderPlay, renderReview, renderFixit, renderWarmup, renderTutor } from './views/practice.js';
 import { renderRewards, showBadges } from './views/rewards.js';
 import { renderDashboard } from './views/dashboard.js';
 import { renderCurriculum } from './views/curriculum.js';
 import { renderPet } from './views/pet.js';
 import { renderAdventure } from './views/adventure.js';
 import { renderSprint } from './views/sprint.js';
+import { renderSortStorm } from './views/sortstorm.js';
+import { renderMagnitude } from './views/magnitude.js';
+import { renderReport } from './views/report.js';
 import { renderOnboard } from './views/onboard.js';
 
 const content = () => document.getElementById('content');
-const TOP_LEVEL = new Set(['', 'adventure', 'pet', 'rewards', 'parent']);
+// Top-level hubs show the kid HUD + bottom nav. Everything else is a "sub-screen"
+// that gets a slim back bar (see shell.renderSubhead) and hides the kid chrome.
+const TOP_LEVEL = new Set(['', 'adventure', 'pet', 'rewards']);
 
 function parseHash() {
   const h = (location.hash || '#/').replace(/^#\//, '');
@@ -32,24 +37,30 @@ function route() {
 
   const { route, param } = parseHash();
   const root = content();
+  stopSpeech(); // silence any read-aloud from the view we're leaving
   root.scrollTop = 0;
   window.scrollTo(0, 0);
 
   document.body.dataset.route = route || 'home';
-  const showChrome = TOP_LEVEL.has(route) && S.onboarded;
-  document.getElementById('nav').style.display = showChrome ? '' : 'none';
-  document.getElementById('hud').style.display = (route === 'onboard') ? 'none' : '';
+  // top-level hubs: kid HUD + bottom nav. sub-screens: slim back bar (renderSubhead).
+  const top = TOP_LEVEL.has(route) && S.onboarded;
+  document.getElementById('nav').style.display = top ? '' : 'none';
+  document.getElementById('hud').style.display = top ? '' : 'none';
 
   switch (route) {
     case '': renderHome(root); break;
     case 'onboard': renderOnboard(root); break;
     case 'learn': renderLesson(root, param); break;
     case 'practice': renderPractice(root, param); break;
+    case 'tutor': renderTutor(root, param); break;
     case 'play': renderPlay(root); break;
     case 'review': renderReview(root); break;
     case 'fixit': renderFixit(root); break;
     case 'warmup': renderWarmup(root); break;
     case 'sprint': renderSprint(root); break;
+    case 'magnitude': renderMagnitude(root); break;
+    case 'sort': renderSortStorm(root); break;
+    case 'report': renderReport(root); break;
     case 'rewards': renderRewards(root); break;
     case 'parent': renderDashboard(root); break;
     case 'curriculum': renderCurriculum(root); break;
@@ -57,6 +68,8 @@ function route() {
     case 'adventure': renderAdventure(root); break;
     default: location.hash = '#/'; return;
   }
+  // subtle modern view-enter transition (transform+opacity only; reduced-motion safe)
+  root.classList.remove('view-enter'); void root.offsetWidth; root.classList.add('view-enter');
   refreshChrome();
 }
 
@@ -82,6 +95,10 @@ function boot() {
   }
   setRouter(route);
   window.addEventListener('hashchange', route);
+  // if the device can't persist (quota / private mode), let the grown-up know once
+  window.addEventListener('mathquest:save-error', () => {
+    toast("Heads up: this device isn't saving progress right now. 💛", { actionLabel: 'OK' });
+  }, { once: true });
   primeAudio();
   renderHUD(); renderNav();
   route();
@@ -90,7 +107,9 @@ function boot() {
 
 // PWA service worker + controlled update flow
 function registerSW() {
-  if (!('serviceWorker' in navigator)) return;
+  // `navigator` is absent in non-browser runtimes (e.g. the Node test/CI env on
+  // versions before the global was added) — guard so boot never throws there.
+  if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) return;
   navigator.serviceWorker.register('./service-worker.js').then((reg) => {
     const offerUpdate = () => {
       if (!reg.waiting) return;

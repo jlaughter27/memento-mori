@@ -6,23 +6,48 @@ const PALETTE = ['#6c5ce7', '#00b894', '#e17055', '#0984e3', '#e84393', '#fdcb6e
 export function renderVisual(v) {
   if (!v || !v.type) return '';
   try {
+    let html = '';
     switch (v.type) {
-      case 'numberLine': return numberLine(v);
-      case 'array': return array(v);
-      case 'baseTen': return baseTen(v);
-      case 'fractionBar': return fractionBars(v);
-      case 'fractionCircle': return fractionCircle(v);
-      case 'groups': return groups(v);
-      case 'shape': return shapeRect(v);
-      case 'clock': return clock(v);
-      case 'money': return money(v);
-      case 'percentBar': return percentBar(v);
-      case 'tape': return tape(v);
-      case 'box3d': return box3d(v);
-      case 'dotPlot': return dotPlot(v);
+      case 'numberLine': html = numberLine(v); break;
+      case 'array': html = array(v); break;
+      case 'baseTen': html = baseTen(v); break;
+      case 'fractionBar': html = fractionBars(v); break;
+      case 'fractionCircle': html = fractionCircle(v); break;
+      case 'groups': html = groups(v); break;
+      case 'shape': html = shapeRect(v); break;
+      case 'clock': html = clock(v); break;
+      case 'money': html = money(v); break;
+      case 'percentBar': html = percentBar(v); break;
+      case 'tape': html = tape(v); break;
+      case 'box3d': html = box3d(v); break;
+      case 'dotPlot': html = dotPlot(v); break;
       default: return '';
     }
+    // make the diagram screen-reader-describable (WCAG: informative images need a name)
+    if (html) html = html.replace('<svg ', `<svg role="img" aria-label="${describeVisual(v).replace(/"/g, '&quot;')}" `);
+    return html;
   } catch (e) { return ''; }
+}
+
+function describeVisual(v) {
+  const dn = (b) => (b.den != null ? b.den : b.denom); // accept den or denom
+  const fr = (b) => `${b.num} out of ${dn(b)}`;
+  switch (v.type) {
+    case 'numberLine': return `Number line from ${v.min} to ${v.max}${v.mark !== undefined ? `, marked at ${v.mark}` : ''}`;
+    case 'array': return `Array of ${v.a} rows by ${v.b}, ${v.a * v.b} dots in all`;
+    case 'baseTen': return `Base-ten blocks showing ${v.value}`;
+    case 'fractionBar': return `Fraction bars: ${(v.bars || [{ num: v.num, den: dn(v) }]).map(fr).join(' and ')}`;
+    case 'fractionCircle': return `Fraction circle showing ${v.num} out of ${dn(v)}`;
+    case 'groups': return `${v.groups} equal groups of ${v.perGroup}`;
+    case 'shape': return `Rectangle, ${v.w} by ${v.h}`;
+    case 'clock': return `Clock showing ${v.h}:${String(v.m).padStart(2, '0')}`;
+    case 'money': return `Money: ${v.cents} cents`;
+    case 'percentBar': return `Bar showing ${v.pct} percent`;
+    case 'tape': return `Tape diagram comparing ${v.a} to ${v.b}`;
+    case 'box3d': return `Three-D box, ${v.l} by ${v.w} by ${v.h}`;
+    case 'dotPlot': return `Dot plot of the data values`;
+    default: return 'math diagram';
+  }
 }
 const wrap = (inner, vb = '0 0 320 160') =>
   `<div class="manip"><svg viewBox="${vb}" class="manip-svg" preserveAspectRatio="xMidYMid meet">${inner}</svg></div>`;
@@ -77,8 +102,11 @@ function baseTen({ value = 0 }) {
   return wrap(`${s}<text x="${W / 2}" y="86" text-anchor="middle" font-size="14" fill="#5a4f86" font-weight="700">${value}</text>`, `0 0 ${W} 96`);
 }
 
-function oneBar({ num, den }, y, h, label = true) {
+function oneBar(b, y, h, label = true) {
+  const num = b.num;
+  const den = b.den != null ? b.den : b.denom; // content uses `denom`, engine uses `den`
   const W = 280, x0 = 10, w = W - 20;
+  if (!den || den <= 0) return { svg: '', lab: '' }; // never divide by zero
   const cw = w / den;
   let cells = '';
   for (let i = 0; i < den; i++) {
@@ -88,13 +116,16 @@ function oneBar({ num, den }, y, h, label = true) {
   return { svg: cells, lab };
 }
 function fractionBars(v) {
-  const bars = v.bars || [{ num: v.num, den: v.den }];
+  const bars = v.bars || [{ num: v.num, den: v.den != null ? v.den : v.denom }];
   let s = ''; let y = 12; const h = 38;
   for (const b of bars) { const o = oneBar(b, y, h); s += o.svg + o.lab; y += h + 14; }
   return wrap(s, `0 0 320 ${y}`);
 }
 
-function fractionCircle({ num = 1, den = 2 }) {
+function fractionCircle(v) {
+  const num = v.num != null ? v.num : 1;
+  let den = v.den != null ? v.den : (v.denom != null ? v.denom : 2);
+  if (!den || den <= 0) den = 2;
   const cx = 80, cy = 70, r = 56;
   let s = '';
   for (let i = 0; i < den; i++) {

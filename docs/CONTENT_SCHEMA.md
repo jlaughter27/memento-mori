@@ -73,9 +73,11 @@ Content may ONLY use these `type` ids. `params` shapes per type:
 | `mult`          | `{aDigits:1..3, bDigits:1..2, regroup:bool}`                       | 3–6    |
 | `div`           | `{dividendDigits:2..4, divisor:1..12, remainder:bool}`            | 3–6    |
 | `placeValue`    | `{digits:3..7, ask:'value'|'name'|'expanded'}`                    | 3–5    |
+| `baseTenBuild`  | `{places:2..4}` · **interactive** (`inputKind:'build'` — tap blocks to build a number) | 2–4 |
 | `rounding`      | `{digits:2..6, to:10|100|1000}`                                    | 3–5    |
 | `compare`       | `{digits:2..6}`                                                    | 3–4    |
 | `fractionCompare`| `{maxDenom:2..12}`                                                | 3–5    |
+| `fractionShade` | `{maxDenom:2..8}` · **interactive** (`inputKind:'tap'` — child shades a bar) | 3–4    |
 | `equivFraction` | `{maxDenom:2..12}`                                                 | 3–5    |
 | `fractionAddSub`| `{maxDenom:2..12, like:bool, op:'+'|'-'|'mix'}`                   | 4–6    |
 | `fractionOfNum` | `{maxDenom:2..10, op:'mix'}`                                       | 4–6    |

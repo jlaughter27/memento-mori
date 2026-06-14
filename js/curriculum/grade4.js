@@ -648,6 +648,143 @@ export default [
       count: 6
     },
     wordProblemTags: ['ocean', 'space']
+  },
+
+  // ── 17. Multiplication (OA) ───────────────────────────────────────────────
+
+  {
+    id: 'g4-mult-compare',
+    grade: 4,
+    strand: 'Multiplication',
+    title: 'Multiplicative Comparison',
+    emoji: '🔭',
+    blurb: 'Understand "5 times as many" and write the multiplication equation that shows it.',
+    prereq: ['g4-mult-3x1', 'g4-div-basic'],
+    cc: {
+      code: '4.OA.A.1',
+      domain: 'Operations & Algebraic Thinking',
+      text: 'Interpret a multiplication equation as a comparison; represent multiplicative comparisons as equations.'
+    },
+    lesson: {
+      hook: 'Sam has 4 stickers. Alex has 5 times as many. That\'s NOT the same as 5 MORE — it\'s 5 GROUPS of 4!',
+      bigIdea: 'Multiplicative comparison uses × to say one amount is so many times another — it\'s about equal groups, not adding extras.',
+      steps: [
+        {
+          title: 'Spot the comparison language',
+          text: '"Times as many / as much" signals multiplication. "More than" signals addition — don\'t mix them up!',
+          example: { problem: '4 stickers × 5 = ?', show: '5 times as many → 5 × 4 = 20 stickers' }
+        },
+        {
+          title: 'Draw a bar model',
+          text: 'Draw one bar for the smaller amount. Stack that many bars for the bigger amount.',
+          example: { problem: 'Sam: [4] · Alex: [4][4][4][4][4]', show: 'Alex has 20 stickers' }
+        },
+        {
+          title: 'Work backwards: divide to find the smaller amount',
+          text: 'If you know the big amount and the multiplier, divide to find the smaller amount.',
+          example: { problem: '35 is 7 times as many as ?', show: '35 ÷ 7 = 5' }
+        }
+      ],
+      visual: { type: 'groups', groups: 5, perGroup: 4 },
+      tryThis: 'Read the problem carefully — is it times as many, or more than? 🔭'
+    },
+    practice: {
+      type: 'wordProblem',
+      params: { skill: 'mult' },
+      count: 5
+    },
+    wordProblemTags: ['animals', 'sports', 'space']
+  },
+
+  // ── 18. Multiplication / Division (OA) ───────────────────────────────────
+
+  {
+    id: 'g4-multistep',
+    grade: 4,
+    strand: 'Multiplication',
+    title: 'Multi-Step Word Problems',
+    emoji: '🧠',
+    blurb: 'Solve real-world problems that need two or more steps to crack.',
+    prereq: ['g4-mult-compare', 'g4-div-remainder'],
+    cc: {
+      code: '4.OA.A.3',
+      domain: 'Operations & Algebraic Thinking',
+      text: 'Solve multi-step word problems using the four operations; interpret remainders; assess reasonableness.'
+    },
+    lesson: {
+      hook: 'Some problems need more than one step. You buy 3 packs of 8 cards, then give 7 away — how many are left?',
+      bigIdea: 'Break a big problem into smaller steps. Solve one step at a time, and use the answer to tackle the next.',
+      steps: [
+        {
+          title: 'Read the whole problem first',
+          text: 'Find the final question. Then look for all the facts you\'ll need to get there.',
+          example: { problem: '3 packs × 8 cards, then give away 7', show: 'Need TWO steps: multiply, then subtract' }
+        },
+        {
+          title: 'Solve step by step',
+          text: 'Do one operation at a time. Label what each answer means so you stay on track.',
+          example: { problem: 'Step 1: 3 × 8 = 24 cards total', show: 'Step 2: 24 − 7 = 17 cards left' }
+        },
+        {
+          title: 'Check: does your answer make sense?',
+          text: 'Round the numbers, estimate quickly, and see if your exact answer is close.',
+          example: { problem: 'Estimate: 3 × 8 ≈ 24, minus a few → about 17', show: '17 makes sense ✓' }
+        }
+      ],
+      tryThis: 'Step by step — you can solve anything! 🧠'
+    },
+    practice: {
+      type: 'wordProblem',
+      params: { skill: 'div' },
+      count: 6
+    },
+    wordProblemTags: ['baking', 'sports', 'dinosaurs']
+  },
+
+  // ── 19. Fractions (NF) ────────────────────────────────────────────────────
+
+  {
+    id: 'g4-fraction-times-whole',
+    grade: 4,
+    strand: 'Fractions',
+    title: 'Multiply a Fraction by a Whole Number',
+    emoji: '✖️',
+    blurb: 'Find a fraction of a set — like 3/4 of 20 — by dividing then multiplying.',
+    prereq: ['g4-fraction-add-sub'],
+    cc: {
+      code: '4.NF.B.4',
+      domain: 'Number & Operations — Fractions',
+      text: 'Apply and extend understanding of multiplication to multiply a fraction by a whole number.'
+    },
+    lesson: {
+      hook: 'There are 18 muffins. You want to save 2/3 of them for a party. How many muffins is that?',
+      bigIdea: '"Fraction of a number" means multiply. Divide by the denominator to find one equal part, then multiply by the numerator to get the right number of parts.',
+      steps: [
+        {
+          title: 'Divide by the denominator',
+          text: 'The denominator tells you how many equal groups to make. Divide the whole number into that many groups.',
+          example: { problem: '2/3 of 18 — step 1', show: '18 ÷ 3 = 6  (one third of 18 is 6)' }
+        },
+        {
+          title: 'Multiply by the numerator',
+          text: 'The numerator tells you how many of those groups you want. Multiply one-group\'s amount by the numerator.',
+          example: { problem: '2/3 of 18 — step 2', show: '6 × 2 = 12  (two thirds of 18 is 12)' }
+        },
+        {
+          title: 'Write it as multiplication',
+          text: 'n × (a/b) = (n × a) ÷ b. So 3 × (2/5) = 6/5 — the numerator grows, denominator stays.',
+          example: { problem: '4 × (3/8)', show: '(4 × 3) ÷ 8 = 12/8 = 1 and 4/8 = 1½' }
+        }
+      ],
+      visual: { type: 'groups', groups: 3, perGroup: 6 },
+      tryThis: 'Divide into equal parts, then grab the right number of them! ✖️'
+    },
+    practice: {
+      type: 'fractionOfNum',
+      params: { maxDenom: 6 },
+      count: 6
+    },
+    wordProblemTags: ['baking', 'candy', 'animals']
   }
 
 ];

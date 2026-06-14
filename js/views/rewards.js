@@ -14,11 +14,21 @@ export function renderRewards(root) {
   root.innerHTML = `
     <div class="rewards-wrap">
       <div class="rewards-coinbar card-soft">
-        <div class="rc-pet">${foxSVG('happy')}</div>
+        <div class="rc-pet rc-pet-emoji">${(rewardsData.pets.find((p) => p.id === S.profile.avatar.pet) || { emoji: '🦊' }).emoji}</div>
         <div class="rc-info">
           <div class="rc-name">${escapeHtml(S.profile.name || 'Explorer')}'s Treasures</div>
           <div class="rc-coins">🪙 <b>${S.progress.coins}</b> coins</div>
         </div>
+      </div>
+      <div class="collection-bar card-soft">
+        ${(() => {
+          const ownedSet = new Set(S.progress.owned);
+          const badgesGot = S.progress.badges.length, badgesTot = rewardsData.badges.length;
+          const petsGot = rewardsData.pets.filter((p) => ownedSet.has(p.id)).length, petsTot = rewardsData.pets.length;
+          const itemsGot = rewardsData.shop.filter((i) => ownedSet.has(i.id)).length, itemsTot = rewardsData.shop.length;
+          const cell = (emoji, got, tot) => `<span class="coll-cell">${emoji} <b>${got}</b>/${tot}</span>`;
+          return `<span class="coll-label">My collection</span>${cell('🏅', badgesGot, badgesTot)}${cell('🐾', petsGot, petsTot)}${cell('🎀', itemsGot, itemsTot)}`;
+        })()}
       </div>
       <div class="tabbar">
         ${['badges', 'shop', 'pets', 'style'].map((t) =>
@@ -59,7 +69,9 @@ function drawItems(host, items, mode) {
   host.querySelectorAll('.shop-item').forEach((c) => {
     const id = c.dataset.id;
     const item = items.find((x) => x.id === id);
-    c.querySelector('.item-btn').addEventListener('click', (e) => {
+    const btn = c.querySelector('.item-btn');
+    if (!item || !btn) return;
+    btn.addEventListener('click', (e) => {
       e.stopPropagation();
       handleItem(item, host);
     });
@@ -127,7 +139,9 @@ function drawStyle(host) {
   tHost.innerHTML = themes.map((t) => itemCard(t)).join('');
   tHost.querySelectorAll('.shop-item').forEach((c) => {
     const t = themes.find((x) => x.id === c.dataset.id);
-    c.querySelector('.item-btn').addEventListener('click', () => {
+    const btn = c.querySelector('.item-btn');
+    if (!t || !btn) return;
+    btn.addEventListener('click', () => {
       sfx.tap(); equip(t); applyBodyClasses(); drawStyle(host);
     });
   });

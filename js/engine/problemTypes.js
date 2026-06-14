@@ -8,7 +8,7 @@
 //   steps: [{text}],         full worked solution (revealed on "Show me how")
 //   hints: [string],          progressive nudges (revealed one at a time)
 //   visual: descriptor|null,  optional manipulative for THIS problem
-//   inputKind: 'number'|'fraction'|'choice'|'text',
+//   inputKind: 'number'|'fraction'|'choice'|'text'|'tap'|'build',
 //   choices: [..]|undefined,  for choice questions (<,>,=, yes/no, multiple choice)
 //   check(raw) -> bool
 // }
@@ -365,6 +365,35 @@ function longDivisionSteps(dividend, divisor, q, r) {
 /* =====================================================================
    PLACE VALUE
 ===================================================================== */
+// interactive: build a multi-digit number from place-value blocks (inputKind:'build')
+function makeBaseTenBuild(params = {}, rng) {
+  const places = Math.max(2, Math.min(4, params.places || 3));
+  const lo = Math.pow(10, places - 1), hi = Math.pow(10, places) - 1;
+  const target = randInt(rng, lo, hi); // a `places`-digit number (leading digit ≥ 1)
+  const names = ['ones', 'tens', 'hundreds', 'thousands'];
+  let t = target; const digs = [];
+  for (let i = 0; i < places; i++) { digs.push(t % 10); t = Math.floor(t / 10); }
+  const breakdown = digs.map((dd, i) => `${dd} ${names[i]}`).reverse().join(', ');
+  return P({
+    type: 'baseTenBuild',
+    prompt: `Build the number ${target} with blocks.`,
+    answer: String(target),
+    inputKind: 'build',
+    build: { places },
+    steps: [
+      { text: `Break ${target} into its place values: ${breakdown}.` },
+      { text: `In each column, add that many blocks — tap ＋ to add, － to take one away.` },
+      { text: `All the blocks together make **${target}**. ✨` },
+    ],
+    hints: [
+      `The last digit is the ones, the next is the tens, then hundreds…`,
+      `${target} = ${breakdown}.`,
+      `Match each column to the matching digit of ${target}.`,
+    ],
+    check: checkInt(target),
+  });
+}
+
 function makePlaceValue(params = {}, rng) {
   const d = params.digits || 3;
   const ask = params.ask || 'value';
@@ -380,9 +409,9 @@ function makePlaceValue(params = {}, rng) {
       prompt: `Write ${grp(n)} in expanded form (like 300 + 40 + 5):`,
       answer: ansStr,
       steps: [
-        { text: `Look at each digit and its place value.` },
-        ...[...digs].map((dv, i) => digs.length - 1 - i >= 0 && digs[digs.length - 1 - i] ? null : null).filter(Boolean),
-        { text: parts.map((p, i) => `${grp(p)}`).join(' + ') + ` = ${grp(n)}.` },
+        { text: `Look at each digit and what place it's in.` },
+        ...parts.map((p) => ({ text: `One digit is worth ${grp(p)}.` })),
+        { text: `Add the place values: ${parts.map(grp).join(' + ')} = ${grp(n)}.` },
         { text: `Expanded form: ${ansStr}. 🧩` },
       ],
       hints: ['Each digit is worth its face value times its place (ones, tens, hundreds...).', 'Write each nonzero digit times its place, joined with +.'],
@@ -528,6 +557,33 @@ function makeEquivFraction(params = {}, rng) {
 }
 
 /* =====================================================================
+   FRACTIONS — shade it (interactive: tap parts of a bar to build the fraction)
+===================================================================== */
+function makeFractionShade(params = {}, rng) {
+  const den = randInt(rng, 2, params.maxDenom || 6);
+  const num = randInt(rng, 1, den - 1);
+  const shape = params.shape || (rng() < 0.5 ? 'circle' : 'bar');
+  return P({
+    type: 'fractionShade',
+    prompt: `Tap to shade ${num}/${den} of the ${shape}.`,
+    answer: String(num),
+    inputKind: 'tap',
+    tap: { den, shape },
+    steps: [
+      { text: `The bottom number, ${den}, splits the whole ${shape} into **${den} equal parts**.` },
+      { text: `The top number, ${num}, tells you how many parts to shade.` },
+      { text: `So shade **${num}** of the ${den} parts — that's ${num}/${den}. ✨` },
+    ],
+    hints: [
+      `The bottom (${den}) is how many equal parts there are in all.`,
+      `The top (${num}) is how many parts to color in.`,
+      `Tap exactly ${num} part${num > 1 ? 's' : ''}.`,
+    ],
+    check: checkInt(num),
+  });
+}
+
+/* =====================================================================
    FRACTIONS — add / subtract
 ===================================================================== */
 function makeFractionAddSub(params = {}, rng) {
@@ -540,7 +596,7 @@ function makeFractionAddSub(params = {}, rng) {
     n1 = randInt(rng, 1, d1 - 1); n2 = randInt(rng, 1, d1 - 1);
   } else {
     d1 = randInt(rng, 2, maxD); d2 = randInt(rng, 2, maxD);
-    while (d2 === d1) d2 = randInt(rng, 2, maxD);
+    while (d2 === d1 && maxD > 2) d2 = randInt(rng, 2, maxD);
     n1 = randInt(rng, 1, d1 - 1); n2 = randInt(rng, 1, d2 - 1);
   }
   if (op === '-' && n1 / d1 < n2 / d2) { [d1, d2] = [d2, d1];[n1, n2] = [n2, n1]; }
@@ -570,8 +626,13 @@ function makeFractionAddSub(params = {}, rng) {
       `Always simplify your answer if you can.`,
     ],
     visual: { type: 'fractionBar', bars: [{ num: n1, den: d1 }, { num: n2, den: d2 }] },
-    misconceptions: (() => { const wN = op === '+' ? n1 + n2 : n1 - n2, wD = op === '+' ? d1 + d2 : d1 + d2;
-      return wD > 0 && Math.abs(wN / wD - sNum / sDen) > 1e-9 ? [mis(checkFraction(wN, wD), `Watch out — you **don't add the bottom numbers**. Give both fractions the same denominator first, then ${op === '+' ? 'add' : 'subtract'} just the tops. 🍕`)] : []; })(),
+    misconceptions: (() => {
+      // classic "operate on the denominators too" error — cleanest to detect on addition
+      if (op !== '+') return [];
+      const wN = n1 + n2, wD = d1 + d2;
+      return wD > 0 && Math.abs(wN / wD - sNum / sDen) > 1e-9
+        ? [mis(checkFraction(wN, wD), `Watch out — you **don't add the bottom numbers**. Give both fractions the same denominator first, then add just the tops. 🍕`)] : [];
+    })(),
     check: checkFraction(sNum, sDen),
   });
 }
@@ -966,7 +1027,7 @@ function makePercent(params = {}, rng) {
   const kind = params.kind || 'ofNumber';
   if (kind === 'whole') {
     const pct = pick(rng, [10, 20, 25, 50]);
-    const part = randInt(rng, 2, 12) * (pct / 100) * 4; // keep clean
+    const part = Math.round(randInt(rng, 2, 12) * (pct / 100) * 4 * 100) / 100; // keep clean (no float noise)
     const whole = Math.round(part / (pct / 100));
     return P({
       type: 'percent',
@@ -1035,12 +1096,15 @@ function makeMean(params = {}, rng) {
   const ask = params.ask || 'mean';
   let nums;
   if (ask === 'mean') {
-    // make the sum divisible by count for a clean average
-    const target = randInt(rng, 3, max);
-    nums = Array.from({ length: count }, () => randInt(rng, 1, max));
-    const sum = nums.reduce((a, b) => a + b, 0);
-    const fix = (target * count - sum);
-    nums[0] = Math.min(Math.max(nums[0] + fix, 1), max * count);
+    // Start with every value equal to the target mean (sum is exactly mean*count, so the
+    // average is a whole number), then shuffle units between pairs to add variety while
+    // keeping the sum — and therefore the mean — exact.
+    const m = randInt(rng, 3, max);
+    nums = Array.from({ length: count }, () => m);
+    for (let s = 0; s < count * 4; s++) {
+      const i = Math.floor(rng() * count), j = Math.floor(rng() * count);
+      if (i !== j && nums[i] > 1 && nums[j] < max) { nums[i]--; nums[j]++; }
+    }
   } else {
     nums = Array.from({ length: count }, () => randInt(rng, 1, max));
   }
@@ -1080,8 +1144,9 @@ function makeMean(params = {}, rng) {
 /* ---------- registry + generic fallback ---------- */
 export const TYPES = {
   add: makeAdd, sub: makeSub, mult: makeMult, div: makeDiv,
-  placeValue: makePlaceValue, rounding: makeRounding, compare: makeCompare,
+  placeValue: makePlaceValue, baseTenBuild: makeBaseTenBuild, rounding: makeRounding, compare: makeCompare,
   fractionCompare: makeFractionCompare, equivFraction: makeEquivFraction,
+  fractionShade: makeFractionShade,
   fractionAddSub: makeFractionAddSub, fractionOfNum: makeFractionOfNum,
   decimalAddSub: makeDecimalAddSub, decimalCompare: makeDecimalCompare,
   factors: makeFactors, patterns: makePatterns, order: makeOrder,

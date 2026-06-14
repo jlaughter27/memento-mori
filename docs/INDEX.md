@@ -36,6 +36,7 @@ Welcome to the MathQuest docs. Everything you need, organized by who you are.
 - **[CLAUDE.md](../CLAUDE.md)** — build rules, invariants, file map, how to extend.
 - **[Architecture](ARCHITECTURE.md)** — system design, data flow, the teaching engine, state model.
 - **[Content Schema](CONTENT_SCHEMA.md)** — the locked data contract for all curriculum content.
+- **[Design System](DESIGN_SYSTEM.md)** — tokens (spacing/type/color), the text-fit pattern, layout, a11y, and common UI roadblocks.
 - **[Contributing](../CONTRIBUTING.md)** — step-by-step recipes (add a skill, problem type, badge…).
 - **[Testing](TESTING.md)** — the test suite and how to run it.
 

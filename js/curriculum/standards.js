@@ -13,6 +13,12 @@ export default {
     text: 'Understand place value for hundreds, tens, and ones to read and write numbers up to 1,000.'
   },
 
+  'g3-build-number': {
+    code: '2.NBT.A.1',
+    domain: 'Number & Operations in Base Ten',
+    text: 'Compose a three-digit number from hundreds, tens, and ones using place-value blocks.'
+  },
+
   'g3-compare-numbers': {
     code: '3.NBT.A.1',
     domain: 'Number & Operations in Base Ten',
@@ -65,6 +71,12 @@ export default {
     code: '3.NF.A.1',
     domain: 'Number & Operations—Fractions',
     text: 'Understand a fraction 1/b as one equal part when a whole is divided into b equal parts.'
+  },
+
+  'g3-fractions-shade': {
+    code: '3.NF.A.1',
+    domain: 'Number & Operations—Fractions',
+    text: 'Build a fraction a/b by shading a equal parts of a whole divided into b equal parts.'
   },
 
   'g3-fractions-compare': {

@@ -7,18 +7,24 @@ import { addCoins } from '../gamification.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx, speak } from '../ui/sound.js';
 import { confetti, popup, sparkle } from '../ui/celebrations.js';
-import { escapeHtml } from '../ui/dom.js';
+import { escapeHtml, fitText } from '../ui/dom.js';
 
 const DURATION = 60; // seconds
-// quick mental-math pool — answerable in a couple of seconds (fact fluency)
-const POOL = [
-  { practice: { type: 'mult', params: { aDigits: 1, bDigits: 1 } } },
-  { practice: { type: 'mult', params: { aDigits: 1, bDigits: 1 } } },
-  { practice: { type: 'add', params: { digits: 2, regroup: false, terms: 2 } } },
-  { practice: { type: 'sub', params: { digits: 2, regroup: false } } },
-];
+// quick mental-math pool, lightly tuned to the child's grade (fact fluency, not busywork)
+function poolForGrade(grade) {
+  const base = [
+    { practice: { type: 'add', params: { digits: 2, regroup: false, terms: 2 } } },
+    { practice: { type: 'sub', params: { digits: 2, regroup: false } } },
+    { practice: { type: 'mult', params: { aDigits: 1, bDigits: 1 } } },
+  ];
+  if (grade <= 2) return [{ practice: { type: 'add', params: { digits: 1, terms: 2 } } }, { practice: { type: 'sub', params: { digits: 1 } } }, ...base.slice(0, 2)];
+  if (grade >= 4) base.push({ practice: { type: 'div', params: { dividendDigits: 2, divisor: 4, remainder: false } } });
+  if (grade >= 5) base.push({ practice: { type: 'mult', params: { aDigits: 2, bDigits: 1 } } });
+  return base;
+}
 
 export function renderSprint(root) {
+  const POOL = poolForGrade(S.profile.grade || 3);
   let timer = null;
   const clear = () => { if (timer) { clearInterval(timer); timer = null; } };
 
@@ -26,7 +32,6 @@ export function renderSprint(root) {
     clear();
     root.innerHTML = `
       <div class="sprint-wrap">
-        <header class="sprint-top"><button class="btn-ghost" id="sprint-back">← Map</button></header>
         <div class="sprint-intro card-soft">
           <div class="sprint-emoji">⚡</div>
           <h1>Math Sprint</h1>
@@ -35,7 +40,6 @@ export function renderSprint(root) {
           <button class="btn btn-big btn-play" id="sprint-start">Start! 🚀</button>
         </div>
       </div>`;
-    root.querySelector('#sprint-back').addEventListener('click', () => { clear(); navigate('#/'); });
     root.querySelector('#sprint-start').addEventListener('click', () => { sfx.tap(); countdown(); });
   }
 
@@ -44,11 +48,13 @@ export function renderSprint(root) {
     root.innerHTML = `<div class="sprint-wrap"><div class="sprint-count" id="sprint-count">${n}</div></div>`;
     const el = root.querySelector('#sprint-count');
     sfx.tap();
+    const pop = () => { el.classList.remove('pop-in'); void el.offsetWidth; el.classList.add('pop-in'); };
     timer = setInterval(() => {
+      if (!document.body.contains(el)) { clear(); return; } // navigated away
       n--;
-      if (n === 0) { el.textContent = 'GO!'; sfx.star(); }
+      if (n === 0) { el.textContent = 'GO!'; pop(); sfx.star(); }
       else if (n < 0) { clear(); play(); }
-      else { el.textContent = n; sfx.tap(); }
+      else { el.textContent = n; pop(); sfx.tap(); }
     }, 700);
   }
 
@@ -57,9 +63,9 @@ export function renderSprint(root) {
     root.innerHTML = `
       <div class="sprint-wrap sprint-game">
         <div class="sprint-hud">
-          <span class="sprint-score">⚡ <b id="s-score">0</b></span>
-          <div class="sprint-timebar"><div class="sprint-timefill" id="s-time"></div></div>
-          <span class="sprint-clock" id="s-clock">${remaining}</span>
+          <span class="sprint-score" aria-live="polite" aria-atomic="true">⚡ <b id="s-score">0</b></span>
+          <div class="sprint-timebar" aria-hidden="true"><div class="sprint-timefill" id="s-time"></div></div>
+          <span class="sprint-clock" id="s-clock" role="timer" aria-label="${remaining} seconds left">${remaining}</span>
         </div>
         <div class="sprint-problem" id="s-prob"></div>
         <div class="answer-display sprint-ans" id="s-ans" data-empty="1">?</div>
@@ -80,7 +86,7 @@ export function renderSprint(root) {
       val = ''; ansEl.textContent = '?'; ansEl.dataset.empty = '1';
       probEl.textContent = cur.prompt.replace(/\s*=\s*\?$/, '');
     }
-    function sync() { ansEl.textContent = val || '?'; ansEl.dataset.empty = val ? '0' : '1'; }
+    function sync() { ansEl.textContent = val || '?'; ansEl.dataset.empty = val ? '0' : '1'; fitText(ansEl); }
     function tryAnswer() {
       if (val !== '' && Number(val) === answerNum()) {
         score++; scoreEl.textContent = score; sfx.correct(); sparkle(ansEl);
@@ -88,6 +94,7 @@ export function renderSprint(root) {
       }
     }
     pad.querySelectorAll('.key').forEach((b) => b.addEventListener('click', () => {
+      sfx.tap();
       const k = b.textContent;
       if (k === '⌫') val = val.slice(0, -1);
       else if (val.length < 4) val += k;
@@ -101,6 +108,7 @@ export function renderSprint(root) {
 
     nextProb();
     timer = setInterval(() => {
+      if (!document.body.contains(clockEl)) { clear(); document.removeEventListener('keydown', keyHandler); return; } // navigated away mid-game
       remaining--;
       clockEl.textContent = remaining;
       timeFill.style.width = (remaining / DURATION * 100) + '%';

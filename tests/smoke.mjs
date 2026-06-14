@@ -19,7 +19,8 @@ class FakeOsc { constructor(){this.frequency={setValueAtTime(){}};} connect(){} 
 class FakeGain { constructor(){this.gain={setValueAtTime(){},linearRampToValueAtTime(){},exponentialRampToValueAtTime(){}};} connect(){} }
 g.AudioContext = class { constructor(){this.currentTime=0;this.destination={};this.state='running';} resume(){} createOscillator(){return new FakeOsc();} createGain(){return new FakeGain();} };
 g.SpeechSynthesisUtterance = class {};
-g.speechSynthesis = { cancel(){}, speak(){} };
+let speechCancels = 0;
+g.speechSynthesis = { cancel(){ speechCancels++; }, speak(){} };
 window.HTMLCanvasElement.prototype.getContext = () => ({ scale(){}, clearRect(){}, save(){}, restore(){}, translate(){}, rotate(){}, fillRect(){}, set fillStyle(v){}, set globalAlpha(v){}, beginPath(){}, arc(){}, fill(){} });
 
 // expose globals the ES modules expect (they reference bare document/window/etc.)
@@ -80,6 +81,14 @@ try {
     }
   };
   await dismissPopups();
+  // lesson now flows into Tutor mode (teach-first): step through the worked example, then start
+  if ($('.tutor-wrap')) {
+    let tg = 0; while ($('#t-step') && !$('#t-step').hidden && tg++ < 14) { click($('#t-step')); await wait(15); }
+    if (!$('#t-go') || $('#t-go').hidden) throw new Error('tutor teach screen did not reach "let\'s practice"');
+    click($('#t-go')); await wait(50);
+    log('tutor teach screen walked → practice');
+  }
+  await dismissPopups();
   log('lesson done; popups dismissed → practice');
 
   step = 'practice';
@@ -88,6 +97,21 @@ try {
   log('problem: ' + $('.problem-prompt').textContent);
   if ($$('.pip').length < 1) throw new Error('no progress pips');
   if (!$('.keypad') && !$('.choices')) throw new Error('no input control');
+  // v2.8 long-answer regression: hammering the keypad must cap the value and
+  // keep it inside the display (no overflow), then clear cleanly.
+  if ($('.keypad') && $('#ans-display')) {
+    const nine = $$('.key').find((b) => b.textContent === '9');
+    for (let i = 0; i < 48; i++) click(nine);
+    await wait(10);
+    const shown = $('#ans-display').textContent;
+    if (shown.length > 40) throw new Error('answer display not length-capped (' + shown.length + ' chars)');
+    if ($('#ans-display').dataset.empty !== '0') throw new Error('answer display empty flag wrong after typing');
+    const back = $$('.key').find((b) => b.getAttribute('aria-label') === 'delete' || b.textContent === '⌫');
+    for (let i = 0; i < 45; i++) click(back);
+    await wait(10);
+    if ($('#ans-display').textContent !== '?') throw new Error('answer display did not clear back to empty');
+    log('long-answer input capped + cleared cleanly (no overflow)');
+  }
   // hint ladder
   click($('#hint-btn')); await wait(20);
   if (!$('.mascot-bubble')) throw new Error('hint did not show mascot bubble');
@@ -119,6 +143,7 @@ try {
   await dismissPopups();
 
   step = 'routes';
+  const cancelsBefore = speechCancels;
   for (const r of ['#/play', '#/rewards', '#/parent', '#/']) {
     window.location.hash = r;
     window.dispatchEvent(new window.Event('hashchange'));
@@ -126,11 +151,65 @@ try {
     if (!$('#content').children.length) throw new Error('empty content at ' + r);
     log('route ' + r + ' ok');
   }
+  // navigation must stop any in-flight read-aloud (regression: TTS kept playing)
+  if (speechCancels <= cancelsBefore) throw new Error('route change did not stop speech (stopSpeech not wired)');
+  log('navigation stops read-aloud (speechSynthesis.cancel fired)');
+
+  step = 'navigation chrome';
+  // bottom nav is the 4 kid hubs; Grown-ups moved to the HUD gear
+  if ($$('.nav-btn').length !== 4) throw new Error('expected 4 bottom-nav items, got ' + $$('.nav-btn').length);
+  if (!$('.hud-gear')) throw new Error('HUD gear (grown-ups) missing');
+  // sub-screens show the slim back bar and hide the kid HUD/nav
+  window.location.hash = '#/sprint'; window.dispatchEvent(new window.Event('hashchange')); await wait(50);
+  if ($('#subhead').hidden || !$('.sub-back')) throw new Error('sub-header back bar not shown on a sub-screen');
+  if ($('#hud').style.display !== 'none') throw new Error('kid HUD should be hidden on a sub-screen');
+  click($('.sub-back')); await wait(50);
+  if (!$('.home-hero')) throw new Error('sub-header back did not return home');
+  if (!$('#subhead').hidden) throw new Error('sub-header should hide on a top-level hub');
+  log('nav chrome: 4 hubs + HUD gear; sub-header back bar works');
 
   step = 'rewards-tabs';
   window.location.hash = '#/rewards'; window.dispatchEvent(new window.Event('hashchange')); await wait(40);
   for (const t of $$('.tab')) { click(t); await wait(25); }
   log('rewards tabs all rendered');
+
+  step = 'text-fit helpers';
+  const { promptLen, fitText } = await import('../js/ui/dom.js');
+  if (promptLen('2+2') !== '') throw new Error('promptLen: short prompt should bucket to ""');
+  if (promptLen('x'.repeat(50)) !== 'long') throw new Error('promptLen: 50 chars should be "long"');
+  if (promptLen('x'.repeat(90)) !== 'xlong') throw new Error('promptLen: 90 chars should be "xlong"');
+  fitText(undefined); fitText(null); fitText($('#hud')); // must be no-op-safe, never throw
+  log('text-fit helpers: promptLen buckets correct + fitText no-op safe');
+
+  step = 'modal inert ref-count';
+  // two stacked modals (e.g. level-up + daily-goal) must keep the background inert
+  // until the LAST closes — regression guard for the focus-trap bug.
+  const { setInert } = await import('../js/ui/celebrations.js');
+  setInert(true); setInert(true);
+  if ($('#content').getAttribute('inert') === null) throw new Error('inert not applied while modal open');
+  setInert(false); // first of two closes
+  if ($('#content').getAttribute('inert') === null) throw new Error('inert removed too early (focus trap broke with a 2nd modal still open)');
+  setInert(false); // last closes
+  if ($('#content').getAttribute('inert') !== null) throw new Error('inert not removed after last modal closed');
+  log('modal inert is reference-counted (stacked popups keep focus trap)');
+
+  step = 'popup/toast escape dynamic content';
+  // popup + toast must escape strings (the child's name is free-text input) — no
+  // element injection. Deterministic: an unescaped title would create a real <img>.
+  const { popup, toast } = await import('../js/ui/celebrations.js');
+  popup({ title: '<img src=x onerror="window.__pwn=1">', sub: '<b>hi</b>', sound: false, confetti: false });
+  await wait(20);
+  const titleEl = $('.celebrate-title');
+  if (titleEl && titleEl.querySelector('img')) throw new Error('popup title not escaped — an <img> was injected');
+  if (titleEl && !titleEl.textContent.includes('<img')) throw new Error('popup title text lost during escaping');
+  if (window.__pwn) throw new Error('popup executed injected HTML');
+  if ($('.celebrate-btn')) click($('.celebrate-btn'));
+  await wait(20);
+  toast('<img src=x onerror="window.__pwn=1">');
+  await wait(10);
+  if ($('.toast-msg') && $('.toast-msg').querySelector('img')) throw new Error('toast message not escaped');
+  const tc = $('.toast-close'); if (tc) click(tc);
+  log('popup + toast escape dynamic content (no HTML injection)');
 
 } catch (e) {
   console.log('\n❌ SMOKE FAILED at step [' + step + ']:', e.message);

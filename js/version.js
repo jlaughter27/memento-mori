@@ -1,10 +1,183 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.4.0';
+export const APP_VERSION = '2.22.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.22.0',
+    date: '2026-06-07',
+    title: 'Whole Family',
+    items: [
+      '👧👦 Multiple kids can share one device — each with their own pet & progress',
+      '➕ Add, switch, and manage learners in the Grown-ups Corner',
+    ],
+  },
+  {
+    v: '2.21.0',
+    date: '2026-06-07',
+    title: 'Safe & Sound',
+    items: [
+      '🔒 Extra safety: all pop-up text is now properly sanitized',
+    ],
+  },
+  {
+    v: '2.20.0',
+    date: '2026-06-07',
+    title: 'Polish Pass',
+    items: [
+      '✋ Tapping "Check" before building now gently reminds you to tap first',
+    ],
+  },
+  {
+    v: '2.19.0',
+    date: '2026-06-07',
+    title: 'Building Blocks',
+    items: [
+      '🧱 New "Build the Number" skill — tap blocks to make hundreds, tens & ones!',
+      '➕ Add and remove place-value blocks to build any number',
+    ],
+  },
+  {
+    v: '2.18.0',
+    date: '2026-06-07',
+    title: 'Pizza Fractions',
+    items: [
+      '🍕 "Show the Fraction" now uses bars AND circles — shade a pizza!',
+      '✋ Tap the pie slices or bar parts to build your fraction',
+    ],
+  },
+  {
+    v: '2.17.0',
+    date: '2026-06-07',
+    title: 'Hands-On Fractions',
+    items: [
+      '🎨 New "Show the Fraction" skill — tap to shade the bar and build a fraction!',
+      '✋ Our first hands-on, tap-to-learn activity (more coming!)',
+    ],
+  },
+  {
+    v: '2.16.0',
+    date: '2026-06-07',
+    title: 'Accessible by Default',
+    items: [
+      '♿ Every button and control is now guaranteed to work with a screen reader',
+      '🎉 Pop-ups close cleanly even if you tap fast',
+    ],
+  },
+  {
+    v: '2.15.0',
+    date: '2026-06-07',
+    title: 'Tested & True',
+    items: [
+      '🧪 Deeper testing of settings, the shop, pets, and the quest map',
+      '🛡️ A few more safety checks so menus never hiccup',
+    ],
+  },
+  {
+    v: '2.14.0',
+    date: '2026-06-07',
+    title: 'Bug Hunt',
+    items: [
+      '🖼️ Fixed fraction pictures in lessons that were showing up blank',
+      '♿ Celebration pop-ups now play nicely when two happen at once',
+      '🛡️ Extra safety checks so nothing can crash mid-play',
+    ],
+  },
+  {
+    v: '2.13.0',
+    date: '2026-06-07',
+    title: 'Clear Next Steps',
+    items: [
+      '🔒 Locked skills now tell you exactly which one to master first',
+    ],
+  },
+  {
+    v: '2.12.0',
+    date: '2026-06-07',
+    title: 'Easy to Get Around',
+    items: [
+      '↩️ One clear "Back" bar on every screen — never get lost',
+      '🧭 Simpler bottom menu with your 4 favorite places',
+      '⚙️ Grown-up tools tucked behind a gear, out of your way',
+      '🏠 Tidier home — tap "Grade" only when you want to switch',
+    ],
+  },
+  {
+    v: '2.11.0',
+    date: '2026-06-07',
+    title: 'Modern & Clean',
+    items: [
+      '✨ Screens now glide in smoothly instead of snapping',
+      '🧹 Cleaner, calmer cards with more breathing room',
+      '🎮 Home has a tidy "Play & explore" shelf for the games',
+      '💫 Friendlier pop animations on celebrations',
+    ],
+  },
+  {
+    v: '2.10.0',
+    date: '2026-06-07',
+    title: 'Readable Everywhere',
+    items: [
+      '🌌 Everything stays clear on the starry, galaxy & aurora backgrounds',
+      '🔳 Works in high-contrast mode for extra-clear visuals',
+      '🎯 Sharper keyboard outlines on every theme',
+    ],
+  },
+  {
+    v: '2.9.0',
+    date: '2026-06-07',
+    title: 'Crisp & Consistent',
+    items: [
+      '🎨 Buttons & worked-examples now match every color theme (not just purple)',
+      '👀 Clearer, higher-contrast colors so answers are easy to read',
+      '🌙 Star, galaxy & aurora backgrounds keep everything readable',
+      '🔇 Read-aloud now stops when you change screens',
+      '⚡ Snappier taps and tidier spacing all around',
+    ],
+  },
+  {
+    v: '2.8.0',
+    date: '2026-06-07',
+    title: 'Polished to Fit',
+    items: [
+      '🔢 Long answers now shrink to fit their box — no more text spilling out',
+      '📖 Big word problems scale down and wrap so they\'re easy to read',
+      '✨ A consistent spacing & type system makes every screen feel tidy',
+    ],
+  },
+  {
+    v: '2.7.0',
+    date: '2026-06-06',
+    title: 'Grow Together',
+    items: [
+      '🐣 Your pet grows up as you master skills — watch it evolve!',
+      '🌪️ New game: Sort & Storm — tap the numbers that fit the rule',
+      '🔄 "Rusty" skills come back so your learning never fades',
+      '📅 Grown-ups can set a weekly goal · 🎀 collect it all in Rewards',
+    ],
+  },
+  {
+    v: '2.6.0',
+    date: '2026-06-06',
+    title: 'Learn with Foxy',
+    items: [
+      '🦊 Tutor mode — Foxy shows you how, helps you try, then lets you fly solo',
+      '📍 New game: Number Line — guess where the number goes!',
+      '📊 Grown-ups: a full progress report you can read & print',
+    ],
+  },
+  {
+    v: '2.5.0',
+    date: '2026-06-06',
+    title: 'Polished & Hardened',
+    items: [
+      '♿ Full accessibility pass — screen-reader friendly, keyboard-friendly',
+      '✨ Lots of polish: cleaner home, friendlier feedback, smoother games',
+      '🐛 Squashed bugs found by a deep audit (your pet quest is rock-solid now)',
+    ],
+  },
   {
     v: '2.4.0',
     date: '2026-06-06',

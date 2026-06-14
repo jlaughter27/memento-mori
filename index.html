@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="color-scheme" content="light">
   <title>MathQuest — Fun Math Adventures</title>
   <meta name="description" content="A friendly, interactive math tutor for grades 3–6. Learn, play, earn badges!">
   <meta name="theme-color" content="#6c5ce7">
@@ -10,16 +11,19 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="MathQuest">
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/icon.svg">
   <!-- Progressive font enhancement; falls back to rounded system fonts offline -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lexend:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body data-theme="default" data-bg="default">
-  <header id="hud" class="hud"></header>
-  <main id="content" class="content" aria-live="polite"></main>
-  <nav id="nav" class="nav"></nav>
+  <a class="skip-link sr-only" href="#content">Skip to content</a>
+  <header id="hud" class="hud" aria-label="Game status"></header>
+  <div id="subhead" class="subhead" aria-label="Screen navigation" hidden></div>
+  <main id="content" class="content" tabindex="-1" aria-label="Main content"></main>
+  <nav id="nav" class="nav" aria-label="Main navigation"></nav>
   <script type="module" src="js/app.js"></script>
   <noscript style="padding:2rem;display:block;font-family:sans-serif">MathQuest needs JavaScript turned on. 🦊</noscript>
 </body>

@@ -1,7 +1,7 @@
 // views/home.js — the learning map: continue card, daily goal, grade tabs, strands.
 import { S, persist, isUnlocked, isMastered, skillRec } from '../state.js';
 import { groupedByStrand, getSkill, GRADES } from '../curriculum/index.js';
-import { gradeCompletion, recommendedSkill, dailyStatus, dueReviews, mistakeCount, warmupDue } from '../gamification.js';
+import { gradeCompletion, recommendedSkill, dailyStatus, dueReviews, mistakeCount, warmupDue, isRusty, weeklyProgress } from '../gamification.js';
 import { rewardsData } from '../curriculum/index.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { navigate } from '../ui/shell.js';
@@ -19,6 +19,7 @@ export function renderHome(root) {
   const reviews = dueReviews();
   const mistakes = mistakeCount();
   const showWarmup = warmupDue();
+  const weekly = weeklyProgress();
   const petName = (rewardsData.pets.find((p) => p.id === S.profile.avatar.pet) || { name: 'Your pet' }).name;
   const greeting = streak > 1
     ? `You've practiced ${streak} days in a row — keep it up! 🔥`
@@ -34,27 +35,6 @@ export function renderHome(root) {
       </div>
     </section>
 
-    ${showWarmup ? `
-    <button class="continue-card warmup-card" id="warmup-btn">
-      <span class="cont-emoji">🌅</span>
-      <span class="cont-text"><b>Daily warm-up</b><span>${escapeHtml(petName)} wants to see what you remember!</span></span>
-      <span class="cont-go">▶</span>
-    </button>` : ''}
-
-    ${mistakes ? `
-    <button class="continue-card fixit-card" id="fixit-btn">
-      <span class="cont-emoji">🔧</span>
-      <span class="cont-text"><b>Fix-It time</b><span>${mistakes} tricky problem${mistakes > 1 ? 's' : ''} to master</span></span>
-      <span class="cont-go">▶</span>
-    </button>` : ''}
-
-    ${reviews.length ? `
-    <button class="continue-card review-card" id="review-btn">
-      <span class="cont-emoji">🔁</span>
-      <span class="cont-text"><b>Review time</b><span>${reviews.length} skill${reviews.length > 1 ? 's' : ''} ready for a quick refresh</span></span>
-      <span class="cont-go">▶</span>
-    </button>` : ''}
-
     ${cont ? `
     <button class="continue-card" id="continue-btn" data-id="${cont.id}">
       <span class="cont-emoji">${cont.emoji || '✏️'}</span>
@@ -68,22 +48,61 @@ export function renderHome(root) {
       ${daily.reached ? '<p class="goal-done">Goal complete — you\'re a star today! 🌟</p>' : ''}
     </div>
 
+    ${weekly.goal ? `
+    <div class="card-soft weekly-goal">
+      <div class="wg-ring" style="--p:${Math.min(100, Math.round(weekly.days / weekly.goal * 100))}"><span>${Math.min(weekly.days, weekly.goal)}/${weekly.goal}</span></div>
+      <div class="wg-text">📅 <b>This week's goal</b><br><span class="muted">${weekly.met ? 'Goal met this week — amazing! 🎉' : `${weekly.days} of ${weekly.goal} practice days`}</span></div>
+    </div>` : ''}
+
+    ${(showWarmup || mistakes || reviews.length) ? `
+    <h3 class="section-h nudge-h">Quick boosts ✨</h3>
+    <div class="home-nudges">
+      ${showWarmup ? `
+      <button class="continue-card warmup-card" id="warmup-btn">
+        <span class="cont-emoji">🌅</span>
+        <span class="cont-text"><b>Daily warm-up</b><span>${escapeHtml(petName)} wants to see what you remember!</span></span>
+        <span class="cont-go">▶</span>
+      </button>` : ''}
+      ${mistakes ? `
+      <button class="continue-card fixit-card" id="fixit-btn">
+        <span class="cont-emoji">🔧</span>
+        <span class="cont-text"><b>Fix-It time</b><span>${mistakes} tricky problem${mistakes > 1 ? 's' : ''} to master</span></span>
+        <span class="cont-go">▶</span>
+      </button>` : ''}
+      ${reviews.length ? `
+      <button class="continue-card review-card" id="review-btn">
+        <span class="cont-emoji">🔁</span>
+        <span class="cont-text"><b>Review time</b><span>${reviews.length} skill${reviews.length > 1 ? 's' : ''} ready for a quick refresh</span></span>
+        <span class="cont-go">▶</span>
+      </button>` : ''}
+    </div>` : ''}
+
+    <h3 class="section-h">Play &amp; explore 🎮</h3>
     <div class="home-cta-row">
       <button class="continue-card quest-card" id="quest-btn">
         <span class="cont-emoji">⚔️</span>
         <span class="cont-text"><b>Pet Quest</b><span>A story adventure with your pet!</span></span>
-        <span class="cont-go">▶</span>
       </button>
       <button class="continue-card sprint-card" id="sprint-btn">
         <span class="cont-emoji">⚡</span>
         <span class="cont-text"><b>Math Sprint</b><span>Beat your best in 60 seconds!</span></span>
-        <span class="cont-go">▶</span>
+      </button>
+      <button class="continue-card magnitude-card" id="magnitude-btn">
+        <span class="cont-emoji">📍</span>
+        <span class="cont-text"><b>Number Line</b><span>Guess where the number goes!</span></span>
+      </button>
+      <button class="continue-card sort-card" id="sort-btn">
+        <span class="cont-emoji">🌪️</span>
+        <span class="cont-text"><b>Sort &amp; Storm</b><span>Tap the numbers that fit the rule!</span></span>
       </button>
     </div>
 
-    <div class="grade-tabs" role="tablist" aria-label="Choose grade">
-      ${GRADES.map((g) => `<button class="grade-tab ${g === grade ? 'active' : ''}" role="tab" aria-selected="${g === grade}" data-grade="${g}">Grade ${g}</button>`).join('')}
-    </div>
+    <details class="grade-switch">
+      <summary><span>📚 Grade ${grade}</span><span class="gs-hint">tap to switch grade</span></summary>
+      <div class="grade-tabs" role="tablist" aria-label="Choose grade">
+        ${GRADES.map((g) => `<button class="grade-tab ${g === grade ? 'active' : ''}" role="tab" aria-selected="${g === grade}" data-grade="${g}">Grade ${g}</button>`).join('')}
+      </div>
+    </details>
 
     <div class="grade-progress card-soft">
       <div class="gp-row">
@@ -108,11 +127,13 @@ export function renderHome(root) {
   if (warmBtn) warmBtn.addEventListener('click', () => { sfx.tap(); navigate('#/warmup'); });
   root.querySelector('#quest-btn').addEventListener('click', () => { sfx.tap(); navigate('#/adventure'); });
   root.querySelector('#sprint-btn').addEventListener('click', () => { sfx.tap(); navigate('#/sprint'); });
+  root.querySelector('#magnitude-btn').addEventListener('click', () => { sfx.tap(); navigate('#/magnitude'); });
+  root.querySelector('#sort-btn').addEventListener('click', () => { sfx.tap(); navigate('#/sort'); });
   const contBtn = root.querySelector('#continue-btn');
   if (contBtn) contBtn.addEventListener('click', () => {
     sfx.tap();
     const rec = skillRec(cont.id);
-    navigate(rec.lessonDone ? `#/practice/${cont.id}` : `#/learn/${cont.id}`);
+    navigate(rec.mastered ? `#/practice/${cont.id}` : rec.lessonDone ? `#/tutor/${cont.id}` : `#/learn/${cont.id}`);
   });
 
   const tabs = [...root.querySelectorAll('.grade-tab')];
@@ -160,16 +181,24 @@ export function renderHome(root) {
       }
       sfx.tap();
       const rec = skillRec(id);
-      navigate(rec.lessonDone ? `#/practice/${id}` : `#/learn/${id}`);
+      navigate(rec.mastered ? `#/practice/${id}` : rec.lessonDone ? `#/tutor/${id}` : `#/learn/${id}`);
     }));
 }
 
 function skillCard(s) {
   const unlocked = isUnlocked(s);
   const rec = S.progress.skills[s.id] || { stars: 0, mastered: false };
+  const rusty = isRusty(rec);
+  // for locked cards, name the prerequisite so "why is this locked?" is answerable
+  // without tapping (tooltip + richer aria-label)
+  const prereq = unlocked ? null
+    : (s.prereq || []).map((p) => getSkill(p)).find((x) => x && !isMastered(x.id));
+  const lockHint = prereq ? `Master "${prereq.title}" first` : 'Finish the earlier skills first';
   return `
-    <button class="skill-card ${unlocked ? '' : 'locked'} ${rec.mastered ? 'mastered' : ''}" data-id="${s.id}"
-      aria-label="${escapeHtml(s.title)}${unlocked ? '' : ' (locked)'}${rec.mastered ? ' (mastered)' : ''}">
+    <button class="skill-card ${unlocked ? '' : 'locked'} ${rec.mastered ? 'mastered' : ''} ${rusty ? 'rusty' : ''}" data-id="${s.id}"
+      ${unlocked ? '' : `title="🔒 ${escapeHtml(lockHint)}"`}
+      aria-label="${escapeHtml(s.title)}${unlocked ? '' : ` (locked — ${lockHint})`}${rec.mastered ? ' (mastered)' : ''}${rusty ? ' (needs a refresh)' : ''}">
+      ${rusty ? '<span class="rusty-flag" title="Time for a refresh!">🔄</span>' : ''}
       <span class="skill-emoji">${s.emoji || '✏️'}</span>
       <span class="skill-title">${escapeHtml(s.title)}</span>
       ${unlocked ? stars(rec.stars || 0) : '<span class="lock">🔒</span>'}
