@@ -79,6 +79,14 @@ export function renderHome(root) {
 
     <h3 class="section-h">Play &amp; explore 🎮</h3>
     <div class="home-cta-row">
+      <button class="continue-card world-card" id="world-btn">
+        <span class="cont-emoji">🗺️</span>
+        <span class="cont-text"><b>Explore the World</b><span>Walk your pet around MathQuest Island!</span></span>
+      </button>
+      <button class="continue-card collection-card" id="collection-btn">
+        <span class="cont-emoji">📖</span>
+        <span class="cont-text"><b>My Collection</b><span>See everything you've found!</span></span>
+      </button>
       <button class="continue-card quest-card" id="quest-btn">
         <span class="cont-emoji">⚔️</span>
         <span class="cont-text"><b>Pet Quest</b><span>A story adventure with your pet!</span></span>
@@ -125,6 +133,8 @@ export function renderHome(root) {
   if (fixBtn) fixBtn.addEventListener('click', () => { sfx.tap(); navigate('#/fixit'); });
   const warmBtn = root.querySelector('#warmup-btn');
   if (warmBtn) warmBtn.addEventListener('click', () => { sfx.tap(); navigate('#/warmup'); });
+  root.querySelector('#world-btn').addEventListener('click', () => { sfx.tap(); navigate('#/world'); });
+  root.querySelector('#collection-btn').addEventListener('click', () => { sfx.tap(); navigate('#/collection'); });
   root.querySelector('#quest-btn').addEventListener('click', () => { sfx.tap(); navigate('#/adventure'); });
   root.querySelector('#sprint-btn').addEventListener('click', () => { sfx.tap(); navigate('#/sprint'); });
   root.querySelector('#magnitude-btn').addEventListener('click', () => { sfx.tap(); navigate('#/magnitude'); });

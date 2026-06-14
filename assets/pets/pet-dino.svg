@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Bespoke vector pet: a gentle long-neck dino for the Pet World avatar. -->
+  <defs><radialGradient id="dinb" cx="45%" cy="60%" r="70%"><stop offset="0%" stop-color="#86d77f"/><stop offset="100%" stop-color="#57a84e"/></radialGradient></defs>
+  <!-- tail -->
+  <path d="M56 150 q-34 0 -34 -28 q12 10 24 4 q-6 16 10 24 z" fill="#57a84e" stroke="#3f8a3e" stroke-width="3"/>
+  <!-- body -->
+  <ellipse cx="92" cy="142" rx="50" ry="40" fill="url(#dinb)" stroke="#3f8a3e" stroke-width="4"/>
+  <ellipse cx="92" cy="152" rx="32" ry="24" fill="#dff0cf"/>
+  <!-- back plates -->
+  <path d="M64 110 l8 -12 l8 12 z M84 104 l8 -12 l8 12 z" fill="#3f8a3e"/>
+  <!-- neck -->
+  <path d="M120 124 q30 -28 24 -74 q-2 -12 -16 -9 q8 30 -16 66 z" fill="url(#dinb)" stroke="#3f8a3e" stroke-width="4"/>
+  <!-- head -->
+  <ellipse cx="134" cy="46" rx="22" ry="17" fill="url(#dinb)" stroke="#3f8a3e" stroke-width="3"/>
+  <circle cx="140" cy="42" r="5" fill="#2d2233"/><circle cx="142" cy="40" r="2" fill="#fff"/>
+  <circle cx="126" cy="50" r="5" fill="#ff9d9d" opacity=".4"/>
+  <path d="M126 54 q8 5 16 1" stroke="#3f8a3e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- spots -->
+  <circle cx="80" cy="134" r="5" fill="#3f8a3e" opacity=".35"/>
+  <circle cx="104" cy="146" r="6" fill="#3f8a3e" opacity=".35"/>
+  <!-- legs -->
+  <ellipse cx="74" cy="176" rx="13" ry="9" fill="#dff0cf" stroke="#3f8a3e" stroke-width="3"/>
+  <ellipse cx="110" cy="176" rx="13" ry="9" fill="#dff0cf" stroke="#3f8a3e" stroke-width="3"/>
+</svg>

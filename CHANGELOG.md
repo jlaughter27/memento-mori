@@ -4,6 +4,25 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.24.0] — 2026-06-14 — "MathQuest Island"
+The explorable game, rebased cleanly onto the v2.23 line.
+### Added
+- **MathQuest Island** (`#/world`) — a top-down world you walk your pet around with taps or
+  arrow keys: a tiny game engine (`js/game/loop·input·camera·tilemap·tiles·sprite·particles·
+  encounter.js`), strand-themed zones with warps + an accessible fast-travel map, mastery-gated
+  unlocks, roaming spaced-review "critters", per-zone quests + NPC dialogue, a boss in every
+  zone → **Champion's Castle** finale, daily bonus + rotating events, a Star-Catch mini-game,
+  and a pet **friendship** meter that grows from play. Loot (treats/toys/decor) drops into the
+  Pet Home. Data in `js/curriculum/world-maps.js` + `toys-data.js`; bespoke SVG art for all 11 pets.
+- **Collection album** (`#/collection`) — pets, toys, decorations, rooms, zones, bosses, stickers,
+  and badges as owned/locked chips with an overall island-complete % meter.
+- Entry points on the Home "Play & explore" shelf and the Pet Home; **World adventure** stats on
+  the parent dashboard; a Friendship bar on the Pet Home.
+### Internal
+- `state.js` gains `progress.world`, `home.toys`, `care.friendship`; `gamification.js` gains
+  `addFriendship`/`friendInfo`; `sound.js` gains soft `step`/`chime` cues. New `tests/world.mjs`
+  drives the whole world end-to-end; all suites + `engine:check` + `fuzz` stay green.
+
 ## [2.23.0] — 2026-06-07 — "Worksheet Maker"
 Printable worksheet generator — a v3.0 Definition-of-Done gate item.
 ### Added

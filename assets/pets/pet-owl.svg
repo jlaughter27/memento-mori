@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Bespoke vector pet: a wise owl for the Pet World avatar. -->
+  <defs><radialGradient id="owlb" cx="50%" cy="36%" r="72%"><stop offset="0%" stop-color="#c39a5e"/><stop offset="100%" stop-color="#9a6e3c"/></radialGradient></defs>
+  <path d="M64 70 l-6 -28 l22 18 z" fill="#9a6e3c" stroke="#7a572e" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M136 70 l6 -28 l-22 18 z" fill="#9a6e3c" stroke="#7a572e" stroke-width="3" stroke-linejoin="round"/>
+  <ellipse cx="100" cy="118" rx="52" ry="60" fill="url(#owlb)" stroke="#7a572e" stroke-width="4"/>
+  <path d="M50 100 q-10 32 6 56 q10 -4 10 -18 q-10 -20 -4 -40 z" fill="#865f31"/>
+  <path d="M150 100 q10 32 -6 56 q-10 -4 -10 -18 q10 -20 4 -40 z" fill="#865f31"/>
+  <ellipse cx="100" cy="132" rx="30" ry="40" fill="#ead2a6"/>
+  <circle cx="80" cy="92" r="22" fill="#fff" stroke="#7a572e" stroke-width="2"/>
+  <circle cx="120" cy="92" r="22" fill="#fff" stroke="#7a572e" stroke-width="2"/>
+  <circle cx="80" cy="93" r="11" fill="#2d2233"/>
+  <circle cx="120" cy="93" r="11" fill="#2d2233"/>
+  <circle cx="84" cy="89" r="4" fill="#fff"/><circle cx="124" cy="89" r="4" fill="#fff"/>
+  <path d="M92 102 h16 l-8 13 z" fill="#ffae34" stroke="#e08a00" stroke-width="1.5"/>
+  <path d="M82 176 l-6 8 m6 -8 l0 9 m0 -9 l6 8 M118 176 l-6 8 m6 -8 l0 9 m0 -9 l6 8" stroke="#ffae34" stroke-width="3" fill="none" stroke-linecap="round"/>
+</svg>

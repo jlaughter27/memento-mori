@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Bespoke vector pet: a sparkly unicorn for the Pet World avatar. -->
+  <defs><radialGradient id="unib" cx="50%" cy="38%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f3e9fb"/></radialGradient></defs>
+  <path d="M100 16 l9 36 h-18 z" fill="#ffe08a" stroke="#e0b94a" stroke-width="2"/>
+  <path d="M74 58 l-6 -20 l18 12 z" fill="url(#unib)" stroke="#e3c6dd" stroke-width="2"/>
+  <path d="M126 58 l6 -20 l-18 12 z" fill="url(#unib)" stroke="#e3c6dd" stroke-width="2"/>
+  <!-- rainbow mane -->
+  <path d="M58 56 q-20 28 -4 64 q10 -6 8 -18 q-8 -22 12 -34 z" fill="#ff6fa5"/>
+  <path d="M62 60 q-14 24 0 52" stroke="#ffd23f" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M68 60 q-10 22 2 46" stroke="#6bcb77" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="100" cy="142" rx="44" ry="38" fill="url(#unib)" stroke="#e3c6dd" stroke-width="4"/>
+  <ellipse cx="100" cy="152" rx="26" ry="20" fill="#fff"/>
+  <circle cx="100" cy="92" r="46" fill="url(#unib)" stroke="#e3c6dd" stroke-width="4"/>
+  <path d="M100 48 q26 6 24 30 q-12 -10 -24 -6 q-12 -4 -24 6 q-2 -24 24 -30 z" fill="#a06bff"/>
+  <ellipse cx="100" cy="106" rx="22" ry="15" fill="#fff"/>
+  <circle cx="74" cy="104" r="9" fill="#ff9d9d" opacity=".5"/>
+  <circle cx="126" cy="104" r="9" fill="#ff9d9d" opacity=".5"/>
+  <circle cx="84" cy="90" r="8" fill="#2d2233"/>
+  <circle cx="116" cy="90" r="8" fill="#2d2233"/>
+  <circle cx="86" cy="87" r="3" fill="#fff"/><circle cx="118" cy="87" r="3" fill="#fff"/>
+  <path d="M70 84 q6 -5 12 -1 M118 83 q6 -4 12 1" stroke="#caa6dd" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M94 108 q6 5 12 0" stroke="#caa6dd" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <ellipse cx="80" cy="176" rx="13" ry="9" fill="#fff" stroke="#e3c6dd" stroke-width="3"/>
+  <ellipse cx="120" cy="176" rx="13" ry="9" fill="#fff" stroke="#e3c6dd" stroke-width="3"/>
+</svg>

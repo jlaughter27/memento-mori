@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Bespoke vector pet: a cheerful orange tabby mascot for the Pet World avatar.
+       Drawn front-facing; rendered to the game canvas via game/sprite.js (static-image mode). -->
+  <defs>
+    <radialGradient id="body" cx="50%" cy="38%" r="70%">
+      <stop offset="0%" stop-color="#ffb55e"/>
+      <stop offset="100%" stop-color="#f59331"/>
+    </radialGradient>
+  </defs>
+  <!-- tail -->
+  <path d="M150 150 q40 -6 30 -44 q-3 -16 -18 -12 q12 8 6 24 q-6 18 -28 18 z" fill="#f59331" stroke="#cf7322" stroke-width="3"/>
+  <!-- ears -->
+  <path d="M62 64 L48 26 L92 54 Z" fill="#f59331" stroke="#cf7322" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M138 64 L152 26 L108 54 Z" fill="#f59331" stroke="#cf7322" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M66 56 L57 36 L82 52 Z" fill="#ffd9a8"/>
+  <path d="M134 56 L143 36 L118 52 Z" fill="#ffd9a8"/>
+  <!-- body -->
+  <ellipse cx="100" cy="138" rx="46" ry="40" fill="url(#body)" stroke="#cf7322" stroke-width="4"/>
+  <ellipse cx="100" cy="150" rx="30" ry="24" fill="#fff2df"/>
+  <!-- head -->
+  <circle cx="100" cy="86" r="50" fill="url(#body)" stroke="#cf7322" stroke-width="4"/>
+  <!-- tabby stripes -->
+  <path d="M100 40 v16 M86 42 l4 14 M114 42 l-4 14" stroke="#cf7322" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <!-- cheeks -->
+  <circle cx="72" cy="100" r="10" fill="#ff9d9d" opacity=".55"/>
+  <circle cx="128" cy="100" r="10" fill="#ff9d9d" opacity=".55"/>
+  <!-- eyes -->
+  <circle cx="82" cy="86" r="11" fill="#2d2233"/>
+  <circle cx="118" cy="86" r="11" fill="#2d2233"/>
+  <circle cx="86" cy="82" r="4" fill="#fff"/>
+  <circle cx="122" cy="82" r="4" fill="#fff"/>
+  <!-- nose + mouth -->
+  <path d="M95 98 h10 l-5 6 z" fill="#ff7a9c"/>
+  <path d="M100 104 q-7 8 -15 4 M100 104 q7 8 15 4" stroke="#cf7322" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- whiskers -->
+  <path d="M58 96 h-18 M60 104 h-20 M142 96 h18 M140 104 h20" stroke="#cf7322" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- little paws -->
+  <ellipse cx="80" cy="174" rx="13" ry="9" fill="#fff2df" stroke="#cf7322" stroke-width="3"/>
+  <ellipse cx="120" cy="174" rx="13" ry="9" fill="#fff2df" stroke="#cf7322" stroke-width="3"/>
+</svg>
