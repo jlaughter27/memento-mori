@@ -1,10 +1,19 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.22.0';
+export const APP_VERSION = '2.23.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.23.0',
+    date: '2026-06-07',
+    title: 'Worksheet Maker',
+    items: [
+      '📄 Grown-ups can print a practice worksheet for any grade & topic',
+      '🔑 Each sheet comes with an answer key on its own page',
+    ],
+  },
   {
     v: '2.22.0',
     date: '2026-06-07',

@@ -18,6 +18,7 @@ import { renderSprint } from './views/sprint.js';
 import { renderSortStorm } from './views/sortstorm.js';
 import { renderMagnitude } from './views/magnitude.js';
 import { renderReport } from './views/report.js';
+import { renderWorksheet } from './views/worksheet.js';
 import { renderOnboard } from './views/onboard.js';
 
 const content = () => document.getElementById('content');
@@ -61,6 +62,7 @@ function route() {
     case 'magnitude': renderMagnitude(root); break;
     case 'sort': renderSortStorm(root); break;
     case 'report': renderReport(root); break;
+    case 'worksheet': renderWorksheet(root); break;
     case 'rewards': renderRewards(root); break;
     case 'parent': renderDashboard(root); break;
     case 'curriculum': renderCurriculum(root); break;

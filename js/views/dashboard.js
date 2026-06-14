@@ -55,6 +55,7 @@ export function renderDashboard(root) {
       </div>
 
       <button class="btn btn-big" id="report-btn">📊 View full progress report</button>
+      <button class="btn btn-big" id="worksheet-btn">📄 Make a printable worksheet</button>
 
       <h2 class="section-h">Curriculum &amp; trust</h2>
       <div class="settings card-soft">
@@ -146,6 +147,7 @@ export function renderDashboard(root) {
   root.querySelector('#set-grade').addEventListener('change', (e) => { S.profile.grade = +e.target.value; persist(); refreshChrome(); });
   root.querySelector('#set-weekly').addEventListener('change', (e) => { S.profile.weeklyGoal = +e.target.value; persist(); });
   root.querySelector('#report-btn').addEventListener('click', () => { sfx.tap(); navigate('#/report'); });
+  root.querySelector('#worksheet-btn').addEventListener('click', () => { sfx.tap(); navigate('#/worksheet'); });
   root.querySelector('#curric-map-btn').addEventListener('click', () => { sfx.tap(); navigate('#/curriculum'); });
   root.querySelector('#whatsnew-btn').addEventListener('click', () => { sfx.tap(); showWhatsNew(); });
 

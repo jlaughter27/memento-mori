@@ -26,6 +26,7 @@ const SCREENS = {
   sort:      { title: 'Sort & Storm',    back: '#/' },
   parent:    { title: 'Grown-ups',       back: '#/' },
   report:    { title: 'Progress Report', back: '#/parent' },
+  worksheet: { title: 'Worksheet Maker', back: '#/parent' },
   curriculum:{ title: 'Curriculum Map',  back: '#/parent' },
 };
 export function screenFor(route) { return SCREENS[route] || null; }
