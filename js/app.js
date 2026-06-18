@@ -13,6 +13,8 @@ import { renderRewards, showBadges } from './views/rewards.js';
 import { renderDashboard } from './views/dashboard.js';
 import { renderCurriculum } from './views/curriculum.js';
 import { renderPet } from './views/pet.js';
+import { renderWorld } from './views/world.js';
+import { renderCollection } from './views/collection.js';
 import { renderAdventure } from './views/adventure.js';
 import { renderSprint } from './views/sprint.js';
 import { renderSortStorm } from './views/sortstorm.js';
@@ -24,7 +26,7 @@ import { renderOnboard } from './views/onboard.js';
 const content = () => document.getElementById('content');
 // Top-level hubs show the kid HUD + bottom nav. Everything else is a "sub-screen"
 // that gets a slim back bar (see shell.renderSubhead) and hides the kid chrome.
-const TOP_LEVEL = new Set(['', 'adventure', 'pet', 'rewards']);
+const TOP_LEVEL = new Set(['', 'adventure', 'pet', 'world', 'collection', 'rewards']);
 
 function parseHash() {
   const h = (location.hash || '#/').replace(/^#\//, '');
@@ -67,6 +69,8 @@ function route() {
     case 'parent': renderDashboard(root); break;
     case 'curriculum': renderCurriculum(root); break;
     case 'pet': renderPet(root); break;
+    case 'world': renderWorld(root); break;
+    case 'collection': renderCollection(root); break;
     case 'adventure': renderAdventure(root); break;
     default: location.hash = '#/'; return;
   }

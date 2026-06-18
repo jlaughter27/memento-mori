@@ -1,10 +1,20 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.23.0';
+export const APP_VERSION = '2.24.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.24.0',
+    date: '2026-06-14',
+    title: 'MathQuest Island',
+    items: [
+      '🗺️ Explore the World — walk your pet around MathQuest Island and bump into math!',
+      '🏝️ Themed zones, friendly creatures, chests, and a pet that grows in friendship',
+      '📖 A new Collection album — see every pet, toy, zone, and treasure you\'ve found',
+    ],
+  },
   {
     v: '2.23.0',
     date: '2026-06-07',

@@ -23,8 +23,9 @@ function defaultState() {
       magnitudeBest: 0, // best Magnitude Match score
       sortBest: 0, // best Sort & Storm score
       history: [], // rolling daily log [{ d:'YYYY-M-D', a:attempted, c:correct }] (last ~30 days)
-      care: { happiness: 85, fullness: 70, lastTick: Date.now(), treats: 3, feeds: 0, plays: 0, pats: 0, stageSeen: 0 },
-      home: { room: 'room-cozy', ownedRooms: ['room-cozy'], decor: [] }, // pet room + placed decorations
+      care: { happiness: 85, fullness: 70, lastTick: Date.now(), treats: 3, feeds: 0, plays: 0, pats: 0, stageSeen: 0, friendship: 0 },
+      home: { room: 'room-cozy', ownedRooms: ['room-cozy'], decor: [], toys: [] }, // pet room + placed decorations + unlocked play toys
+      world: { map: 'town', x: 0, y: 0, facing: 'down', visited: [], quests: {}, bosses: {}, npcSeen: {}, stickers: [], bonusDate: null, champion: false }, // explorable world position + progress
       adventure: { chapter: 0, scene: 0, completed: [] }, // pet story progress
       skills: {}, // id -> {attempts, correct, mastered, stars, lastSeen}
       badges: [], // earned badge ids

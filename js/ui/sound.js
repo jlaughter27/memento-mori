@@ -35,6 +35,8 @@ export const sfx = {
   badge() { [784, 988, 1319].forEach((f, i) => tone(f, i * 0.12, 0.28, 'triangle', 0.16)); },
   star() { tone(1175, 0, 0.1, 'sine', 0.14); tone(1568, 0.08, 0.16, 'sine', 0.14); },
   whoosh() { tone(400, 0, 0.18, 'sawtooth', 0.05); },
+  step() { tone(170, 0, 0.04, 'sine', 0.035); },               // a very soft footstep tick
+  chime() { tone(659, 0, 0.12, 'sine', 0.11); tone(988, 0.1, 0.2, 'sine', 0.11); }, // zone-arrival
 };
 
 // unlock audio on first user gesture (mobile)

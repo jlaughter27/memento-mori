@@ -412,3 +412,13 @@ export function buyTreats(count, cost) {
 }
 // small treats reward from learning (called occasionally on correct answers)
 export function awardTreat(n = 1) { S.progress.care.treats = (S.progress.care.treats || 0) + n; persistSoon(); }
+
+// pet friendship: gentle XP from playing/helping in the World; levels never go down
+const FRIEND_PER_LEVEL = 25;
+export function addFriendship(n = 1) { const c = S.progress.care; c.friendship = (c.friendship || 0) + n; persistSoon(); return c.friendship; }
+export function friendInfo() {
+  const fp = S.progress.care.friendship || 0;
+  const level = Math.floor(fp / FRIEND_PER_LEVEL) + 1;
+  const into = fp % FRIEND_PER_LEVEL;
+  return { fp, level, into, need: FRIEND_PER_LEVEL, pct: Math.round((into / FRIEND_PER_LEVEL) * 100) };
+}

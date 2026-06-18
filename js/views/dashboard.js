@@ -2,6 +2,7 @@
 import { S, persist, setSetting, resetAll, applyBodyClasses,
   listProfiles, switchProfile, createProfile, deleteProfile, profileCount } from '../state.js';
 import { STRANDS, STRAND_META, skillsForGrade, ALL_SKILLS, standardsCount, GRADES, rewardsData } from '../curriculum/index.js';
+import worldMaps from '../curriculum/world-maps.js';
 import { levelProgress, allBadges } from '../gamification.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx } from '../ui/sound.js';
@@ -12,6 +13,16 @@ import { showWhatsNew } from '../ui/whatsnew.js';
 export function renderDashboard(root) {
   const st = S.progress.stats;
   const lp = levelProgress();
+  // World adventure progress (MathQuest Island)
+  const w = S.progress.world || {};
+  const zoneTotal = worldMaps.order.length;
+  const zonesExplored = worldMaps.order.filter((id) => id === 'town' || (w.visited || []).includes(id) || w.map === id).length;
+  let bossTotal = 0, bossBeat = 0, questTotal = 0, questDone = 0;
+  for (const id of worldMaps.order) {
+    const z = worldMaps.zones[id];
+    if (z.quest) { questTotal++; if (((w.quests || {})[z.quest.id] || {}).done) questDone++; }
+    for (const o of (z.objects || [])) { if (o.type === 'boss') { bossTotal++; if (((w.bosses || {})[o.id] || {}).done) bossBeat++; } }
+  }
   const acc = st.problemsAttempted ? Math.round((st.problemsCorrect / st.problemsAttempted) * 100) : 0;
   const badges = allBadges().filter((b) => b.earned).length;
 
@@ -32,6 +43,14 @@ export function renderDashboard(root) {
         ${stat('Accuracy', acc + '%', '🎯')}
         ${stat('Lessons done', st.lessonsCompleted, '📘')}
         ${stat('Skills mastered', st.skillsMastered, '🌟')}
+      </div>
+
+      <h2 class="section-h">World adventure</h2>
+      <div class="stat-grid" id="world-stats">
+        ${stat('Places explored', zonesExplored + '/' + zoneTotal, '🗺️')}
+        ${stat('Bosses beaten', bossBeat + '/' + bossTotal, '⚔️')}
+        ${stat('Quests done', questDone + '/' + questTotal, '🐥')}
+        ${stat('Stickers', (w.stickers || []).length + '/' + bossTotal, '⭐')}
       </div>
 
       <h2 class="section-h">Mastery by topic — Grade ${S.profile.grade}</h2>

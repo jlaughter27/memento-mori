@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Bespoke vector pet: a soft bunny for the Pet World avatar. -->
+  <defs><radialGradient id="bunb" cx="50%" cy="38%" r="70%"><stop offset="0%" stop-color="#f3f1f8"/><stop offset="100%" stop-color="#dcd8e8"/></radialGradient></defs>
+  <!-- ears -->
+  <ellipse cx="80" cy="46" rx="13" ry="40" fill="url(#bunb)" stroke="#c4bfd6" stroke-width="3" transform="rotate(-10 80 46)"/>
+  <ellipse cx="120" cy="46" rx="13" ry="40" fill="url(#bunb)" stroke="#c4bfd6" stroke-width="3" transform="rotate(10 120 46)"/>
+  <ellipse cx="80" cy="48" rx="6" ry="28" fill="#ffc2d6" transform="rotate(-10 80 48)"/>
+  <ellipse cx="120" cy="48" rx="6" ry="28" fill="#ffc2d6" transform="rotate(10 120 48)"/>
+  <!-- body + head -->
+  <ellipse cx="100" cy="142" rx="42" ry="36" fill="url(#bunb)" stroke="#c4bfd6" stroke-width="4"/>
+  <ellipse cx="100" cy="152" rx="26" ry="20" fill="#fff"/>
+  <circle cx="100" cy="96" r="46" fill="url(#bunb)" stroke="#c4bfd6" stroke-width="4"/>
+  <circle cx="74" cy="104" r="9" fill="#ff9d9d" opacity=".45"/>
+  <circle cx="126" cy="104" r="9" fill="#ff9d9d" opacity=".45"/>
+  <circle cx="84" cy="92" r="8" fill="#2d2233"/>
+  <circle cx="116" cy="92" r="8" fill="#2d2233"/>
+  <circle cx="86" cy="89" r="3" fill="#fff"/><circle cx="118" cy="89" r="3" fill="#fff"/>
+  <path d="M96 104 h8 l-4 5 z" fill="#ff7a9c"/>
+  <path d="M100 109 v4 M100 113 q-7 6 -13 3 M100 113 q7 6 13 3" stroke="#c4bfd6" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M58 102 h-16 M60 110 h-18 M142 102 h16 M140 110 h18" stroke="#c4bfd6" stroke-width="2.5" stroke-linecap="round"/>
+  <ellipse cx="82" cy="176" rx="13" ry="9" fill="#fff" stroke="#c4bfd6" stroke-width="3"/>
+  <ellipse cx="118" cy="176" rx="13" ry="9" fill="#fff" stroke="#c4bfd6" stroke-width="3"/>
+</svg>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Bespoke vector pet: a clever fox for the Pet World avatar. -->
+  <defs><radialGradient id="foxb" cx="50%" cy="38%" r="70%"><stop offset="0%" stop-color="#ff9a4d"/><stop offset="100%" stop-color="#ee7a2e"/></radialGradient></defs>
+  <path d="M150 150 q40 0 34 -40 q-3 -16 -18 -10 q12 8 6 24 q-6 18 -30 16 z" fill="#fff2df" stroke="#cf6a22" stroke-width="3"/>
+  <!-- ears -->
+  <path d="M58 66 L44 22 L90 56 Z" fill="url(#foxb)" stroke="#cf6a22" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M142 66 L156 22 L110 56 Z" fill="url(#foxb)" stroke="#cf6a22" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M62 58 L54 34 L82 52 Z" fill="#2d2233"/>
+  <path d="M138 58 L146 34 L118 52 Z" fill="#2d2233"/>
+  <ellipse cx="100" cy="140" rx="42" ry="36" fill="url(#foxb)" stroke="#cf6a22" stroke-width="4"/>
+  <ellipse cx="100" cy="150" rx="26" ry="22" fill="#fff2df"/>
+  <circle cx="100" cy="90" r="46" fill="url(#foxb)" stroke="#cf6a22" stroke-width="4"/>
+  <!-- white muzzle/cheeks -->
+  <path d="M100 70 q34 6 24 44 q-24 18 -48 0 q-10 -38 24 -44 z" fill="#fff2df"/>
+  <circle cx="83" cy="84" r="8" fill="#2d2233"/>
+  <circle cx="117" cy="84" r="8" fill="#2d2233"/>
+  <circle cx="85" cy="81" r="3" fill="#fff"/><circle cx="119" cy="81" r="3" fill="#fff"/>
+  <path d="M94 104 h12 l-6 7 z" fill="#2d2233"/>
+  <path d="M100 111 v5 M100 116 q-7 6 -13 2 M100 116 q7 6 13 2" stroke="#cf6a22" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <ellipse cx="80" cy="176" rx="12" ry="8" fill="#3a2f44" stroke="#2d2233" stroke-width="2"/>
+  <ellipse cx="120" cy="176" rx="12" ry="8" fill="#3a2f44" stroke="#2d2233" stroke-width="2"/>
+</svg>

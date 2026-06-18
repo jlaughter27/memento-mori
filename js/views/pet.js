@@ -2,7 +2,7 @@
 import { S, persist } from '../state.js';
 import { rewardsData } from '../curriculum/index.js';
 import decorData from '../curriculum/decor-data.js';
-import { tickCare, petMood, patPet, playPet, feedPet, buyTreats, addCoins, petStage } from '../gamification.js';
+import { tickCare, petMood, patPet, playPet, feedPet, buyTreats, addCoins, petStage, friendInfo } from '../gamification.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx, speak } from '../ui/sound.js';
 import { floatText, sparkle, popup, confetti, toast } from '../ui/celebrations.js';
@@ -45,6 +45,14 @@ export function renderPet(root) {
         ${meter('Happiness', '💖', 'happy', c.happiness)}
         ${meter('Fullness', '🍖', 'full', c.fullness)}
       </div>
+
+      <div class="pet-friend card-soft">
+        <div class="pf-head">🤝 Friendship — Level ${friendInfo().level}</div>
+        <div class="meter-track"><div class="meter-fill happy" style="width:${friendInfo().pct}%"></div></div>
+        <div class="pf-sub muted">Play and learn together in the World to grow your friendship!</div>
+      </div>
+
+      <button class="btn btn-big btn-play" id="open-world">🗺️ Explore the World</button>
 
       <div class="pet-actions">
         <button class="pet-btn" id="act-pat"><span>✋</span>Pat</button>
@@ -124,6 +132,7 @@ export function renderPet(root) {
     say('Treats! You\'re the best! 💝');
   }));
   root.querySelector('#more-pets').addEventListener('click', () => { sfx.tap(); navigate('#/rewards'); });
+  root.querySelector('#open-world').addEventListener('click', () => { sfx.tap(); navigate('#/world'); });
 
   // rooms
   root.querySelectorAll('.room-card').forEach((c) => c.addEventListener('click', () => {
