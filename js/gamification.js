@@ -3,6 +3,7 @@
 // grace-day streaks with positive framing; growth-mindset language only.
 import { S, skillRec, persist, persistSoon } from './state.js';
 import { rewardsData, ALL_SKILLS, strandSkills, GRADES } from './curriculum/index.js';
+import missionTemplates from './curriculum/missions-data.js';
 
 /* ---------- leveling ---------- */
 export function xpToReach(level) {
@@ -86,6 +87,8 @@ export function recordAnswer(skillId, correct, firstTry) {
     if (Math.random() < 1 / 6) { coinsGained += 10; surprise = true; }
     addCoins(coinsGained);
     dailyReached = bumpDaily();
+    bumpMission('solve');
+    if (firstTry) bumpMission('firstTry');
   }
   rec.lastSeen = Date.now();
   const lvl = correct ? addXp(xpGained) : { leveledUp: false };
@@ -101,6 +104,7 @@ export function completeLesson(skillId) {
   }
   const lvl = addXp(20);
   addCoins(5);
+  bumpMission('lesson');
   persist();
   return { xp: 20, coins: 5, ...lvl };
 }
@@ -115,6 +119,7 @@ export function masterSkill(skillId, accuracy) {
     rec.mastered = true;
     rec.masteredAt = Date.now();
     S.progress.stats.skillsMastered++;
+    bumpMission('master');
   }
   if (accuracy >= 0.999) S.progress.stats.perfectQuizzes++;
   const xp = firstTime ? 50 : 15;
@@ -199,6 +204,12 @@ export function petStage() {
   const i = m >= 25 ? 3 : m >= 10 ? 2 : m >= 3 ? 1 : 0;
   return PET_STAGES[i];
 }
+// a one-time "your pet grew up!" moment when the stage advances past what we've shown
+export function pendingPetEvolution() {
+  const st = petStage();
+  return st.i > (S.progress.care.stageSeen || 0) ? st : null;
+}
+export function markPetStageSeen() { S.progress.care.stageSeen = petStage().i; persistSoon(); }
 
 /* ---------- mastery decay (skills get "rusty" if long overdue) ---------- */
 export function isRusty(rec) {
@@ -273,6 +284,79 @@ export function recommendedSkill(isUnlocked) {
   return null;
 }
 
+/* ---------- missions / quests (daily + weekly) ----------
+   A motivating meta-layer over the actions the learner already does. Daily
+   missions are the three core actions (always achievable in a session); weekly
+   missions are bigger and seeded so they vary week to week. Progress is fed by
+   `bumpMission(metric)` from recordAnswer / completeLesson / masterSkill, so the
+   whole system "just works" without touching every view. Rewards are coins +
+   treats; finishing one bumps the `missionsDone` stat (feeds two badges). */
+const MISSION_BY_ID = Object.fromEntries(missionTemplates.map((t) => [t.id, t]));
+const DAILY_MISSION_IDS = ['solve', 'firsttry', 'lesson'];
+function hashStr(s) { let h = 0; for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return h; }
+// the Monday of the current week, as a stable per-week key
+function weekStr(d = new Date()) {
+  const t = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  t.setDate(t.getDate() - ((t.getDay() + 6) % 7));
+  return `${t.getFullYear()}-${t.getMonth() + 1}-${t.getDate()}`;
+}
+function pickWeekly(weekKey) {
+  // deterministically drop one template so the weekly set rotates
+  const drop = hashStr(weekKey) % missionTemplates.length;
+  return missionTemplates.filter((_, i) => i !== drop).map((t) => t.id);
+}
+export function ensureMissions() {
+  const m = S.progress.missions || (S.progress.missions = {});
+  const today = todayStr(), wk = weekStr();
+  if (m.day !== today) { m.day = today; m.daily = {}; DAILY_MISSION_IDS.forEach((id) => { m.daily[id] = { n: 0, claimed: false }; }); }
+  if (m.week !== wk) { m.week = wk; m.weeklyIds = pickWeekly(wk); m.weekly = {}; m.weeklyIds.forEach((id) => { m.weekly[id] = { n: 0, claimed: false }; }); }
+  return m;
+}
+export function bumpMission(metric, n = 1) {
+  const m = ensureMissions();
+  let touched = false;
+  const step = (ids, store, tier) => {
+    for (const id of ids) {
+      const t = MISSION_BY_ID[id], p = store[id];
+      if (t && p && t.metric === metric && !p.claimed && p.n < t[tier].goal) { p.n = Math.min(t[tier].goal, p.n + n); touched = true; }
+    }
+  };
+  step(DAILY_MISSION_IDS, m.daily, 'daily');
+  step(m.weeklyIds || [], m.weekly, 'weekly');
+  if (touched) persistSoon();
+}
+function buildMission(id, tier, store) {
+  const t = MISSION_BY_ID[id], cfg = t[tier], p = store[id] || { n: 0, claimed: false };
+  const unit = cfg.goal === 1 ? t.unit[0] : t.unit[1];
+  return {
+    id, tier, emoji: t.emoji, goal: cfg.goal, n: Math.min(p.n, cfg.goal), claimed: p.claimed,
+    done: p.n >= cfg.goal, title: `${t.verb} ${cfg.goal} ${unit}`, coins: cfg.coins, treats: cfg.treats,
+    pct: Math.round(Math.min(1, p.n / cfg.goal) * 100),
+  };
+}
+export function listMissions() {
+  const m = ensureMissions();
+  return {
+    daily: DAILY_MISSION_IDS.map((id) => buildMission(id, 'daily', m.daily)),
+    weekly: (m.weeklyIds || []).map((id) => buildMission(id, 'weekly', m.weekly)),
+  };
+}
+export function claimMission(tier, id) {
+  const m = ensureMissions();
+  const t = MISSION_BY_ID[id]; if (!t) return null;
+  const cfg = t[tier], store = tier === 'daily' ? m.daily : m.weekly, p = store[id];
+  if (!p || p.claimed || p.n < cfg.goal) return null;
+  p.claimed = true;
+  addCoins(cfg.coins); awardTreat(cfg.treats);
+  S.progress.stats.missionsDone = (S.progress.stats.missionsDone || 0) + 1;
+  persist();
+  return { coins: cfg.coins, treats: cfg.treats, emoji: t.emoji };
+}
+export function claimableMissions() {
+  const { daily, weekly } = listMissions();
+  return [...daily, ...weekly].filter((x) => x.done && !x.claimed).length;
+}
+
 /* ---------- badges ---------- */
 function strandMasteredForAnyGrade(strand) {
   // mastered if every skill of this strand in ANY single grade is mastered
@@ -294,6 +378,7 @@ function badgeMet(b) {
     case 'perfectQuiz': return st.perfectQuizzes >= (t.count || 1);
     case 'coinsEarned': return st.coinsEarned >= t.count;
     case 'levelReached': return pr.level >= t.count;
+    case 'missionsDone': return (st.missionsDone || 0) >= t.count;
     default: return false;
   }
 }

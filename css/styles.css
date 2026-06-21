@@ -1006,3 +1006,65 @@ body[data-bg="bg-stars"] .goal-pip,body[data-bg="bg-galaxy"] .goal-pip,body[data
 /* dark backgrounds: frost the sub-header chrome like the HUD/nav */
 body[data-bg="bg-stars"] .subhead,body[data-bg="bg-galaxy"] .subhead,body[data-bg="bg-aurora"] .subhead{background:rgba(28,24,52,.82)}
 body[data-bg="bg-stars"] .sub-title,body[data-bg="bg-galaxy"] .sub-title,body[data-bg="bg-aurora"] .sub-title{color:#fff}
+
+/* ============================================================
+   v2.25 "Feel Amazing" — hero stats, missions, micro-interactions
+   ============================================================ */
+
+/* hero stat ribbon (level XP ring + streak + badges) */
+.hero-stats{display:flex;gap:18px;margin:10px 0 4px;flex-wrap:wrap}
+.hero-stat{display:flex;flex-direction:column;align-items:center;gap:3px}
+.hs-ring{--p:0;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  background:conic-gradient(var(--p1) calc(var(--p)*1%), #e7e2ff 0);}
+.hs-ring b{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--card);color:var(--p1);font-size:1.05rem}
+.hs-num{font-weight:900;font-size:1.1rem}
+.hs-label{font-size:.72rem;color:var(--ink-soft);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+
+/* missions panel */
+.missions{margin-top:14px}
+.missions-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.missions-head h3{margin:0;font-size:1.1rem;display:flex;align-items:center;gap:8px}
+.missions-sub{font-size:.78rem}
+.m-badge{background:var(--accent);color:#fff;font-size:.7rem;font-weight:900;padding:2px 8px;border-radius:999px;animation:mpop .4s var(--ease-spring,ease)}
+@keyframes mpop{0%{transform:scale(.4)}100%{transform:scale(1)}}
+.missions-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.mission{display:flex;align-items:center;gap:12px;padding:8px 6px;border-radius:var(--radius-sm)}
+.mission.done{background:linear-gradient(90deg,rgba(0,184,148,.10),transparent)}
+.m-emoji{font-size:1.5rem;flex:0 0 auto;width:30px;text-align:center}
+.m-body{flex:1;min-width:0}
+.m-title{font-weight:800;font-size:.95rem;margin-bottom:5px}
+.m-bar{height:9px;border-radius:999px;background:#ece8fb;overflow:hidden}
+.m-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--p2),var(--p1));transition:width .5s var(--ease,ease)}
+.mission.done .m-fill{background:linear-gradient(90deg,#34e0a1,var(--good))}
+.m-prog{font-weight:800;color:var(--ink-soft);font-size:.85rem;flex:0 0 auto}
+.m-claimed{color:var(--good);font-weight:900;font-size:1.2rem;flex:0 0 auto}
+.btn-claim{font-family:inherit;font-weight:900;font-size:.85rem;color:#5a3b00;cursor:pointer;
+  background:linear-gradient(180deg,#ffe07a,#ffc233);border:none;border-radius:999px;padding:8px 14px;
+  box-shadow:0 3px 0 #d99b00;flex:0 0 auto;animation:pulse 1.4s ease-in-out infinite}
+.btn-claim:active{transform:translateY(2px);box-shadow:0 1px 0 #d99b00}
+.missions-weekly{margin-top:10px;border-top:1px dashed #e7e2ff;padding-top:8px}
+.missions-weekly summary{cursor:pointer;font-weight:800;font-size:.9rem;list-style:none}
+.missions-weekly summary::-webkit-details-marker{display:none}
+.missions-weekly summary::before{content:'▸ ';color:var(--p1)}
+.missions-weekly[open] summary::before{content:'▾ '}
+
+/* ---- micro-interactions: hover/press/focus feedback (touch-safe) ---- */
+@media (hover:hover){
+  .continue-card:hover,.world-card:hover,.collection-card:hover,.quest-card:hover,
+  .sprint-card:hover,.magnitude-card:hover,.sort-card:hover,.warmup-card:hover,
+  .fixit-card:hover,.review-card:hover{transform:translateY(-3px);filter:brightness(1.02)}
+  .skill-card:not(.locked):hover{transform:translateY(-3px) scale(1.03)}
+  .btn:hover,.btn-claim:hover{filter:brightness(1.05)}
+  .key:hover,.choice-btn:hover{filter:brightness(1.04);transform:translateY(-1px)}
+  .grade-tab:hover{filter:brightness(1.03)}
+  .nav-btn:hover{transform:translateY(-2px)}
+}
+.continue-card,.skill-card{transition:transform .12s var(--ease,ease),box-shadow .12s,filter .12s}
+.skill-card:not(.locked):active{transform:translateY(0) scale(.97)}
+/* clearer keyboard focus on every interactive surface */
+.continue-card:focus-visible,.skill-card:focus-visible,.key:focus-visible,.choice-btn:focus-visible,
+.grade-tab:focus-visible,.btn-claim:focus-visible,.mission .btn-claim:focus-visible{
+  outline:3px solid var(--p1);outline-offset:2px}
+
+/* small polish: visible placeholder in onboarding/name fields */
+.ob-input::placeholder,input[type="text"]::placeholder{color:var(--ink-soft);opacity:.65}

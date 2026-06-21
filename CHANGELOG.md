@@ -4,6 +4,28 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.25.0] — 2026-06-18 — "Missions & Sparkle"
+A combined polish + motivation release: a real missions system, a visual lift, and a
+micro-interaction layer the app was missing.
+### Added
+- **Missions** (`js/curriculum/missions-data.js`, `js/gamification.js`, home panel) — **daily**
+  quests (the 3 core actions, always achievable) + **weekly** quests (bigger, seeded so they
+  rotate). Progress is fed centrally from `recordAnswer`/`completeLesson`/`masterSkill` via
+  `bumpMission(metric)`, so every view feeds them automatically. Finished quests show a **Claim
+  🎁** button that pays coins + treats with a confetti celebration; `missionsDone` feeds two new
+  badges (🗺️ Quest Begun, 🏵️ Quest Champion). New `tests/missions.mjs`.
+- **Hero stat ribbon** on the home screen — a level **XP ring**, day-streak, and badge count.
+- **Pet-evolution celebration** — when the pet advances a growth stage, a one-time confetti
+  popup fires (was silent before); tracked via `care.stageSeen`.
+### Changed
+- **Micro-interaction layer** (`css/styles.css`) — hover (lift/brighten), press, and clear
+  keyboard `:focus-visible` states on cards, buttons, skill tiles, keypad, choices, and tabs
+  (touch-safe via `@media (hover:hover)`, reduced-motion safe). Visible input placeholders.
+### Internal
+- `state.js`: `progress.missions` + `stats.missionsDone` (hydrated into old saves).
+  `service-worker.js`: missions data precached; cache → `2.25.0`. Full gate green (11 jsdom
+  suites + `engine:check` + `fuzz`).
+
 ## [2.24.0] — 2026-06-14 — "MathQuest Island"
 The explorable game, rebased cleanly onto the v2.23 line.
 ### Added

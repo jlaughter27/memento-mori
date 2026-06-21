@@ -1,10 +1,20 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.24.0';
+export const APP_VERSION = '2.25.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.25.0',
+    date: '2026-06-18',
+    title: 'Missions & Sparkle',
+    items: [
+      '🗺️ New Missions! Daily and weekly quests with progress bars and chest rewards 🎁',
+      '🌟 Your pet now celebrates when it grows up — with confetti!',
+      '✨ A polish pass: a level ring on your home screen, and buttons & cards that respond to your touch',
+    ],
+  },
   {
     v: '2.24.0',
     date: '2026-06-14',
