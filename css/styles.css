@@ -1117,3 +1117,7 @@ body[data-bg="bg-stars"] .sub-title,body[data-bg="bg-galaxy"] .sub-title,body[da
 .lt-fb{margin-top:12px;font-weight:700;min-height:1.4em}
 .lt-good{color:var(--good-text,#0a8f72)}
 .lt-soft{color:var(--ink-soft)}
+
+/* M5 just-in-time Boost banner */
+.boost-banner{display:inline-block;background:#e6f9ee;color:#0a7d4d;font-weight:800;padding:6px 14px;border-radius:999px;font-size:.85rem;margin-bottom:8px}
+.problem-card.boosting{box-shadow:0 0 0 3px rgba(0,184,148,.25), var(--card-shadow)}

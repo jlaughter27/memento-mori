@@ -1,10 +1,18 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.34.0';
+export const APP_VERSION = '2.35.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.35.0',
+    date: '2026-06-28',
+    title: 'A Helping Step',
+    items: [
+      '🌱 Stuck on a tricky kind of problem? Foxy now slips in an easier warm-up to build it up, then brings you back',
+    ],
+  },
   {
     v: '2.34.0',
     date: '2026-06-28',

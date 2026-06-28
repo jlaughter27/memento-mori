@@ -3,6 +3,7 @@ import { S, skillRec } from '../state.js';
 import { getSkill, skillsForGrade } from '../curriculum/index.js';
 import { nextProblem } from '../engine/index.js';
 import { matchMisconception } from '../engine/problemTypes.js';
+import { makeBoost } from '../engine/boost.js';
 import {
   recordAnswer, masterSkill, checkNewBadges, PRAISE, pickPraise, DAILY_GOAL,
   dueReviews, scheduleReview, noteMistake, resolveMistake, mistakeSkills, mistakeCount,
@@ -71,6 +72,12 @@ export function renderTutor(root, id) {
   if (!steps.length) startNow(); else draw();
 }
 
+// the prerequisite skill to drop to during a Boost (first existing prereq)
+function prereqSkillFor(skill) {
+  for (const pid of (skill.prereq || [])) { const p = getSkill(pid); if (p) return p; }
+  return null;
+}
+
 export function renderPractice(root, id) {
   const skill = getSkill(id);
   if (!skill) { navigate('#/'); return; }
@@ -79,12 +86,18 @@ export function renderPractice(root, id) {
   // problems to confirm true mastery (IXL SmartScore idea).
   const meter = masteryMeter(skill.id);
   const inChallenge = meter.zone === 'challenge';
+  // just-in-time Boost: unproductive struggle detours to a prerequisite skill
+  const boost = makeBoost(skill, prereqSkillFor(skill));
   startSession(root, {
     title: `${skill.emoji || ''} ${skill.title}`,
     subtitle: inChallenge ? '⚡ Challenge Zone — reach 100!' : 'Practice',
     goal,
     startDiff: inChallenge ? 1 : 0,
-    getNext: (diff) => ({ problem: nextProblem(skill, diff), skillId: skill.id }),
+    getNext: (diff) => {
+      const pick = boost.next();
+      return { problem: nextProblem(pick.skill, pick.boosting ? -1 : diff), skillId: pick.skill.id, boosting: pick.boosting, boostName: pick.boosting ? pick.skill.title : null };
+    },
+    onResolve: (firstTry) => { boost.record(firstTry); },
     onComplete: (stats) => finishSkill(skill, stats),
   });
 }
@@ -161,7 +174,7 @@ export function renderFixit(root) {
 
 
 /* ---------------- the session runner ---------------- */
-function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor = false, startDiff = 0 }) {
+function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor = false, startDiff = 0, onResolve = null }) {
   const sess = { goal, cleared: 0, distinct: 0, firstTryCorrect: 0, coins: 0, xp: 0 };
   let cur = null, curSkillId = null, wrongOnCur = 0, hintIdx = 0, solxIdx = 0, answered = false, sessionOver = false;
   let supportLevel = tutor ? 2 : 0; // tutor scaffolding that fades as the child succeeds
@@ -211,10 +224,13 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
     sess.distinct++;
     drawPips();
     card.classList.remove('pop-in'); void card.offsetWidth; card.classList.add('pop-in');
+    card.classList.toggle('boosting', !!n.boosting);
     card.innerHTML = `
+      ${n.boosting ? `<div class="boost-banner">🌱 Quick warm-up${n.boostName ? `: ${escapeHtml(n.boostName)}` : ''} — building it up!</div>` : ''}
       <div class="problem-prompt" data-len="${promptLen(cur.prompt)}">${escapeHtml(cur.prompt)}</div>
       ${cur.visual ? `<div class="problem-visual">${renderVisual(cur.visual)}</div>` : ''}
       <div class="feedback" id="feedback" role="alert" aria-atomic="true"></div>`;
+    if (n.boosting) mascot.setSay('Let\'s warm up with something a little easier first. 🌱', 'happy');
     solPanel.hidden = true; solPanel.innerHTML = '';
     hintBtn.classList.remove('pulse'); showBtn.classList.remove('pulse');
     buildInput();
@@ -329,6 +345,7 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
       if (consecCorrect >= 2 && diff < 2) { diff++; consecCorrect = 0; } // ramp up after a streak
       const firstTry = wrongOnCur === 0;
       if (firstTry) { sess.firstTryCorrect++; resolveMistake(curSkillId); if (tutor) supportLevel = Math.max(0, supportLevel - 1); }
+      if (onResolve) onResolve(firstTry); // struggle signal for the just-in-time Boost
       sess.cleared++;
       const r = recordAnswer(curSkillId, true, firstTry);
       sess.coins += r.coinsGained; sess.xp += r.xpGained;
@@ -376,6 +393,7 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
         fb.innerHTML = `<span class="fb-soft">Let's look at it together. You'll get the next one! 💪</span>`;
         revealSolution(true);
         answered = true;
+        if (onResolve) onResolve(false); // a missed problem → feeds Boost detection
         const nextBtn = document.createElement('button');
         nextBtn.className = 'btn btn-big';
         nextBtn.textContent = 'Try a new one →';

@@ -1,6 +1,6 @@
 // service-worker.js — offline-first caching with a controlled update flow.
 // Bump CACHE on every release (mirrors APP_VERSION in js/version.js).
-const CACHE = 'mathquest-2.34.0';
+const CACHE = 'mathquest-2.35.0';
 const ASSETS = [
   './', './index.html', './manifest.json', './assets/icon.svg',
   './css/styles.css',
@@ -9,7 +9,7 @@ const ASSETS = [
   './assets/pets/pet-unicorn.svg', './assets/pets/pet-owl.svg', './assets/pets/pet-chick.svg',
   './assets/pets/pet-dino.svg', './assets/pets/pet-rocket.svg',
   './js/app.js', './js/state.js', './js/storage.js', './js/gamification.js', './js/version.js',
-  './js/engine/index.js', './js/engine/problemTypes.js', './js/engine/rng.js',
+  './js/engine/index.js', './js/engine/problemTypes.js', './js/engine/rng.js', './js/engine/boost.js',
   './js/curriculum/index.js', './js/curriculum/grade2.js', './js/curriculum/grade3.js',
   './js/curriculum/grade4.js', './js/curriculum/grade5.js', './js/curriculum/grade6.js',
   './js/curriculum/grade7.js', './js/curriculum/wordbank.js', './js/curriculum/rewards-data.js',
