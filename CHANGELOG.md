@@ -4,6 +4,19 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.28.0] — 2026-06-28 — "Help, Step by Step" (Plan M2)
+Track B / Plan M2: tiered hints + a bottom-out, so help is laddered and never a dead end.
+### Changed
+- **Tiered hint ladder** (`js/views/practice.js`) — each Hint tap reveals the next tier
+  (nudge → strategy → near-solution), labeled "Hint N of M" so the child knows more help
+  exists. The full worked solution stays a separate, explicit choice ("Show me how").
+- **Bottom-out hint** — when the ladder is exhausted, Foxy walks the whole solution after a
+  read-speed pause, flags the skill for the **Fix-It** loop, and **never auto-fills** the
+  answer (the child still types it). New `tests/hints.mjs` (reveal order + bottom-out gate +
+  no auto-fill).
+### Internal
+- `service-worker.js` cache → `2.28.0`. Full gate green (13 jsdom suites + `engine:check` + `fuzz`).
+
 ## [2.27.0] — 2026-06-28 — "The Tutor Knows" (Plan M1)
 Track B of the v3 roadmap (`docs/DEV_PLAN.md` M1): deeper teaching. Misconception-specific
 feedback now covers **every** problem type (was ~2 of 27) — the biggest pedagogical gap from
