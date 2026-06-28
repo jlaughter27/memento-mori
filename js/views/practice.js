@@ -6,7 +6,7 @@ import { matchMisconception } from '../engine/problemTypes.js';
 import {
   recordAnswer, masterSkill, checkNewBadges, PRAISE, pickPraise, DAILY_GOAL,
   dueReviews, scheduleReview, noteMistake, resolveMistake, mistakeSkills, mistakeCount,
-  warmupPool, markWarmupDone, rustySkills,
+  warmupPool, markWarmupDone, rustySkills, masteryMeter,
 } from '../gamification.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { renderVisual } from '../ui/manipulatives.js';
@@ -75,10 +75,15 @@ export function renderPractice(root, id) {
   const skill = getSkill(id);
   if (!skill) { navigate('#/'); return; }
   const goal = (skill.practice && skill.practice.count) || 5;
+  // Challenge Zone: a skill that's ≥90% known but not yet mastered gets harder
+  // problems to confirm true mastery (IXL SmartScore idea).
+  const meter = masteryMeter(skill.id);
+  const inChallenge = meter.zone === 'challenge';
   startSession(root, {
     title: `${skill.emoji || ''} ${skill.title}`,
-    subtitle: 'Practice',
+    subtitle: inChallenge ? '⚡ Challenge Zone — reach 100!' : 'Practice',
     goal,
+    startDiff: inChallenge ? 1 : 0,
     getNext: (diff) => ({ problem: nextProblem(skill, diff), skillId: skill.id }),
     onComplete: (stats) => finishSkill(skill, stats),
   });
@@ -156,12 +161,12 @@ export function renderFixit(root) {
 
 
 /* ---------------- the session runner ---------------- */
-function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor = false }) {
+function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor = false, startDiff = 0 }) {
   const sess = { goal, cleared: 0, distinct: 0, firstTryCorrect: 0, coins: 0, xp: 0 };
   let cur = null, curSkillId = null, wrongOnCur = 0, hintIdx = 0, solxIdx = 0, answered = false, sessionOver = false;
   let supportLevel = tutor ? 2 : 0; // tutor scaffolding that fades as the child succeeds
   let idleTimers = [];                 // gentle nudges after inactivity (research: ~35s / ~65s)
-  let consecCorrect = 0, consecWrong = 0, diff = 0; // adaptive difficulty (-2..+2)
+  let consecCorrect = 0, consecWrong = 0, diff = startDiff; // adaptive difficulty (-2..+2)
   let navigatedAway = false;           // stop scheduled callbacks once the learner leaves
   const clearIdle = () => { idleTimers.forEach(clearTimeout); idleTimers = []; };
   const leave = () => { navigatedAway = true; clearIdle(); if (ansArea._keyHandler) document.removeEventListener('keydown', ansArea._keyHandler); };
@@ -349,7 +354,7 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
       if (wrongOnCur === 1) noteMistake(curSkillId); // capture the miss once per problem
       consecCorrect = 0; consecWrong++;
       if (consecWrong >= 2 && diff > -2) { diff--; consecWrong = 0; } // ease off after struggles
-      recordAnswer(curSkillId, false, false);
+      recordAnswer(curSkillId, false, false, wrongOnCur === 1); // BKT: only the first response is evidence
       sfx.wrong();
       if (sourceEl) { sourceEl.classList.add('wrong'); setTimeout(() => sourceEl.classList.remove('wrong'), 600); }
       const disp = ansArea.querySelector('#ans-display');
@@ -470,6 +475,17 @@ function finishSkill(skill, sess) {
   const accuracy = sess.distinct ? sess.firstTryCorrect / sess.distinct : 1;
   const res = masterSkill(skill.id, accuracy);
   skillRec(skill.id).lessonDone = true;
+  // BKT says the skill isn't solid yet — celebrate effort, not (false) mastery
+  if (res.almost) {
+    refreshChrome();
+    popup({
+      emoji: '🌱', title: 'Growing Stronger!',
+      sub: `You worked hard on every one of those.\nOne more practice and this skill is yours! 💪\n+${res.xp} XP · +${res.coins} 🪙`,
+      sound: 'level', hold: true, confetti: false,
+      onClose: () => navigate('#/'),
+    });
+    return;
+  }
   const fresh = checkNewBadges();
   refreshChrome();
   const starStr = '⭐'.repeat(res.stars) + '☆'.repeat(3 - res.stars);
