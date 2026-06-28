@@ -2,7 +2,7 @@
 import { S, persist, isUnlocked, isMastered, skillRec } from '../state.js';
 import { groupedByStrand, getSkill, GRADES } from '../curriculum/index.js';
 import { gradeCompletion, recommendedSkill, dailyStatus, dueReviews, mistakeCount, warmupDue, isRusty, weeklyProgress,
-  listMissions, claimMission, levelProgress, allBadges, pendingPetEvolution, markPetStageSeen, checkNewBadges } from '../gamification.js';
+  listMissions, claimMission, levelProgress, allBadges, pendingPetEvolution, markPetStageSeen, checkNewBadges, claimableQuests } from '../gamification.js';
 import { rewardsData } from '../curriculum/index.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
@@ -54,6 +54,7 @@ export function renderHome(root) {
   const weekly = weeklyProgress();
   const lp = levelProgress();
   const badgeCount = allBadges().filter((b) => b.earned).length;
+  const questsReady = claimableQuests();
   const petName = (rewardsData.pets.find((p) => p.id === S.profile.avatar.pet) || { name: 'Your pet' }).name;
   const greeting = streak > 1
     ? `You've practiced ${streak} days in a row — keep it up! 🔥`
@@ -123,6 +124,11 @@ export function renderHome(root) {
       <button class="continue-card world-card" id="world-btn">
         <span class="cont-emoji">🗺️</span>
         <span class="cont-text"><b>Explore the World</b><span>Walk your pet around MathQuest Island!</span></span>
+      </button>
+      <button class="continue-card quests-card" id="quests-btn">
+        <span class="cont-emoji">📜</span>
+        <span class="cont-text"><b>Quest Log</b><span>${questsReady ? `${questsReady} chest${questsReady > 1 ? 's' : ''} ready to claim! 🎁` : 'Big adventures across the island!'}</span></span>
+        ${questsReady ? '<span class="cont-badge">🎁</span>' : ''}
       </button>
       <button class="continue-card collection-card" id="collection-btn">
         <span class="cont-emoji">📖</span>
@@ -201,6 +207,7 @@ export function renderHome(root) {
   const warmBtn = root.querySelector('#warmup-btn');
   if (warmBtn) warmBtn.addEventListener('click', () => { sfx.tap(); navigate('#/warmup'); });
   root.querySelector('#world-btn').addEventListener('click', () => { sfx.tap(); navigate('#/world'); });
+  root.querySelector('#quests-btn').addEventListener('click', () => { sfx.tap(); navigate('#/quests'); });
   root.querySelector('#collection-btn').addEventListener('click', () => { sfx.tap(); navigate('#/collection'); });
   root.querySelector('#quest-btn').addEventListener('click', () => { sfx.tap(); navigate('#/adventure'); });
   root.querySelector('#sprint-btn').addEventListener('click', () => { sfx.tap(); navigate('#/sprint'); });

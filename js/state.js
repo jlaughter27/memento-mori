@@ -28,6 +28,7 @@ function defaultState() {
       world: { map: 'town', x: 0, y: 0, facing: 'down', visited: [], quests: {}, bosses: {}, npcSeen: {}, stickers: [], bonusDate: null, champion: false }, // explorable world position + progress
       adventure: { chapter: 0, scene: 0, completed: [] }, // pet story progress
       missions: { day: null, daily: {}, week: null, weekly: {}, weeklyIds: [] }, // daily/weekly quests
+      questlog: {}, // multi-step island Quests: id -> {step, prog, done, claimed}
       skills: {}, // id -> {attempts, correct, mastered, stars, lastSeen}
       badges: [], // earned badge ids
       owned: ['pet-cat'], // owned shop/pet ids (first pet free)
@@ -40,6 +41,7 @@ function defaultState() {
         coinsEarned: 0,
         bestStreak: 0,
         missionsDone: 0,
+        questsDone: 0,
       },
       settings: { sound: true, reducedMotion: false, dyslexicFont: false, tts: false },
     },

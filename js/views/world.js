@@ -16,7 +16,7 @@ import { drawTile } from '../game/tiles.js';
 import { createSprite, loadImage } from '../game/sprite.js';
 import { createParticles } from '../game/particles.js';
 import { openEncounter } from '../game/encounter.js';
-import { awardTreat, dueReviews, scheduleReview, addCoins, addFriendship } from '../gamification.js';
+import { awardTreat, dueReviews, scheduleReview, addCoins, addFriendship, bumpQuest } from '../gamification.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx, speak } from '../ui/sound.js';
 import { confetti, floatText } from '../ui/celebrations.js';
@@ -276,6 +276,7 @@ export function renderWorld(root) {
   }
   function winBoss(o) {
     bossRec(o.id).done = true;
+    bumpQuest('boss');
     if (o.sticker) { const st = S.progress.world.stickers || (S.progress.world.stickers = []); if (!st.includes(o.id)) st.push(o.id); }
     if (o.reward && o.reward.coins) addCoins(o.reward.coins);
     if (o.reward && o.reward.decor && !S.progress.home.decor.includes(o.reward.decor)) S.progress.home.decor.push(o.reward.decor);
@@ -410,7 +411,7 @@ export function renderWorld(root) {
     S.progress.world.x = (sp.col + 0.5) * t;
     S.progress.world.y = (sp.row + 0.5) * t;
     S.progress.world.facing = 'down';
-    if (!(S.progress.world.visited || []).includes(toZone)) (S.progress.world.visited || (S.progress.world.visited = [])).push(toZone);
+    if (!(S.progress.world.visited || []).includes(toZone)) { (S.progress.world.visited || (S.progress.world.visited = [])).push(toZone); bumpQuest('explore'); }
     persistSoon();
     sfx.chime(); // a gentle arrival cue
     teardown(); renderWorld(root);

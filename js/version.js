@@ -1,10 +1,20 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.25.0';
+export const APP_VERSION = '2.26.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.26.0',
+    date: '2026-06-21',
+    title: 'Island Quests',
+    items: [
+      '📜 New Quest Log! Big multi-step adventures across the island',
+      '🗺️ Quests fill up as you solve, explore, master skills, and beat bosses',
+      '🎁 Finish an adventure to claim a treasure chest — coins, treats, and a trophy!',
+    ],
+  },
   {
     v: '2.25.0',
     date: '2026-06-18',

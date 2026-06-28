@@ -1068,3 +1068,40 @@ body[data-bg="bg-stars"] .sub-title,body[data-bg="bg-galaxy"] .sub-title,body[da
 
 /* small polish: visible placeholder in onboarding/name fields */
 .ob-input::placeholder,input[type="text"]::placeholder{color:var(--ink-soft);opacity:.65}
+
+/* ============================================================
+   v2.26 "Adventures" — Quest Log
+   ============================================================ */
+.quests-wrap{max-width:680px;margin:0 auto}
+.quests-head h1{margin:0 0 4px}
+.quests-summary{margin-top:8px;font-weight:800;color:var(--p1)}
+.quest-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--card-shadow);padding:var(--pad);margin:14px 0;border-left:6px solid var(--p2)}
+.quest-card.ready{border-left-color:var(--coin);animation:qglow 1.8s ease-in-out infinite}
+.quest-card.claimed{border-left-color:var(--good);opacity:.92}
+.quest-card.locked{border-left-color:#d7d0ee;opacity:.7}
+@keyframes qglow{0%,100%{box-shadow:var(--card-shadow)}50%{box-shadow:0 6px 0 rgba(255,179,0,.35),0 10px 22px rgba(255,179,0,.25)}}
+.quest-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.quest-emoji{font-size:1.8rem}
+.quest-name{font-weight:900;font-size:1.15rem;flex:1;min-width:0}
+.q-pill{font-size:.72rem;font-weight:900;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.q-active{background:#efeaff;color:var(--p1)}
+.q-ready{background:#fff1cc;color:#9a6200}
+.q-claimed{background:#e6f9ee;color:var(--good)}
+.q-locked{background:#f0ecff;color:var(--ink-soft)}
+.quest-blurb{margin:8px 0 12px;font-size:.92rem;line-height:1.45}
+.q-steps{list-style:none;padding:0;margin:0 0 12px;display:flex;flex-direction:column;gap:7px}
+.q-step{display:flex;align-items:flex-start;gap:9px;font-weight:700;font-size:.92rem}
+.q-step.q-todo{color:var(--ink-soft);opacity:.7}
+.q-step.q-current{color:var(--ink)}
+.q-step.q-done{color:var(--good)}
+.q-tick{flex:0 0 auto}
+.q-now{margin-top:4px}
+.q-now-label{font-weight:800;font-size:.9rem;margin-bottom:6px}
+.q-bar{height:11px;border-radius:999px;background:#ece8fb;overflow:hidden}
+.q-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--p2),var(--p1));transition:width .5s var(--ease,ease)}
+.q-claim{background:linear-gradient(180deg,#ffe07a,#ffc233)!important;color:#5a3b00!important;box-shadow:0 5px 0 #d99b00!important}
+.q-done{font-weight:800;color:var(--good)}
+.q-lock{font-style:italic}
+.q-toworld{margin:18px auto 0;display:block}
+.cont-badge{position:absolute;top:8px;right:10px;font-size:1.1rem;animation:mpop .4s var(--ease-spring,ease)}
+.quests-card{position:relative}
