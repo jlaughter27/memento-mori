@@ -387,14 +387,28 @@ function startSession(root, { title, subtitle, goal, getNext, onComplete, tutor 
     if (coins) floatText(`+${coins} 🪙`, x + 30, y, 'coin');
   }
 
-  /* ---- hints + solution ---- */
+  /* ---- hints + solution ----
+     Tiered ladder: each tap reveals the next hint (nudge → strategy → near-solution).
+     When the ladder is exhausted, a "bottom-out" walks the WHOLE worked solution after a
+     read-speed pause — but never auto-fills the answer (the child still types it), and the
+     skill is flagged for the Fix-It loop so it comes back around. */
   hintBtn.addEventListener('click', () => {
     sfx.tap(); hintBtn.classList.remove('pulse');
     const hints = cur.hints || [];
-    if (!hints.length) { mascot.setSay('Try breaking it into smaller steps!', 'think'); return; }
-    const h = hints[Math.min(hintIdx, hints.length - 1)];
-    hintIdx++;
-    mascot.setSay(h, 'think');
+    if (hintIdx < hints.length) {
+      const tier = hintIdx + 1;
+      mascot.setSay(`Hint ${tier} of ${hints.length}: ${hints[hintIdx]}`, 'think');
+      hintIdx++;
+      return;
+    }
+    if (!cur._bottomOut) {
+      cur._bottomOut = true;
+      noteMistake(curSkillId); // flag for Fix-It — this one needs another pass later
+      mascot.setSay('Let\'s walk through the WHOLE thing together — then you type the answer. 🤝', 'think');
+      setTimeout(() => { if (!answered && !sessionOver) revealSolution(true); }, 1800);
+    } else {
+      mascot.setSay('The steps are right there — type the answer when you\'re ready! 💛', 'idle');
+    }
   });
   showBtn.addEventListener('click', () => { sfx.tap(); showBtn.classList.remove('pulse'); revealSolution(false); });
 
