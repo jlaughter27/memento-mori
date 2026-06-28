@@ -106,4 +106,20 @@ every merge (new data, owner feedback, or a discovered issue can re-order what's
 ---
 
 ## 6. Status log (append per milestone)
-- _(plan created — awaiting go on M1)_
+- _(plan created)_
+- **ALL 12 MILESTONES SHIPPED 🎉** — one autonomous orchestrated run; each milestone followed the
+  loop (audit → test-first → build/delegate → independent verify → adversarial bug-test → ship →
+  merge on green):
+  - ✅ M1 v2.27.0 — misconception feedback on all 27 problem types
+  - ✅ M2 v2.28.0 — tiered hints + bottom-out
+  - ✅ M3 v2.34.0 — Concrete→Pictorial→Abstract lessons + "Now you try!"
+  - ✅ M4 v2.32.0 — probabilistic (BKT) mastery + Challenge Zone
+  - ✅ M5 v2.35.0 — just-in-time Boost + struggle detection  → **Track B (tutor depth) complete**
+  - ✅ M6 v2.29.0 — CSS consolidation (single reduced-motion guard + token adoption)
+  - ✅ M7 v2.33.0 — streak-freeze safety net
+  - ✅ M8 v2.37.0 — first-run onboarding + warm empty states  → **Track C (refinement) complete**
+  - ✅ M9 v2.30.0 — boss-gated zones (beat a boss, unlock a place)
+  - ✅ M10 v2.31.0 — "help the character" word-problem encounters
+  - ✅ M11 v2.36.0 — math-as-fuel spark loop
+  - ✅ M12 v2.38.0 — seasonal event packs  → **Track A (world depth) complete**
+- Test suite grew from 12 → 23 jsdom suites; `engine:check` + `fuzz` green throughout.

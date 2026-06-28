@@ -1132,3 +1132,10 @@ body[data-bg="bg-stars"] .sub-title,body[data-bg="bg-galaxy"] .sub-title,body[da
 .coll-empty{text-align:center;margin:14px 0}
 .coll-empty p{margin:4px 0}
 .coll-empty .btn{margin-top:10px}
+
+/* M12 seasonal event banner */
+.season-banner{text-align:center;font-weight:700;font-size:.9rem;padding:8px 14px;border-radius:999px;margin:0 0 12px;background:linear-gradient(90deg,rgba(108,92,231,.10),rgba(232,67,147,.10));color:var(--ink)}
+.season-banner[data-season="winter"],.season-banner[data-season="holidays"]{background:linear-gradient(90deg,rgba(77,150,255,.14),rgba(160,200,255,.14))}
+.season-banner[data-season="summer"]{background:linear-gradient(90deg,rgba(255,179,0,.14),rgba(77,200,255,.14))}
+.season-banner[data-season="autumn"],.season-banner[data-season="halloween"]{background:linear-gradient(90deg,rgba(255,140,0,.14),rgba(180,90,30,.12))}
+.season-banner[data-season="spring"]{background:linear-gradient(90deg,rgba(255,120,180,.14),rgba(120,220,120,.12))}
