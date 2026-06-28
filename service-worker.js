@@ -1,6 +1,6 @@
 // service-worker.js — offline-first caching with a controlled update flow.
 // Bump CACHE on every release (mirrors APP_VERSION in js/version.js).
-const CACHE = 'mathquest-2.30.0';
+const CACHE = 'mathquest-2.31.0';
 const ASSETS = [
   './', './index.html', './manifest.json', './assets/icon.svg',
   './css/styles.css',

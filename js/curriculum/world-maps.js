@@ -40,7 +40,7 @@ export default {
         { type: 'encounter', col: 10, row: 6, emoji: '🦉', name: 'Professor Owl', strand: 'Multiplication',
           say: 'Ah, a visitor! Help me with a number puzzle? 🦉' },
         { type: 'encounter', col: 4,  row: 4, emoji: '🦫', name: 'Builder Beaver', strand: 'Addition & Subtraction',
-          say: 'I\'m building a dam — quick, help me add it up! 🪵' },
+          wordProblem: true, say: 'I\'m building a dam and I\'m all muddled up — can you help me work out a number? 🪵' },
         { type: 'boss', col: 7, row: 11, emoji: '🤖', name: 'Count Bot', strand: 'Addition & Subtraction',
           id: 'boss-town', questions: 2, sticker: { glyph: '⚙️', name: 'Robot Gear' }, reward: { coins: 35, decor: 'decor-bookshelf' },
           say: 'BEEP BOOP. SOLVE TWO TO PASS! 🤖', lines: { win: 'SYSTEMS IMPRESSED! 🤖🏆', done: 'YOU.WIN.ALREADY. 👍' } },

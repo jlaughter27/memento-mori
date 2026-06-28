@@ -535,7 +535,7 @@ export function renderWorld(root) {
     paused = true; loop.stop(); prompt.hidden = true;
     openEncounter({
       host: document.body,
-      strand: o.strand, skillId: o.skillId,
+      strand: o.strand, skillId: o.skillId, wordProblem: o.wordProblem,
       title: o.name || 'Math Friend', npcEmoji: o.emoji, intro: o.say,
       onDone: () => {
         // reward + a happy flourish back in the world

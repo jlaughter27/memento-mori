@@ -4,6 +4,16 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.31.0] — 2026-06-28 — "Lend a Hand" (Plan M10)
+Track A / Plan M10: "help the character" framing (SplashLearn/Khan model).
+### Added
+- **Helper encounters** (`js/game/encounter.js`, `js/curriculum/world-maps.js`) — an NPC flagged
+  `wordProblem: true` poses a **themed word problem** (a little story to *help* them with) instead
+  of bare arithmetic, via the engine's word-problem builder mapped from the NPC's strand. Tagged
+  "🧺 Can you help?". Builder Beaver (Town) is the first helper. New `tests/helpchar.mjs`.
+### Internal
+- `service-worker.js` cache → `2.31.0`. Full gate green (16 jsdom suites + `engine:check` + `fuzz`).
+
 ## [2.30.0] — 2026-06-28 — "Beat the Boss, Open the Gate" (Plan M9)
 Track A / Plan M9: bosses gate *access*, not just trophies (Pokémon model).
 ### Added
