@@ -123,7 +123,7 @@ p{line-height:1.5}
 @keyframes wave{0%,100%{transform:rotate(0)}50%{transform:rotate(-22deg)}}
 @keyframes wiggle{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
 .mascot-bubble{
-  background:#fff;border:3px solid var(--p2);border-radius:18px;padding:10px 14px;font-weight:700;
+  background:#fff;border:3px solid var(--p2);border-radius:var(--radius-md);padding:10px 14px;font-weight:700;
   position:relative;max-width:min(420px,90vw);text-align:center;box-shadow:0 4px 0 #e0d9ff;color:var(--ink)
 }
 .mascot-bubble::after{content:"";position:absolute;top:-12px;left:50%;transform:translateX(-50%);border:9px solid transparent;border-bottom-color:var(--p2)}
@@ -181,13 +181,13 @@ p{line-height:1.5}
 .key:active{transform:translateY(3px);box-shadow:0 1px 0 #e0d9ff}
 .key-back{background:#ffe3e3;color:#d63a3a;box-shadow:0 4px 0 #ffc2c2}
 .choices{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;width:100%}
-.choice-btn{font-family:inherit;font-size:1.8rem;font-weight:900;min-width:88px;min-height:78px;border:none;border-radius:18px;background:#fff;color:var(--p1);box-shadow:0 5px 0 #e0d9ff;cursor:pointer;padding:10px 18px}
+.choice-btn{font-family:inherit;font-size:1.8rem;font-weight:900;min-width:88px;min-height:78px;border:none;border-radius:var(--radius-md);background:#fff;color:var(--p1);box-shadow:0 5px 0 #e0d9ff;cursor:pointer;padding:10px 18px}
 .choice-btn:active{transform:translateY(3px)}
 .choice-btn.correct{background:#047857;color:#fff;box-shadow:0 5px 0 #035c43;animation:pop .4s}
 .choice-btn.wrong{background:#ffe3e3;color:#b3261e;box-shadow:0 5px 0 #ffc2c2}
 .practice-actions{display:flex;gap:10px;width:100%;max-width:420px}
 
-.solution-panel{width:100%;max-width:480px;background:#f5f3ff;border-radius:18px;padding:16px;border:2px solid #e7e2ff}
+.solution-panel{width:100%;max-width:480px;background:#f5f3ff;border-radius:var(--radius-md);padding:16px;border:2px solid #e7e2ff}
 .sol-head{font-weight:900;color:var(--p1);margin-bottom:10px;font-size:1.1rem}
 .sol-steps{display:flex;flex-direction:column;gap:10px}
 .sol-step{display:flex;gap:10px;align-items:flex-start;background:#fff;border-radius:12px;padding:10px 12px;box-shadow:0 2px 0 #e7e2ff}
@@ -323,9 +323,11 @@ p{line-height:1.5}
 .manip{display:flex;justify-content:center;margin:6px 0}
 .manip-svg{width:100%;max-width:320px;height:auto}
 
-/* ---------- reduced motion ---------- */
+/* ---------- reduced motion ----------
+   Calm mode (explicit toggle) + the SINGLE OS reduced-motion guard. Keep one of each;
+   tests/css-health.mjs enforces no duplicate prefers-reduced-motion blocks. */
 body.reduced-motion *{animation:none!important;transition:none!important}
-@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
 
 /* ============================================================
    THEMES (set on <body data-theme>)
@@ -521,7 +523,7 @@ body[data-bg="bg-stars"] .hud-level-badge,body[data-bg="bg-galaxy"] .hud-level-b
 .meter-fill.happy{background:linear-gradient(90deg,#ff8fab,#e84393)}
 .meter-fill.full{background:linear-gradient(90deg,#ffd56b,#ff9f1c)}
 .pet-actions{display:flex;gap:10px}
-.pet-btn{flex:1;font-family:inherit;font-weight:800;border:none;border-radius:18px;background:#fff;color:var(--ink);
+.pet-btn{flex:1;font-family:inherit;font-weight:800;border:none;border-radius:var(--radius-md);background:#fff;color:var(--ink);
   box-shadow:0 5px 0 #e0d9ff;cursor:pointer;padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:74px}
 .pet-btn span{font-size:1.8rem}
 .pet-btn small{color:var(--ink-soft);font-weight:700;font-size:.7rem}
@@ -678,8 +680,6 @@ button:disabled{opacity:.5;filter:grayscale(.6);cursor:not-allowed;pointer-event
 .item-btn{min-height:44px}
 .toast-close{min-height:44px;min-width:44px;padding:10px 12px}
 .toast-action{min-height:44px;padding:12px 16px}
-/* full reduced-motion: also zero transitions (OS media query was incomplete) */
-@media (prefers-reduced-motion:reduce){*{animation-duration:0ms!important;animation-iteration-count:1!important;transition-duration:0ms!important}}
 /* high-contrast focus ring in low-contrast themes */
 body[data-theme="theme-candy"] :focus-visible{outline-color:#a85800}
 body[data-theme="theme-dino"] :focus-visible{outline-color:#3f4d00}
@@ -877,9 +877,6 @@ body[data-bg="bg-stars"] .solution-panel,body[data-bg="bg-galaxy"] .solution-pan
 body[data-bg="bg-stars"] .scene-node,body[data-bg="bg-galaxy"] .scene-node,body[data-bg="bg-aurora"] .scene-node{
   background:rgba(255,255,255,.94);
 }
-
-/* reduced-motion: prefer 0s (clearer than 0.001ms) */
-@media (prefers-reduced-motion:reduce){*{animation-duration:0s!important;transition-duration:0s!important}}
 
 /* ============================================================
    v2.10 — final polish: forced-colors, dark-bg legibility,

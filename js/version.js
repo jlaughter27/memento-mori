@@ -1,10 +1,18 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.28.0';
+export const APP_VERSION = '2.29.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.29.0',
+    date: '2026-06-28',
+    title: 'Smoother & Cleaner',
+    items: [
+      '🌿 Calm mode and "reduce motion" now work consistently across the whole app',
+    ],
+  },
   {
     v: '2.28.0',
     date: '2026-06-28',
