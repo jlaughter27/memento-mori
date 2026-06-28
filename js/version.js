@@ -1,10 +1,19 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.35.0';
+export const APP_VERSION = '2.36.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.36.0',
+    date: '2026-06-28',
+    title: 'Charge It Up',
+    items: [
+      '⚡ Every friend you help in the World charges your Spark — fill it up!',
+      '✨ Tap your full Spark for a Power Surge of bonus coins!',
+    ],
+  },
   {
     v: '2.35.0',
     date: '2026-06-28',

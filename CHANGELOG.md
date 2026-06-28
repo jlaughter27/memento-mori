@@ -4,6 +4,19 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.36.0] — 2026-06-28 — "Charge It Up" (Plan M11)
+Track A / Plan M11: math-as-fuel encounter loop (Prodigy model — math powers a world action).
+### Added
+- **Spark charge** (`js/gamification.js`, `js/views/world.js`) — solving a World encounter fills a
+  small **⚡ Spark** meter (5 solves = full, capped). When full, the header button reads **✨ Power!**;
+  tapping it spends the charge for a **Power Surge** (+25 coins) with confetti. `addCharge` /
+  `chargeInfo` / `spendCharge` (`CHARGE_FULL`). Math is the fuel for an in-world payoff.
+- New `tests/fuel.mjs` (charge fills + caps + ready; spend grants coins + resets; World UI shows
+  the meter and the Power click surges coins).
+### Internal
+- `state.js`: `world.charge`. `service-worker.js` cache → `2.36.0`. Full gate green (21 jsdom
+  suites + `engine:check` + `fuzz`).
+
 ## [2.35.0] — 2026-06-28 — "A Helping Step" (Plan M5)
 Track B / Plan M5: just-in-time Boost + productive-vs-unproductive struggle detection (Zearn).
 ### Added

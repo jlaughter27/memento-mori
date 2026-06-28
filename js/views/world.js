@@ -16,7 +16,7 @@ import { drawTile } from '../game/tiles.js';
 import { createSprite, loadImage } from '../game/sprite.js';
 import { createParticles } from '../game/particles.js';
 import { openEncounter } from '../game/encounter.js';
-import { awardTreat, dueReviews, scheduleReview, addCoins, addFriendship, bumpQuest } from '../gamification.js';
+import { awardTreat, dueReviews, scheduleReview, addCoins, addFriendship, bumpQuest, addCharge, spendCharge, chargeInfo } from '../gamification.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx, speak } from '../ui/sound.js';
 import { confetti, floatText } from '../ui/celebrations.js';
@@ -72,6 +72,7 @@ export function renderWorld(root) {
         <button class="btn-link" id="world-pet">🐾 Pet</button>
         <span class="world-zone">${mapData.emoji || '🗺️'} ${escapeHtml(mapData.name)}</span>
         <span class="world-status" id="world-status" hidden></span>
+        <button class="world-charge" id="world-charge" type="button" aria-label="Spark power"></button>
         <span class="pet-coins">🪙 <b id="world-coins">${S.progress.coins}</b></span>
       </header>
       <div class="world-stage" id="world-stage">
@@ -196,6 +197,13 @@ export function renderWorld(root) {
     const boss = mapData.objects.find((o) => o.type === 'boss');
     if (boss) { const r = bossRec(boss.id); bits.push(`${boss.emoji} ${r.done ? '✓' : '⚔️'}`); }
     el.textContent = bits.join('   '); el.hidden = bits.length === 0;
+  }
+  // math-as-fuel: the spark meter, filled by solving; tap when ready for a Power
+  function updateCharge() {
+    const el = root.querySelector('#world-charge'); if (!el) return;
+    const ci = chargeInfo();
+    el.classList.toggle('ready', ci.ready);
+    el.textContent = ci.ready ? '✨ Power!' : `⚡ ${ci.charge}/${ci.full}`;
   }
 
   let paused = false;
@@ -545,6 +553,7 @@ export function renderWorld(root) {
         const db = maybeDailyBonus(); if (db) say(`🎁 Daily bonus! +${db} 🪙 +1 🍪`);
         sfx.coin();
         if (!reduced) { confetti(36); const r = stage.getBoundingClientRect(); floatText(extra[0] ? extra[0].emoji : '🍪', r.left + r.width / 2, r.top + 40, 'coin'); }
+        addCharge(1); updateCharge(); // math is the fuel — each solve charges the spark
         pendingBurst = true; bumpQuest(); // helping a friend advances the zone quest
         const b = root.querySelector('#world-coins'); if (b) b.textContent = S.progress.coins;
         refreshChrome();
@@ -647,8 +656,15 @@ export function renderWorld(root) {
 
   loop.start();
   updateStatus();
+  updateCharge();
   active = { destroy() { loop.stop(); input.destroy(); window.removeEventListener('resize', onResize); } };
   root.querySelector('#world-back').addEventListener('click', () => { sfx.tap(); teardown(); navigate('#/'); });
   root.querySelector('#world-map').addEventListener('click', () => { sfx.tap(); openMap(); });
+  root.querySelector('#world-charge').addEventListener('click', () => {
+    const r = spendCharge();
+    if (!r) { sfx.tap(); say('Help more friends to charge your spark! ⚡'); return; }
+    sfx.level(); if (!reduced) confetti(80);
+    say(`✨ Power Surge! +${r.coins} 🪙`); refreshChrome(); updateCharge();
+  });
   root.querySelector('#world-pet').addEventListener('click', () => { sfx.tap(); openPetSwitch(); });
 }

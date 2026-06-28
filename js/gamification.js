@@ -632,3 +632,17 @@ export function friendInfo() {
   const into = fp % FRIEND_PER_LEVEL;
   return { fp, level, into, need: FRIEND_PER_LEVEL, pct: Math.round((into / FRIEND_PER_LEVEL) * 100) };
 }
+
+/* ---------- math-as-fuel ("spark" charge) ----------
+   Solving encounters in the World fills a small charge meter; when full, the child
+   can spend it on an in-world Power (a coin surge) — math is the fuel (Prodigy idea). */
+export const CHARGE_FULL = 5;
+export function addCharge(n = 1) { const w = S.progress.world; w.charge = Math.min(CHARGE_FULL, (w.charge || 0) + n); persistSoon(); return w.charge; }
+export function chargeInfo() { const c = S.progress.world.charge || 0; return { charge: c, full: CHARGE_FULL, ready: c >= CHARGE_FULL, pct: Math.round((c / CHARGE_FULL) * 100) }; }
+export function spendCharge() {
+  const w = S.progress.world;
+  if ((w.charge || 0) < CHARGE_FULL) return null;
+  w.charge = 0;
+  const coins = 25; addCoins(coins); persist();
+  return { coins };
+}
