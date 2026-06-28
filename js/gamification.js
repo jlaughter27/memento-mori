@@ -73,8 +73,41 @@ export function dailyStatus() {
   return { count, goal: DAILY_GOAL, reached: count >= DAILY_GOAL };
 }
 
-export function recordAnswer(skillId, correct, firstTry) {
+/* ---------- BKT-style mastery estimate ----------
+   A per-skill p(known), updated Bayesian-style from ONE piece of evidence per
+   problem (the FIRST response) — so the mastery meter reflects real, current
+   knowledge (it can go DOWN), not just session completion. Classic parameter
+   values from the literature. Above ~90% a skill enters a "Challenge Zone" where
+   harder problems confirm true mastery (IXL SmartScore idea). */
+const BKT = { pInit: 0.25, pLearn: 0.18, pSlip: 0.1, pGuess: 0.2, masteryAt: 0.9 };
+function bktUpdate(rec, correct) {
+  const p = typeof rec.pKnown === 'number' ? rec.pKnown : BKT.pInit;
+  const pc = correct
+    ? (p * (1 - BKT.pSlip)) / (p * (1 - BKT.pSlip) + (1 - p) * BKT.pGuess)
+    : (p * BKT.pSlip) / (p * BKT.pSlip + (1 - p) * (1 - BKT.pGuess));
+  rec.pKnown = Math.max(0, Math.min(1, pc + (1 - pc) * BKT.pLearn));
+  return rec.pKnown;
+}
+export function knownProb(skillId) {
+  const r = S.progress.skills[skillId];
+  return r && typeof r.pKnown === 'number' ? r.pKnown : BKT.pInit;
+}
+export function readyToMaster(skillId) {
+  const r = S.progress.skills[skillId];
+  return !!(r && r.mastered) || knownProb(skillId) >= BKT.masteryAt;
+}
+// mastery meter for the UI: 0–100, with a zone (learning / challenge / mastered)
+export function masteryMeter(skillId) {
+  const r = S.progress.skills[skillId];
+  const pct = Math.round(knownProb(skillId) * 100);
+  const zone = r && r.mastered ? 'mastered' : pct >= BKT.masteryAt * 100 ? 'challenge' : 'learning';
+  return { pct, zone };
+}
+
+// `evidence`: whether this response counts toward BKT (the problem's FIRST response).
+export function recordAnswer(skillId, correct, firstTry, evidence = correct ? firstTry : true) {
   const rec = skillRec(skillId);
+  if (evidence) bktUpdate(rec, correct);
   rec.attempts++;
   S.progress.stats.problemsAttempted++;
   logDaily(correct);
@@ -111,9 +144,15 @@ export function completeLesson(skillId) {
   return { xp: 20, coins: 5, ...lvl };
 }
 
-// called when a practice session reaches the required correct count
+// called when a practice session reaches the required correct count.
+// Mastery now also needs the BKT estimate to agree the skill is really known —
+// a strong session on a not-yet-solid skill ends warmly ("almost!"), not mastered.
 export function masterSkill(skillId, accuracy) {
   const rec = skillRec(skillId);
+  if (!rec.mastered && !readyToMaster(skillId)) {
+    const lvl = addXp(15); addCoins(5); persist();
+    return { almost: true, stars: 0, firstTime: false, xp: 15, coins: 5, pKnown: knownProb(skillId), ...lvl };
+  }
   const stars = accuracy >= 0.95 ? 3 : accuracy >= 0.8 ? 2 : 1;
   const firstTime = !rec.mastered;
   rec.stars = Math.max(rec.stars || 0, stars);
@@ -131,7 +170,7 @@ export function masterSkill(skillId, accuracy) {
   addCoins(coins);
   scheduleReview(skillId, firstTime ? 0 : null); // first mastery starts the review ladder
   persist();
-  return { stars, firstTime, xp, coins, ...lvl };
+  return { almost: false, stars, firstTime, xp, coins, ...lvl };
 }
 
 /* ---------- spaced review (lightweight Leitner ladder) ---------- */

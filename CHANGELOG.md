@@ -4,6 +4,21 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.32.0] — 2026-06-28 — "True Mastery" (Plan M4)
+Track B / Plan M4: probabilistic mastery — the meter reflects real, current knowledge.
+### Added
+- **BKT-style p(known)** per skill (`js/gamification.js`) — a Bayesian estimate updated from
+  each problem's FIRST response (classic pInit .25 / pLearn .18 / pSlip .10 / pGuess .20). It
+  can go **down**. `knownProb`, `readyToMaster`, `masteryMeter` (0–100 + zone).
+- **Mastery gate** — finishing a session no longer auto-masters: if p(known) < 0.90 the run ends
+  warmly ("🌱 Growing Stronger!") with a smaller reward instead of false mastery.
+- **Challenge Zone** — a skill that's ≥90% known but not yet mastered starts practice with
+  harder problems ("⚡ Challenge Zone — reach 100!") to confirm true mastery (IXL SmartScore idea).
+- New `tests/bktmastery.mjs` (struggling run stays unmastered; meter rises *and* falls; zones).
+### Internal
+- `recordAnswer` takes an `evidence` arg (first response only). `service-worker.js` cache →
+  `2.32.0`. Full gate green (17 jsdom suites + `engine:check` + `fuzz`).
+
 ## [2.31.0] — 2026-06-28 — "Lend a Hand" (Plan M10)
 Track A / Plan M10: "help the character" framing (SplashLearn/Khan model).
 ### Added
