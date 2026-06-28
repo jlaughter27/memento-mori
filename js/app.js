@@ -86,11 +86,13 @@ function boot() {
   if (S.onboarded) {
     const streak = updateStreakOnOpen();
     const fresh = checkNewBadges();
+    // a missed day was saved by an earned streak-freeze — let them know it's safe
+    if (streak.frozen) setTimeout(() => toast('🧊 Streak freeze used — your streak is safe!', { actionLabel: 'Phew!' }), 600);
     if (fresh.length) setTimeout(() => showBadges(fresh, () => {}), 800);
     else if (streak.milestone) {
       setTimeout(() => popup({
         emoji: '🔥', title: `${streak.milestone}-day streak!`,
-        sub: `You've practiced ${streak.milestone} days — amazing! Keep it going!`,
+        sub: `You've practiced ${streak.milestone} days — amazing!\nYou earned a 🧊 Streak Freeze to protect it!`,
         sound: 'level', confetti: true, hold: true,
       }), 800);
     }

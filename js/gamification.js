@@ -287,10 +287,13 @@ function dayDiff(a, b) {
   return Math.round((db - da) / 86400000);
 }
 const STREAK_MILESTONES = [3, 5, 7, 14, 21, 30, 50, 100];
+const MAX_FREEZES = 3;
 export function updateStreakOnOpen() {
   const st = S.progress.streak;
+  if (typeof st.freezes !== 'number') st.freezes = 0;
   const today = todayStr();
   const before = st.count;
+  let frozen = false;
   if (!st.lastActiveDate) {
     st.count = 1; st.lastActiveDate = today; st.graceUsed = false;
   } else {
@@ -298,14 +301,18 @@ export function updateStreakOnOpen() {
     if (diff === 0) { /* same day, no change */ }
     else if (diff === 1) { st.count++; st.lastActiveDate = today; st.graceUsed = false; }
     else if (diff === 2 && !st.graceUsed) { st.count++; st.lastActiveDate = today; st.graceUsed = true; } // one grace day
-    else { st.count = 1; st.lastActiveDate = today; st.graceUsed = false; }
+    else if (st.freezes > 0) { // a missed day that would break the streak — spend a freeze to save it
+      st.freezes--; st.count++; st.lastActiveDate = today; st.graceUsed = false; frozen = true;
+    } else { st.count = 1; st.lastActiveDate = today; st.graceUsed = false; }
   }
   S.progress.stats.bestStreak = Math.max(S.progress.stats.bestStreak || 0, st.count);
   // reset the daily-goal counter for a new calendar day
   if (S.progress.daily.date !== today) { S.progress.daily.date = today; S.progress.daily.count = 0; S.progress.daily.goalReached = false; }
-  persist();
   const milestone = st.count > before && STREAK_MILESTONES.includes(st.count) ? st.count : 0;
-  return { count: st.count, milestone };
+  // earn a freeze at each streak milestone (capped), so longer streaks build a safety net
+  if (milestone) st.freezes = Math.min(MAX_FREEZES, st.freezes + 1);
+  persist();
+  return { count: st.count, milestone, frozen, freezes: st.freezes };
 }
 
 // pick the best skill to suggest "continue" with: most recently seen, not yet mastered,

@@ -69,6 +69,7 @@ export function renderHome(root) {
         <div class="hero-stats" aria-label="Your progress">
           <span class="hero-stat" title="Level"><span class="hs-ring" style="--p:${Math.round(lp.pct * 100)}"><b>${lp.level}</b></span><span class="hs-label">Level</span></span>
           <span class="hero-stat" title="Day streak"><span class="hs-num">🔥 ${streak}</span><span class="hs-label">streak</span></span>
+          ${(S.progress.streak.freezes || 0) > 0 ? `<span class="hero-stat" title="Streak freezes — each saves a missed day"><span class="hs-num">🧊 ${S.progress.streak.freezes}</span><span class="hs-label">freezes</span></span>` : ''}
           <span class="hero-stat" title="Badges earned"><span class="hs-num">🏅 ${badgeCount}</span><span class="hs-label">badges</span></span>
         </div>
         <button class="btn btn-big btn-play" id="daily-btn">⚡ Daily Challenge</button>

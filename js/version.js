@@ -1,10 +1,19 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.32.0';
+export const APP_VERSION = '2.33.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.33.0',
+    date: '2026-06-28',
+    title: 'Streak Savers',
+    items: [
+      '🧊 New Streak Freeze! Miss a day? An earned freeze keeps your streak safe',
+      '🔥 Reach a streak milestone to earn a freeze — build up your safety net!',
+    ],
+  },
   {
     v: '2.32.0',
     date: '2026-06-28',

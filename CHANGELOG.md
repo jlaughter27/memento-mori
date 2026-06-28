@@ -4,6 +4,19 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.33.0] — 2026-06-28 — "Streak Savers" (Plan M7)
+Track C / Plan M7: a streak-freeze safety net (Duolingo loss-aversion + a kid-friendly cushion).
+### Added
+- **Streak freeze** (`js/gamification.js`, `js/state.js`) — `streak.freezes`, earned (+1, capped
+  at 3) each time a streak milestone is reached. When a missed day would otherwise reset the
+  streak (beyond the existing one grace day), a freeze is **automatically spent** to keep it
+  alive; `updateStreakOnOpen` returns `{ frozen, freezes }`.
+- **Surfacing** — a "🧊 Streak freeze used — your streak is safe!" toast on open (`js/app.js`),
+  a freeze count in the home hero ribbon, and milestone popups now note the earned freeze.
+- New `tests/streakfreeze.mjs` (freeze saves a gap; no freeze resets; milestones earn; capped).
+### Internal
+- `service-worker.js` cache → `2.33.0`. Full gate green (18 jsdom suites + `engine:check` + `fuzz`).
+
 ## [2.32.0] — 2026-06-28 — "True Mastery" (Plan M4)
 Track B / Plan M4: probabilistic mastery — the meter reflects real, current knowledge.
 ### Added
