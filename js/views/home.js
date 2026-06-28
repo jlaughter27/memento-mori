@@ -55,6 +55,7 @@ export function renderHome(root) {
   const lp = levelProgress();
   const badgeCount = allBadges().filter((b) => b.earned).length;
   const questsReady = claimableQuests();
+  const isNew = (S.progress.stats.problemsAttempted || 0) === 0; // brand-new learner
   const petName = (rewardsData.pets.find((p) => p.id === S.profile.avatar.pet) || { name: 'Your pet' }).name;
   const greeting = streak > 1
     ? `You've practiced ${streak} days in a row — keep it up! 🔥`
@@ -75,6 +76,13 @@ export function renderHome(root) {
         <button class="btn btn-big btn-play" id="daily-btn">⚡ Daily Challenge</button>
       </div>
     </section>
+
+    ${isNew ? `
+    <section class="welcome-card card-soft">
+      <p class="wc-title">👋 Welcome${S.profile.name ? `, ${escapeHtml(S.profile.name)}` : ''}!</p>
+      <p class="muted">Ready to learn? Tap a skill below to begin — or set off and explore the island!</p>
+      <button class="btn btn-big" id="welcome-explore">🗺️ Explore the World</button>
+    </section>` : ''}
 
     ${cont ? `
     <button class="continue-card" id="continue-btn" data-id="${cont.id}">
@@ -209,6 +217,8 @@ export function renderHome(root) {
   if (warmBtn) warmBtn.addEventListener('click', () => { sfx.tap(); navigate('#/warmup'); });
   root.querySelector('#world-btn').addEventListener('click', () => { sfx.tap(); navigate('#/world'); });
   root.querySelector('#quests-btn').addEventListener('click', () => { sfx.tap(); navigate('#/quests'); });
+  const welcomeBtn = root.querySelector('#welcome-explore');
+  if (welcomeBtn) welcomeBtn.addEventListener('click', () => { sfx.tap(); navigate('#/world'); });
   root.querySelector('#collection-btn').addEventListener('click', () => { sfx.tap(); navigate('#/collection'); });
   root.querySelector('#quest-btn').addEventListener('click', () => { sfx.tap(); navigate('#/adventure'); });
   root.querySelector('#sprint-btn').addEventListener('click', () => { sfx.tap(); navigate('#/sprint'); });

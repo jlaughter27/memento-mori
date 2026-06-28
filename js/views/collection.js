@@ -55,7 +55,8 @@ export function renderCollection(root) {
   // overall "island complete" progress: all collectibles + skills mastered
   const allItems = [...pets, ...toys, ...decor, ...rooms, ...zones, ...bosses, ...stickers, ...badges];
   const mastered = (S.progress.stats && S.progress.stats.skillsMastered) || 0;
-  const earned = allItems.filter((i) => i.owned).length + mastered;
+  const ownedCount = allItems.filter((i) => i.owned).length;
+  const earned = ownedCount + mastered;
   const total = allItems.length + ALL_SKILLS.length;
   const pct = total ? Math.round((earned / total) * 100) : 0;
   const summary = `
@@ -76,9 +77,17 @@ export function renderCollection(root) {
         <h1 class="coll-h1">📒 My Collection</h1>
       </header>
       ${summary}
+      ${pct < 5 ? `
+      <section class="coll-empty card-soft">
+        <p>🎁 Your collection is just getting started!</p>
+        <p class="muted">Explore the World, master skills, and beat bosses to fill it up with pets, treasures, and trophies.</p>
+        <button class="btn btn-big" id="coll-explore">🗺️ Start exploring</button>
+      </section>` : ''}
       ${sections.map(sectionHtml).join('')}
     </div>`;
   root.querySelector('#coll-back').addEventListener('click', () => { sfx.tap(); navigate('#/pet'); });
+  const ce = root.querySelector('#coll-explore');
+  if (ce) ce.addEventListener('click', () => { sfx.tap(); navigate('#/world'); });
 }
 
 function sectionHtml([emoji, title, items]) {
