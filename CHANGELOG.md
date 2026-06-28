@@ -4,6 +4,18 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.34.0] — 2026-06-28 — "See It, Try It" (Plan M3)
+Track B / Plan M3: Concrete→Pictorial→Abstract lessons (Zearn CPA) with a learning check.
+### Changed
+- **CPA-staged lessons** (`js/views/lesson.js`) — lessons now walk explicit stages: **🧱 See it**
+  (the manipulative — uses the lesson's visual or a generated one), **✏️ Work it** (the steps),
+  **🔢 Write it** (the equation in symbols), then a **🎯 Now you try!** card.
+- **Interactive learning check** — the "Now you try!" card poses a fresh easy problem with a real
+  input; a correct answer is celebrated, a wrong one gently reveals the answer (no penalty) before
+  moving to practice. Lessons are no longer passive. New `tests/lesson.mjs`.
+### Internal
+- `service-worker.js` cache → `2.34.0`. Full gate green (19 jsdom suites + `engine:check` + `fuzz`).
+
 ## [2.33.0] — 2026-06-28 — "Streak Savers" (Plan M7)
 Track C / Plan M7: a streak-freeze safety net (Duolingo loss-aversion + a kid-friendly cushion).
 ### Added
