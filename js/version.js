@@ -1,10 +1,18 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.37.0';
+export const APP_VERSION = '2.38.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.38.0',
+    date: '2026-06-28',
+    title: 'Seasons of Math',
+    items: [
+      '🎉 MathQuest now celebrates the seasons and holidays — look for the banner up top!',
+    ],
+  },
   {
     v: '2.37.0',
     date: '2026-06-28',

@@ -4,6 +4,7 @@ import { groupedByStrand, getSkill, GRADES } from '../curriculum/index.js';
 import { gradeCompletion, recommendedSkill, dailyStatus, dueReviews, mistakeCount, warmupDue, isRusty, weeklyProgress,
   listMissions, claimMission, levelProgress, allBadges, pendingPetEvolution, markPetStageSeen, checkNewBadges, claimableQuests } from '../gamification.js';
 import { rewardsData } from '../curriculum/index.js';
+import { activeSeason } from '../curriculum/seasonal-data.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
 import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx } from '../ui/sound.js';
@@ -61,7 +62,9 @@ export function renderHome(root) {
     ? `You've practiced ${streak} days in a row — keep it up! 🔥`
     : "Let's learn something awesome today.";
 
+  const season = activeSeason();
   root.innerHTML = `
+    <div class="season-banner" data-season="${season.id}">${season.emoji} <b>${escapeHtml(season.name)}</b> — ${escapeHtml(season.greet)}</div>
     <section class="home-hero card-soft">
       <div class="home-mascot" id="home-mascot"></div>
       <div class="home-hello">

@@ -4,6 +4,18 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.38.0] — 2026-06-28 — "Seasons of Math" (Plan M12) — **dev plan complete 🎉**
+Track A / Plan M12: date-gated seasonal event packs (Prodigy-style freshness, no server). This
+is the **last of the 12 development-plan milestones** (`docs/DEV_PLAN.md`).
+### Added
+- **Seasonal events** (`js/curriculum/seasonal-data.js`, home banner) — a festive banner on Home
+  chosen by the **local date**: four seasons (Winter Wonderland / Spring Bloom / Summer Splash /
+  Autumn Harvest, with a year-wrapping winter window) plus holiday **specials** that take priority
+  (New Year, Spooky Math, Winter Holidays). Pure `activeSeason(date)` selector — zero server, fully
+  offline. New `tests/seasonal.mjs`.
+### Internal
+- `service-worker.js` cache → `2.38.0`. Full gate green (23 jsdom suites + `engine:check` + `fuzz`).
+
 ## [2.37.0] — 2026-06-28 — "Warm Welcome" (Plan M8)
 Track C / Plan M8: first-run onboarding + warm empty states (no more cold/hollow screens).
 ### Added
