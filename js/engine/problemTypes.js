@@ -400,7 +400,7 @@ function makeBaseTenBuild(params = {}, rng) {
       `${target} = ${breakdown}.`,
       `Match each column to the matching digit of ${target}.`,
     ],
-    misconceptions: (() => { const w = digs.reduce((a, dd) => a + dd, 0); return w !== target ? [mis(checkInt(w), `That's just the digits added up. Each block column is worth a different amount — ones, tens, hundreds. Put **${digs[digs.length - 1]} in the ${names[digs.length - 1]} column**, not all in ones. 🧱`, w)] : []; })(),
+    misconceptions: (() => { const w = digs.reduce((a, dd) => a + dd, 0); return w !== target ? [mis(checkInt(w), `That just adds the digits up. Each column is worth a different amount! Put each digit in its own place: ${breakdown}. 🧱`, w)] : []; })(),
     check: checkInt(target),
   });
 }
