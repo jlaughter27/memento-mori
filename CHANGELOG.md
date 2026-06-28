@@ -4,6 +4,26 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.27.0] — 2026-06-28 — "The Tutor Knows" (Plan M1)
+Track B of the v3 roadmap (`docs/DEV_PLAN.md` M1): deeper teaching. Misconception-specific
+feedback now covers **every** problem type (was ~2 of 27) — the biggest pedagogical gap from
+the audit.
+### Added
+- **Error-specific feedback on all 27 problem types** (`js/engine/problemTypes.js`) — each type
+  detects ≥1 classic wrong-answer pattern and explains the *exact* fix in warm, growth-mindset
+  language (added-instead-of-multiplied, dropped the ×10 zero, forgot the remainder, digit-vs-
+  value, rounded the wrong way, reversed comparisons, added the denominators, lost the decimal
+  point, area↔perimeter, forgot the height, 60-minute rollover, percent-without-÷100, sign
+  flips, sum-instead-of-mean, and more).
+- **Verified by the engine** (`tools/engine-check.mjs`) — each misconception carries a classic
+  wrong `sample`; the self-check proves the detector fires on its own sample, the sample is
+  genuinely wrong, `matchMisconception` surfaces it, and **every type has coverage** (held at
+  60, 500, and 1000 instances/type). Authored by an orchestrated builder subagent + an
+  adversarial bug-test review pass.
+### Internal
+- `mis()` gains a `sample` field. `service-worker.js` cache → `2.27.0`. Full gate green
+  (12 jsdom suites + `engine:check` + `fuzz`).
+
 ## [2.26.0] — 2026-06-21 — "Island Quests"
 Track A of the v3 "Refinement" roadmap (see `docs/AUDIT_AND_ROADMAP.md`): the world gets real
 **adventures & tasks** — informed by a competitive audit (Prodigy/Pokémon quest gating,

@@ -332,7 +332,14 @@ function makeDiv(params = {}, rng) {
       wantRem ? `Whatever is left at the end that's smaller than ${divisor} is the remainder.` : `It should divide evenly with nothing left over.`,
     ],
     inputKind: r ? 'text' : 'number',
-    misconceptions: r ? [mis((raw) => { const s = String(raw).toLowerCase().replace(/\s+/g, ''); return s === String(q); }, `So close! ${grp(q)} is right, but there's a **remainder** left over. Write it as "${q} r${r}". ➗`, String(q))] : [],
+    misconceptions: (() => {
+      const list = [];
+      if (r) list.push(mis((raw) => { const s = String(raw).toLowerCase().replace(/\s+/g, ''); return s === String(q); }, `So close! ${grp(q)} is right, but there's a **remainder** left over. Write it as "${q} r${r}". ➗`, String(q)));
+      // subtract-not-share: dividing isn't taking away once — it's sharing into equal groups
+      const sub = dividend - divisor;
+      if (sub !== q && sub >= 0) list.push(mis((raw) => { const s = String(raw).toLowerCase().replace(/\s+/g, ''); return s === String(sub); }, `Dividing isn't subtracting! ${grp(dividend)} ÷ ${divisor} asks how many groups of ${divisor} fit inside ${grp(dividend)} — that's ${ansStr}, not ${grp(dividend)} − ${divisor}. ➗`, String(sub)));
+      return list;
+    })(),
     check: r
       ? (raw) => {
           const s = String(raw).toLowerCase().replace(/\s+/g, '');
@@ -818,6 +825,10 @@ function makePatterns(params = {}, rng) {
       { text: `So next is ${seq[4]} ${kind === 'mult' ? '×' : '+'} ${step} = ${next}. 🔍` },
     ],
     hints: [`Find the difference (or ratio) between each pair.`, `Apply that same change to the last number.`],
+    misconceptions: (() => {
+      if (kind === 'mult') { const w = seq[4] + step; return w !== next ? [mis(checkInt(w), `Careful — this pattern **multiplies** each time, it doesn't add. The last number is ${seq[4]}, and ${seq[4]} × ${step} = ${next}. ✖️`, w)] : []; }
+      return step !== next ? [mis(checkInt(step), `That's the *step size* — how much it jumps by — not the next number. Take the last number and add ${step}: ${seq[4]} + ${step} = ${next}. ➕`, step)] : [];
+    })(),
     check: checkInt(next),
   });
 }
@@ -829,6 +840,8 @@ function makeOrder(params = {}, rng) {
   const parens = params.parens !== false && rng() < 0.6;
   const a = randInt(rng, 2, 9), b = randInt(rng, 2, 9), c = randInt(rng, 2, 9);
   let expr, ans, steps;
+  // value a left-to-right (no PEMDAS) child would get
+  const ltr = (a + b) * c;
   if (parens) {
     expr = `(${a} + ${b}) × ${c}`; ans = (a + b) * c;
     steps = [
@@ -850,6 +863,7 @@ function makeOrder(params = {}, rng) {
     answer: String(ans),
     steps,
     hints: [`Remember PEMDAS: Parentheses, then ×/÷, then +/−.`, `Don't just go left to right!`],
+    misconceptions: (() => { return !parens && ltr !== ans ? [mis(checkInt(ltr), `Don't just work left to right! **PEMDAS** says multiply before you add. Do ${b} × ${c} = ${b * c} first, then add ${a}. ✖️➕`, ltr)] : []; })(),
     check: checkInt(ans),
   });
 }
@@ -875,6 +889,7 @@ function makePerimeterArea(params = {}, rng) {
       ],
       hints: [`Perimeter = the fence around the shape.`, `Add up every side: 2 long + 2 short.`],
       visual: { type: 'shape', shape: 'rect', w, h },
+      misconceptions: (() => { const w2 = w * h; return w2 !== ans ? [mis(checkInt(w2), `That's the **area** (the space inside). **Perimeter** is the distance all the way around — add up the four sides: 2 × (${w} + ${h}) = ${ans}. 📏`, w2)] : []; })(),
       check: checkInt(ans),
     });
   }
@@ -890,6 +905,7 @@ function makePerimeterArea(params = {}, rng) {
     ],
     hints: [`Area = length × width.`, `Count the rows of squares times the columns.`],
     visual: { type: 'shape', shape: 'rect', w, h },
+    misconceptions: (() => { const wp = 2 * (w + h); return wp !== ans ? [mis(checkInt(wp), `That's the **perimeter** (the distance around). **Area** is the space inside — multiply length × width: ${w} × ${h} = ${ans}. 🟦`, wp)] : []; })(),
     check: checkInt(ans),
   });
 }
@@ -912,6 +928,7 @@ function makeVolume(params = {}, rng) {
     ],
     hints: [`Volume = length × width × height.`, `Find the area of the bottom first, then multiply by the height.`],
     visual: { type: 'box3d', l, w, h },
+    misconceptions: (() => { const w2 = l * w; return w2 !== ans ? [mis(checkInt(w2), `That's just the **bottom** of the box (${l} × ${w}). Don't forget the **height** — keep multiplying: ${l} × ${w} × ${h} = ${ans} cubic units. 📦`, w2)] : []; })(),
     check: checkInt(ans),
   });
 }
@@ -954,6 +971,11 @@ function makeTime(params = {}, rng) {
     ],
     hints: [`Count forward by the minutes, rolling over each hour at 60.`, `60 minutes = 1 hour.`],
     visual: { type: 'clock', h: startH, m: startM },
+    misconceptions: (() => {
+      const flatMin = startM + addMin; // didn't roll the minutes over an hour
+      const w = `${startH}:${String(flatMin).padStart(2, '0')}`;
+      return flatMin >= 60 && w !== ansStr ? [mis((raw) => String(raw).replace(/\s/g, '') === w, `Minutes can't go past **60** — that's a whole new hour! ${startM} + ${addMin} = ${flatMin} min rolls over: ${endH}:${String(endM).padStart(2, '0')}. ⏰`, w)] : [];
+    })(),
     check: (raw) => String(raw).replace(/\s/g, '') === ansStr,
   });
 }
@@ -977,6 +999,7 @@ function makeMoney(params = {}, rng) {
         { text: `Total: $${ans.toFixed(2)}. 💵` },
       ],
       hints: [`Adding money is just adding decimals.`, `Keep the dollars under dollars and cents under cents.`],
+      misconceptions: (() => { const w = +(ans * 10).toFixed(2); return Math.abs(w - ans) > 1e-9 ? [mis(checkDecimal(w), `Mind the **decimal point** — it slipped a spot. Line up the dollars over dollars and cents over cents so the point stays put. 💵`, w.toFixed(2))] : []; })(),
       check: checkDecimal(ans),
     });
   }
@@ -993,6 +1016,7 @@ function makeMoney(params = {}, rng) {
       { text: `You get $${change.toFixed(2)} back. 🪙` },
     ],
     hints: [`Subtract the price from what you paid.`, `Line up the decimal points and borrow if needed.`],
+    misconceptions: (() => { const w = +(change * 10).toFixed(2); return Math.abs(w - change) > 1e-9 ? [mis(checkDecimal(w), `Check the **decimal point** — your change is off by a place. Subtract carefully and bring the point straight down: $${paid}.00 − $${price.toFixed(2)} = $${change.toFixed(2)}. 🪙`, w.toFixed(2))] : []; })(),
     check: checkDecimal(change),
   });
 }
@@ -1020,6 +1044,7 @@ function makeMeasure(params = {}, rng) {
       { text: `${n} ${table.from} = ${grp(ans)} ${table.to}. 📐` },
     ],
     hints: [`Bigger units → smaller units means MULTIPLY.`, `1 ${table.from.replace(/s$/, '')} = ${grp(table.factor)} ${table.to}.`],
+    misconceptions: (() => { const w = n / table.factor; return w !== ans ? [mis(checkInt(w), `Going from **big units to small units**, you **multiply**, not divide — small units are tiny, so you need lots of them: ${n} × ${grp(table.factor)} = ${grp(ans)}. 📐`, w)] : []; })(),
     check: checkInt(ans),
   });
 }
@@ -1043,6 +1068,7 @@ function makeRatio(params = {}, rng) {
     ],
     hints: [`Treat it like reducing a fraction.`, `Divide both numbers by their greatest common factor.`],
     visual: { type: 'tape', a: sa, b: sb },
+    misconceptions: (() => { const w = `${a}:${b}`; return [mis((raw) => { const m = String(raw).replace(/\s/g, '').match(/^(\d+):(\d+)$/); return !!m && +m[1] === a && +m[2] === b; }, `That's the same ratio, but not in **lowest terms** yet. Divide both sides by ${gcd(a, b)}: ${a} ÷ ${gcd(a, b)} : ${b} ÷ ${gcd(a, b)} = ${sa}:${sb}. ✂️`, w)]; })(),
     check: (raw) => {
       const m = String(raw).replace(/\s/g, '').match(/^(\d+):(\d+)$/);
       return m && +m[1] === sa && +m[2] === sb;
@@ -1070,6 +1096,7 @@ function makePercent(params = {}, rng) {
       ],
       hints: [`Percent means "out of 100".`, `Divide the part by the percent (as a decimal) to get the whole.`],
       visual: { type: 'percentBar', pct, label: `${pct}% = ${part}` },
+      misconceptions: (() => { const w = +(part * (pct / 100)).toFixed(4); return w !== whole ? [mis(checkDecimal(w), `To find the **whole** when you know a part, **divide** — don't multiply. ${part} ÷ ${pct / 100} = ${whole}. The whole is bigger than the part! 🔍`, w)] : []; })(),
       check: checkInt(whole),
     });
   }
@@ -1087,6 +1114,7 @@ function makePercent(params = {}, rng) {
     ],
     hints: [`Turn the percent into a decimal (move the dot 2 left).`, `Then multiply by the number.`],
     visual: { type: 'percentBar', pct, label: `${pct}% of ${whole}` },
+    misconceptions: (() => { const w = pct * whole; return w !== ans ? [mis(checkInt(w), `Don't forget: percent means "out of **100**". Turn ${pct}% into a decimal first (${pct} ÷ 100 = ${(pct / 100).toFixed(2)}), *then* multiply by ${whole}. 💯`, w)] : []; })(),
     check: checkInt(ans),
   });
 }
@@ -1113,6 +1141,14 @@ function makeIntegers(params = {}, rng) {
     ],
     hints: [`Use a number line: right for +, left for −.`, `Subtracting a negative is the same as adding!`],
     visual: { type: 'numberLine', min: -max - 5, max: max + 5, step: 5, mark: ans },
+    misconceptions: (() => {
+      if (b >= 0) return [];
+      // the classic sign-flip: ignoring the minus on a negative b
+      const w = op === '-' ? a + b : a - b;
+      return w !== ans ? [mis(checkInt(w), op === '-'
+        ? `Watch the two minus signs! **Subtracting a negative is the same as adding.** ${a} − (${b}) = ${a} + ${Math.abs(b)} = ${ans}. ➕`
+        : `Adding a **negative** moves you *down*, not up. ${a} + (${b}) means move left ${Math.abs(b)}: you land on ${ans}. ⬅️`, w)] : [];
+    })(),
     check: checkInt(ans),
   });
 }
@@ -1152,6 +1188,7 @@ function makeMean(params = {}, rng) {
       ],
       hints: [`Find the largest and smallest values.`, `Subtract the smallest from the largest.`],
       visual: { type: 'dotPlot', values: nums },
+      misconceptions: (() => { const w = Math.max(...nums); return w !== ans ? [mis(checkInt(w), `That's just the **biggest** value. The range is how far apart they spread — subtract the smallest from the biggest: ${Math.max(...nums)} − ${Math.min(...nums)} = ${ans}. 📊`, w)] : []; })(),
       check: checkInt(ans),
     });
   }
@@ -1167,6 +1204,7 @@ function makeMean(params = {}, rng) {
     ],
     hints: [`Add every number first.`, `Then divide the total by how many numbers there are.`],
     visual: { type: 'dotPlot', values: nums, mean: ans },
+    misconceptions: (() => { return sum !== ans ? [mis(checkInt(sum), `That's the **total**, but you're not done! The mean is the total shared evenly — divide by how many numbers there are: ${sum} ÷ ${count} = ${ans}. 📈`, sum)] : []; })(),
     check: checkInt(ans),
   });
 }
