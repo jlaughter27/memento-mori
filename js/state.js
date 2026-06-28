@@ -15,7 +15,7 @@ function defaultState() {
       xp: 0,
       level: 1,
       coins: 0,
-      streak: { count: 0, lastActiveDate: null, graceUsed: false },
+      streak: { count: 0, lastActiveDate: null, graceUsed: false, freezes: 0 }, // freezes = earned streak-savers
       daily: { date: null, count: 0, goalReached: false }, // today's problem count toward daily goal
       mistakes: {}, // skillId -> { count, lastMiss } : the "Mistakes Notebook" / Fix-It queue
       warmup: { date: null }, // last day the open-session warm-up was offered
