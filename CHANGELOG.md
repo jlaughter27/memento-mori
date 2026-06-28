@@ -4,6 +4,19 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.35.0] — 2026-06-28 — "A Helping Step" (Plan M5)
+Track B / Plan M5: just-in-time Boost + productive-vs-unproductive struggle detection (Zearn).
+### Added
+- **Just-in-time Boost** (`js/engine/boost.js`, `js/views/practice.js`) — a small controller that
+  tells **productive** struggle (a miss that's then corrected — fine) from **unproductive**
+  struggle (consecutive missed problems). On unproductive struggle it **detours to a prerequisite
+  skill** for a couple of easier supporting problems ("🌱 Quick warm-up — building it up!"), then
+  returns to grade level without lowering the ceiling. Uses each skill's existing `prereq` data;
+  graceful when there's none. New `tests/boost.mjs`.
+### Internal
+- `startSession` gains an `onResolve(firstTry)` hook. `service-worker.js` cache → `2.35.0`.
+  Full gate green (20 jsdom suites + `engine:check` + `fuzz`).
+
 ## [2.34.0] — 2026-06-28 — "See It, Try It" (Plan M3)
 Track B / Plan M3: Concrete→Pictorial→Abstract lessons (Zearn CPA) with a learning check.
 ### Changed
