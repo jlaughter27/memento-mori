@@ -154,7 +154,7 @@ export default {
 
     docks: {
       name: 'Decimal Docks', emoji: '🌊', tile: 40, spawn: { col: 3, row: 9 },
-      lock: { mastered: 4 }, // unlocks deeper in the journey
+      lock: { boss: 'boss-gardens' }, // defeat Geo Rex in Geometry Gardens to unlock the Docks (access gate)
       legend: { '.': {}, '#': {}, '~': { solid: true }, 'T': { solid: true }, 'H': { solid: true }, '*': {} },
       rows: [
         'TTTTTTTTTTTTTTTT',

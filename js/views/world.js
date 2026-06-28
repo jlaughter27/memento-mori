@@ -377,13 +377,24 @@ export function renderWorld(root) {
     }
     return n;
   }
+  // find a boss object by id across every zone (for boss-gated labels)
+  function bossById(id) {
+    for (const zid of worldMaps.order) {
+      const o = (worldMaps.zones[zid].objects || []).find((x) => x.type === 'boss' && x.id === id);
+      if (o) return o;
+    }
+    return null;
+  }
+  const bossDone = (id) => !!((S.progress.world.bosses || {})[id] || {}).done;
   function zoneUnlocked(z) {
     if (!z || !z.lock) return true;
     if (z.lock.mastered && masteredCount() < z.lock.mastered) return false;
     if (z.lock.bosses && bossesBeatenCount() < z.lock.bosses) return false;
+    if (z.lock.boss && !bossDone(z.lock.boss)) return false; // a specific boss gates access (Pokémon-style)
     return true;
   }
   function lockText(z) {
+    if (z.lock.boss) { const b = bossById(z.lock.boss); return `Defeat ${b ? `${b.emoji} ${b.name}` : 'the keeper'} to open`; }
     if (z.lock.bosses) { const n = Math.max(0, z.lock.bosses - bossesBeatenCount()); return `Beat ${n} more boss${n !== 1 ? 'es' : ''} to open`; }
     const n = Math.max(0, (z.lock.mastered || 0) - masteredCount()); return `Master ${n} more skill${n !== 1 ? 's' : ''} to open`;
   }

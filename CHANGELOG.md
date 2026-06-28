@@ -4,6 +4,18 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.30.0] — 2026-06-28 — "Beat the Boss, Open the Gate" (Plan M9)
+Track A / Plan M9: bosses gate *access*, not just trophies (Pokémon model).
+### Added
+- **Boss-gated zones** (`js/views/world.js`, `js/curriculum/world-maps.js`) — a new
+  `lock: { boss: '<id>' }` gate type: a zone unlocks only when a *specific* boss is defeated.
+  **Decimal Docks** is now gated behind **Geo Rex** (the Geometry Gardens boss) instead of a
+  raw mastery count — so beating a boss grants new *access*. The map names the boss to defeat
+  ("Defeat 🦕 Geo Rex to open"). New `tests/bossgate.mjs` (locked pre-boss even at 20 mastered;
+  unlocks + travelable post-boss).
+### Internal
+- `service-worker.js` cache → `2.30.0`. Full gate green (15 jsdom suites + `engine:check` + `fuzz`).
+
 ## [2.29.0] — 2026-06-28 — "Smoother & Cleaner" (Plan M6)
 Track C / Plan M6: refinement foundation — consolidate accreted CSS so motion is predictable.
 ### Fixed
