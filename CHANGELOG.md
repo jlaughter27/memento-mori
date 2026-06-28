@@ -4,6 +4,19 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.37.0] — 2026-06-28 — "Warm Welcome" (Plan M8)
+Track C / Plan M8: first-run onboarding + warm empty states (no more cold/hollow screens).
+### Added
+- **First-run welcome** (`js/views/home.js`) — a brand-new learner (no problems attempted yet)
+  sees a friendly welcome card with a clear CTA ("🗺️ Explore the World"); it fades once they've
+  started (not nagging).
+- **Warm Collection empty state** (`js/views/collection.js`) — a near-empty collection (<5%) now
+  shows encouraging guidance ("Your collection is just getting started!") with a "Start exploring"
+  CTA instead of a wall of locked chips.
+- New `tests/onboarding.mjs` (welcome + empty state render with CTAs; welcome fades after starting).
+### Internal
+- `service-worker.js` cache → `2.37.0`. Full gate green (22 jsdom suites + `engine:check` + `fuzz`).
+
 ## [2.36.0] — 2026-06-28 — "Charge It Up" (Plan M11)
 Track A / Plan M11: math-as-fuel encounter loop (Prodigy model — math powers a world action).
 ### Added
