@@ -8,7 +8,15 @@
 // side effects at import time.
 import { S, persist, isMastered, isUnlocked } from '../state.js';
 import { getSkill, ALL_SKILLS, strandSkills, GRADES } from '../curriculum/index.js';
-import { nextProblem } from '../engine/index.js';
+import { nextProblem, wordProblem } from '../engine/index.js';
+
+// map a skill's strand to a word-problem skill tag in the wordbank ("help the
+// character" framing). Unmapped strands fall back to any grade-appropriate story.
+const STRAND_TO_WORD = {
+  'Addition & Subtraction': 'add', 'Multiplication': 'mult', 'Division': 'div',
+  'Fractions': 'fractionOfNum', 'Geometry & Measurement': 'perimeterArea',
+  'Money & Time': 'money', 'Ratios & Algebra': 'ratio',
+};
 import { matchMisconception } from '../engine/problemTypes.js';
 import { recordAnswer, checkNewBadges, addCoins, noteMistake, resolveMistake } from '../gamification.js';
 import { renderVisual } from '../ui/manipulatives.js';
@@ -195,12 +203,16 @@ export function openEncounter(opts = {}) {
 
   /* ---------------- CHALLENGE section (one adaptive problem) ---------------- */
   function renderChallenge() {
-    const problem = nextProblem(skill, 0);
+    // "help the character": when the NPC asks for help, pose a themed WORD problem
+    // (a little story) instead of bare arithmetic; otherwise the usual adaptive problem.
+    const problem = opts.wordProblem
+      ? wordProblem({ skill: (skill && STRAND_TO_WORD[skill.strand]) || 'add', grade: S.profile.grade })
+      : nextProblem(skill, 0);
     let wrong = 0, hintIdx = 0, answered = false, showedMe = false;
 
     body.innerHTML = `
       <section class="enc-challenge">
-        <div class="enc-tag">🧩 ${escapeHtml(skill.title)}</div>
+        <div class="enc-tag">${opts.wordProblem ? '🧺 Can you help?' : `🧩 ${escapeHtml(skill.title)}`}</div>
         <div class="enc-prompt">${escapeHtml(problem.prompt)}</div>
         ${problem.visual ? `<div class="enc-visual">${renderVisual(problem.visual)}</div>` : ''}
         <div class="enc-feedback" aria-live="assertive"></div>
