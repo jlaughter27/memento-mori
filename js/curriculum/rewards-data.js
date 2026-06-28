@@ -286,6 +286,20 @@ export default {
       name: 'Quest Champion',
       desc: '25 missions complete — you show up and get it done!',
       trigger: { kind: 'missionsDone', count: 25 }
+    },
+    {
+      id: 'adventure-1',
+      emoji: '🧭',
+      name: 'Adventurer',
+      desc: 'You completed your first island Quest — the adventure begins!',
+      trigger: { kind: 'questsDone', count: 1 }
+    },
+    {
+      id: 'adventure-all',
+      emoji: '🏝️',
+      name: 'Island Hero',
+      desc: 'Every island Quest complete — you are a true island hero!',
+      trigger: { kind: 'questsDone', count: 4 }
     }
   ],
 

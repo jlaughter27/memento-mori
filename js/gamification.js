@@ -4,6 +4,7 @@
 import { S, skillRec, persist, persistSoon } from './state.js';
 import { rewardsData, ALL_SKILLS, strandSkills, GRADES } from './curriculum/index.js';
 import missionTemplates from './curriculum/missions-data.js';
+import questsData from './curriculum/quests-data.js';
 
 /* ---------- leveling ---------- */
 export function xpToReach(level) {
@@ -89,6 +90,7 @@ export function recordAnswer(skillId, correct, firstTry) {
     dailyReached = bumpDaily();
     bumpMission('solve');
     if (firstTry) bumpMission('firstTry');
+    bumpQuest('solve');
   }
   rec.lastSeen = Date.now();
   const lvl = correct ? addXp(xpGained) : { leveledUp: false };
@@ -120,6 +122,7 @@ export function masterSkill(skillId, accuracy) {
     rec.masteredAt = Date.now();
     S.progress.stats.skillsMastered++;
     bumpMission('master');
+    bumpQuest('master');
   }
   if (accuracy >= 0.999) S.progress.stats.perfectQuizzes++;
   const xp = firstTime ? 50 : 15;
@@ -357,6 +360,81 @@ export function claimableMissions() {
   return [...daily, ...weekly].filter((x) => x.done && !x.claimed).length;
 }
 
+/* ---------- Quests (multi-step island adventures) ----------
+   A quest is a CHAIN of steps; each step is an objective over an event the engine
+   already emits (solve / master / boss / explore). Unlocked quests auto-progress
+   as the learner plays — `bumpQuest(metric)` advances the current step of every
+   active quest, grants the step's small reward + a cheer when it completes, and
+   marks the quest ready-to-claim when the chain is done. The completion chest
+   (coins + treats + a sticker, shown in the Collection) is claimed in the Quest
+   Log. Pure state + central hooks, so every view feeds quests automatically. */
+const QUEST_BY_ID = Object.fromEntries(questsData.map((q) => [q.id, q]));
+function questUnlocked(q) {
+  if (!q.unlock) return true;
+  if (q.unlock.mastered) return (S.progress.stats.skillsMastered || 0) >= q.unlock.mastered;
+  return true;
+}
+function questRec(id) {
+  const log = S.progress.questlog || (S.progress.questlog = {});
+  return log[id] || (log[id] = { step: 0, prog: 0, done: false, claimed: false, cheer: null });
+}
+// advance every active quest whose current step tracks this metric
+export function bumpQuest(metric, n = 1) {
+  let cheer = null, touched = false;
+  for (const q of questsData) {
+    if (!questUnlocked(q)) continue;
+    const r = questRec(q.id);
+    if (r.done) continue;
+    const step = q.steps[r.step];
+    if (!step || step.metric !== metric) continue;
+    r.prog += n; touched = true;
+    if (r.prog >= step.goal) {
+      if (step.reward) { addCoins(step.reward.coins || 0); if (step.reward.treats) awardTreat(step.reward.treats); }
+      cheer = step.cheer || 'Step complete!';
+      r.cheer = cheer;
+      r.step += 1; r.prog = 0;
+      if (r.step >= q.steps.length) { r.done = true; }
+    }
+  }
+  if (touched) persistSoon();
+  return cheer; // a freshly-completed step's cheer (for a toast), or null
+}
+export function listQuests() {
+  return questsData.map((q) => {
+    const r = questRec(q.id);
+    const unlocked = questUnlocked(q);
+    const step = q.steps[Math.min(r.step, q.steps.length - 1)];
+    const status = !unlocked ? 'locked' : r.claimed ? 'claimed' : r.done ? 'ready' : 'active';
+    return {
+      id: q.id, title: q.title, emoji: q.emoji, blurb: q.blurb,
+      status, unlocked, stepIndex: r.step, stepCount: q.steps.length,
+      chest: q.chest,
+      lockText: q.unlock && q.unlock.mastered ? `Master ${q.unlock.mastered} skills to unlock` : '',
+      current: r.done ? null : {
+        label: step.label, n: Math.min(r.prog, step.goal), goal: step.goal,
+        pct: Math.round(Math.min(1, r.prog / step.goal) * 100),
+      },
+      steps: q.steps.map((s, i) => ({ label: s.label, state: i < r.step ? 'done' : i === r.step && !r.done ? 'current' : 'todo' })),
+    };
+  });
+}
+export function claimQuest(id) {
+  const q = QUEST_BY_ID[id]; if (!q) return null;
+  const r = questRec(id);
+  if (!r.done || r.claimed) return null;
+  r.claimed = true;
+  const chest = q.chest || {};
+  addCoins(chest.coins || 0); if (chest.treats) awardTreat(chest.treats);
+  if (chest.sticker) {
+    const st = S.progress.world.stickers || (S.progress.world.stickers = []);
+    if (!st.includes(chest.sticker)) st.push(chest.sticker);
+  }
+  S.progress.stats.questsDone = (S.progress.stats.questsDone || 0) + 1;
+  persist();
+  return { coins: chest.coins || 0, treats: chest.treats || 0, emoji: q.emoji, title: q.title };
+}
+export function claimableQuests() { return listQuests().filter((q) => q.status === 'ready').length; }
+
 /* ---------- badges ---------- */
 function strandMasteredForAnyGrade(strand) {
   // mastered if every skill of this strand in ANY single grade is mastered
@@ -379,6 +457,7 @@ function badgeMet(b) {
     case 'coinsEarned': return st.coinsEarned >= t.count;
     case 'levelReached': return pr.level >= t.count;
     case 'missionsDone': return (st.missionsDone || 0) >= t.count;
+    case 'questsDone': return (st.questsDone || 0) >= t.count;
     default: return false;
   }
 }

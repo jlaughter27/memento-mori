@@ -4,6 +4,29 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.26.0] — 2026-06-21 — "Island Quests"
+Track A of the v3 "Refinement" roadmap (see `docs/AUDIT_AND_ROADMAP.md`): the world gets real
+**adventures & tasks** — informed by a competitive audit (Prodigy/Pokémon quest gating,
+SplashLearn/Khan "help the character") and an internal audit that found the old per-zone
+"quests" were single counters with no chains.
+### Added
+- **Quest Log** (`#/quests`, `js/views/quests.js`) — multi-step island adventures. Each quest is
+  a **chain of objectives** (solve N · explore new zones · master skills · beat bosses) with its
+  own narrative, a step checklist, a live progress bar on the current objective, per-step rewards,
+  and a **completion chest** (coins + treats + a trophy sticker). Quests **gate by mastery** and
+  **auto-progress as you play**.
+- **Data model** (`js/curriculum/quests-data.js`) + **engine** (`js/gamification.js`:
+  `bumpQuest`/`listQuests`/`claimQuest`) hooked centrally into `recordAnswer` (solve), `masterSkill`
+  (master), and the world's boss-defeat + new-zone-arrival — so **every screen feeds quests** with
+  no per-view wiring. Two new badges (🧭 Adventurer, 🏝️ Island Hero) via a `questsDone` stat.
+- Home **Quest Log** card (with a 🎁 "chest ready" badge). New `tests/quests.mjs`.
+### Docs
+- **`docs/AUDIT_AND_ROADMAP.md`** — competitive + internal audit synthesis and the 3-track v3 plan
+  (World adventures · Tutor depth · Refinement).
+### Internal
+- `state.js`: `progress.questlog` + `stats.questsDone`. `service-worker.js` cache → `2.26.0`.
+  Full gate green (12 jsdom suites + `engine:check` + `fuzz`).
+
 ## [2.25.0] — 2026-06-18 — "Missions & Sparkle"
 A combined polish + motivation release: a real missions system, a visual lift, and a
 micro-interaction layer the app was missing.

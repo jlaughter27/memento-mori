@@ -1,6 +1,6 @@
 // service-worker.js — offline-first caching with a controlled update flow.
 // Bump CACHE on every release (mirrors APP_VERSION in js/version.js).
-const CACHE = 'mathquest-2.25.0';
+const CACHE = 'mathquest-2.26.0';
 const ASSETS = [
   './', './index.html', './manifest.json', './assets/icon.svg',
   './css/styles.css',
@@ -14,7 +14,7 @@ const ASSETS = [
   './js/curriculum/grade4.js', './js/curriculum/grade5.js', './js/curriculum/grade6.js',
   './js/curriculum/grade7.js', './js/curriculum/wordbank.js', './js/curriculum/rewards-data.js',
   './js/curriculum/standards.js', './js/curriculum/adventures.js', './js/curriculum/decor-data.js',
-  './js/curriculum/world-maps.js', './js/curriculum/toys-data.js', './js/curriculum/missions-data.js',
+  './js/curriculum/world-maps.js', './js/curriculum/toys-data.js', './js/curriculum/missions-data.js', './js/curriculum/quests-data.js',
   './js/game/loop.js', './js/game/input.js', './js/game/camera.js', './js/game/tilemap.js',
   './js/game/tiles.js', './js/game/sprite.js', './js/game/particles.js', './js/game/encounter.js',
   './js/ui/dom.js', './js/ui/shell.js', './js/ui/sound.js', './js/ui/mascot.js',
@@ -23,7 +23,7 @@ const ASSETS = [
   './js/views/rewards.js', './js/views/dashboard.js', './js/views/onboard.js',
   './js/views/curriculum.js', './js/views/pet.js', './js/views/adventure.js', './js/views/sprint.js',
   './js/views/magnitude.js', './js/views/report.js', './js/views/worksheet.js', './js/views/sortstorm.js',
-  './js/views/world.js', './js/views/collection.js',
+  './js/views/world.js', './js/views/collection.js', './js/views/quests.js',
 ];
 
 self.addEventListener('install', (e) => {
