@@ -1,10 +1,18 @@
 // version.js — single source of truth for the app version + release notes.
 // Bump APP_VERSION when shipping; the service worker cache + "What's New"
 // modal key off this string so installed apps update themselves.
-export const APP_VERSION = '2.29.0';
+export const APP_VERSION = '2.30.0';
 
 // Newest first. Shown in the in-app "What's New" modal on version change.
 export const RELEASES = [
+  {
+    v: '2.30.0',
+    date: '2026-06-28',
+    title: 'Beat the Boss, Open the Gate',
+    items: [
+      '⚔️ Bosses now unlock new places! Defeat Geo Rex to open Decimal Docks 🌊',
+    ],
+  },
   {
     v: '2.29.0',
     date: '2026-06-28',
