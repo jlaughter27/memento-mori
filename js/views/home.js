@@ -1,14 +1,46 @@
 // views/home.js — the learning map: continue card, daily goal, grade tabs, strands.
 import { S, persist, isUnlocked, isMastered, skillRec } from '../state.js';
 import { groupedByStrand, getSkill, GRADES } from '../curriculum/index.js';
-import { gradeCompletion, recommendedSkill, dailyStatus, dueReviews, mistakeCount, warmupDue, isRusty, weeklyProgress } from '../gamification.js';
+import { gradeCompletion, recommendedSkill, dailyStatus, dueReviews, mistakeCount, warmupDue, isRusty, weeklyProgress,
+  listMissions, claimMission, levelProgress, allBadges, pendingPetEvolution, markPetStageSeen, checkNewBadges } from '../gamification.js';
 import { rewardsData } from '../curriculum/index.js';
 import { mountMascot, foxLine } from '../ui/mascot.js';
-import { navigate } from '../ui/shell.js';
+import { navigate, refreshChrome } from '../ui/shell.js';
 import { sfx } from '../ui/sound.js';
+import { popup, confetti } from '../ui/celebrations.js';
+import { showBadges } from './rewards.js';
 import { escapeHtml } from '../ui/dom.js';
 
 const stars = (n) => `<span class="stars" aria-label="${n} of 3 stars">${[0, 1, 2].map((i) => `<span class="${i < n ? 'on' : ''}">★</span>`).join('')}</span>`;
+
+// one mission row (daily or weekly)
+function missionRow(m) {
+  const right = m.claimed
+    ? '<span class="m-claimed" aria-label="claimed">✓</span>'
+    : m.done
+      ? `<button class="btn-claim" data-tier="${m.tier}" data-id="${m.id}" aria-label="Claim reward: ${m.coins} coins">Claim 🎁</button>`
+      : `<span class="m-prog">${m.n}/${m.goal}</span>`;
+  return `<div class="mission ${m.done ? 'done' : ''} ${m.claimed ? 'claimed' : ''}">
+    <span class="m-emoji">${m.emoji}</span>
+    <div class="m-body">
+      <div class="m-title">${escapeHtml(m.title)}</div>
+      <div class="m-bar"><div class="m-fill" style="width:${m.pct}%"></div></div>
+    </div>${right}</div>`;
+}
+function missionsHtml() {
+  const { daily, weekly } = listMissions();
+  const ready = [...daily, ...weekly].filter((x) => x.done && !x.claimed).length;
+  return `
+    <div class="missions-head">
+      <h3>🗺️ Missions${ready ? ` <span class="m-badge">${ready} ready!</span>` : ''}</h3>
+      <span class="missions-sub muted">New daily quests each day</span>
+    </div>
+    <div class="missions-list">${daily.map(missionRow).join('')}</div>
+    <details class="missions-weekly"${ready && weekly.some((w) => w.done && !w.claimed) ? ' open' : ''}>
+      <summary>📆 Weekly quests <span class="muted">(bigger rewards)</span></summary>
+      <div class="missions-list">${weekly.map(missionRow).join('')}</div>
+    </details>`;
+}
 
 export function renderHome(root) {
   const grade = S.profile.grade;
@@ -20,6 +52,8 @@ export function renderHome(root) {
   const mistakes = mistakeCount();
   const showWarmup = warmupDue();
   const weekly = weeklyProgress();
+  const lp = levelProgress();
+  const badgeCount = allBadges().filter((b) => b.earned).length;
   const petName = (rewardsData.pets.find((p) => p.id === S.profile.avatar.pet) || { name: 'Your pet' }).name;
   const greeting = streak > 1
     ? `You've practiced ${streak} days in a row — keep it up! 🔥`
@@ -31,6 +65,11 @@ export function renderHome(root) {
       <div class="home-hello">
         <h1>Hi ${escapeHtml(S.profile.name || 'friend')}! 👋</h1>
         <p class="muted">${greeting}</p>
+        <div class="hero-stats" aria-label="Your progress">
+          <span class="hero-stat" title="Level"><span class="hs-ring" style="--p:${Math.round(lp.pct * 100)}"><b>${lp.level}</b></span><span class="hs-label">Level</span></span>
+          <span class="hero-stat" title="Day streak"><span class="hs-num">🔥 ${streak}</span><span class="hs-label">streak</span></span>
+          <span class="hero-stat" title="Badges earned"><span class="hs-num">🏅 ${badgeCount}</span><span class="hs-label">badges</span></span>
+        </div>
         <button class="btn btn-big btn-play" id="daily-btn">⚡ Daily Challenge</button>
       </div>
     </section>
@@ -47,6 +86,8 @@ export function renderHome(root) {
       <div class="goal-pips">${Array.from({ length: daily.goal }, (_, i) => `<span class="goal-pip ${i < daily.count ? 'on' : ''}"></span>`).join('')}</div>
       ${daily.reached ? '<p class="goal-done">Goal complete — you\'re a star today! 🌟</p>' : ''}
     </div>
+
+    <section class="missions card-soft" id="missions-panel">${missionsHtml()}</section>
 
     ${weekly.goal ? `
     <div class="card-soft weekly-goal">
@@ -125,6 +166,32 @@ export function renderHome(root) {
 
   const m = mountMascot(root.querySelector('#home-mascot'), { mood: 'wave', say: foxLine('greet'), size: 110 });
   setTimeout(() => m.setMood('idle'), 1600);
+
+  // celebrate a pet "evolution" the first time we're back home after it advances
+  const evo = pendingPetEvolution();
+  if (evo) {
+    markPetStageSeen();
+    setTimeout(() => popup({
+      emoji: '🌟', title: `${escapeHtml(petName)} grew up!`,
+      sub: `Your pet is now ${evo.name}! Keep mastering skills to help it grow.`,
+      sound: 'level', hold: true, confetti: true,
+    }), 700);
+  }
+
+  // missions: claim a finished quest → reward + celebration, then re-render the panel
+  const panel = root.querySelector('#missions-panel');
+  const wireMissions = () => {
+    panel.querySelectorAll('.btn-claim').forEach((b) => b.addEventListener('click', () => {
+      const r = claimMission(b.dataset.tier, b.dataset.id);
+      if (!r) return;
+      sfx.coin(); confetti(90);
+      popup({ emoji: r.emoji || '🎁', title: 'Mission complete!', sub: `+${r.coins} 🪙  +${r.treats} 🍪`, sound: 'badge' });
+      panel.innerHTML = missionsHtml(); wireMissions(); refreshChrome();
+      const fresh = checkNewBadges();
+      if (fresh.length) setTimeout(() => showBadges(fresh, () => {}), 900);
+    }));
+  };
+  wireMissions();
 
   root.querySelector('#daily-btn').addEventListener('click', () => { sfx.tap(); navigate('#/play'); });
   const revBtn = root.querySelector('#review-btn');

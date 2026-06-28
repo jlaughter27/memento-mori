@@ -272,6 +272,20 @@ export default {
       name: 'Math Legend',
       desc: 'Level 20! You are an absolute Math Legend!',
       trigger: { kind: 'levelReached', count: 20 }
+    },
+    {
+      id: 'mission-1',
+      emoji: '🗺️',
+      name: 'Quest Begun',
+      desc: 'You finished your first mission — adventure awaits!',
+      trigger: { kind: 'missionsDone', count: 1 }
+    },
+    {
+      id: 'mission-25',
+      emoji: '🏵️',
+      name: 'Quest Champion',
+      desc: '25 missions complete — you show up and get it done!',
+      trigger: { kind: 'missionsDone', count: 25 }
     }
   ],
 
