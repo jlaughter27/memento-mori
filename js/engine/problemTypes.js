@@ -87,9 +87,11 @@ const checkSet = (targetArr) => (raw) => {
 const P = (o) => ({ steps: [], hints: [], visual: null, inputKind: 'number', misconceptions: [], ...o });
 
 /* ---------- misconception detection (tutor: error-specific feedback) ----------
-   Each entry { test(raw)->bool, msg } fires when the child's WRONG answer matches a
-   classic error, so the tutor can address the specific misunderstanding, not "try again". */
-const mis = (test, msg) => ({ test, msg });
+   Each entry { test(raw)->bool, msg, sample } fires when the child's WRONG answer matches
+   a classic error, so the tutor can address the specific misunderstanding, not "try again".
+   `sample` is that classic wrong answer itself — engine-check uses it to prove the detector
+   fires on its own pattern and that the pattern is genuinely wrong. */
+const mis = (test, msg, sample) => ({ test, msg, sample });
 // build the number you'd get by writing each column's digit-sum WITHOUT carrying
 function addNoCarry(nums) {
   const maxLen = Math.max(...nums.map((n) => String(n).length));
@@ -138,7 +140,7 @@ function makeAdd(params = {}, rng) {
       `If a column adds up to 10 or more, carry the extra to the next column. ${regroup ? 'This one needs carrying!' : ''}`,
     ],
     visual: terms === 2 && total <= 30 ? { type: 'numberLine', min: 0, max: roundUp(total), step: stepFor(total), mark: total } : null,
-    misconceptions: (() => { const w = addNoCarry(nums); return w !== total ? [mis(checkInt(w), 'Careful — when a column adds up to 10 or more, you have to **carry** the extra ten to the next column. 🔟')] : []; })(),
+    misconceptions: (() => { const w = addNoCarry(nums); return w !== total ? [mis(checkInt(w), 'Careful — when a column adds up to 10 or more, you have to **carry** the extra ten to the next column. 🔟', w)] : []; })(),
     check: checkInt(total),
   });
 }
@@ -204,7 +206,7 @@ function makeSub(params = {}, rng) {
         : 'Each top digit is big enough — no borrowing needed here.',
     ],
     visual: a <= 30 ? { type: 'numberLine', min: 0, max: roundUp(a), step: stepFor(a), mark: ans } : null,
-    misconceptions: (() => { const w = subAbsCols(a, b); return w !== ans ? [mis(checkInt(w), 'Hmm — you can\'t just subtract the smaller digit from the bigger one in each column. When the top is smaller, **borrow** 10 from the next column. 🔄')] : []; })(),
+    misconceptions: (() => { const w = subAbsCols(a, b); return w !== ans ? [mis(checkInt(w), 'Hmm — you can\'t just subtract the smaller digit from the bigger one in each column. When the top is smaller, **borrow** 10 from the next column. 🔄', w)] : []; })(),
     check: checkInt(ans),
   });
 }
@@ -296,6 +298,7 @@ function makeMult(params = {}, rng) {
       `Don't forget the zeros: tens × something ends in 0.`,
     ],
     visual,
+    misconceptions: (() => { const w = a + b; return w !== ans ? [mis(checkInt(w), `Careful — × means *times*, not plus. Don't add ${grp(a)} and ${grp(b)}; make ${grp(a)} groups of ${grp(b)} and add them all up. ✖️`, w)] : []; })(),
     check: checkInt(ans),
   });
 }
@@ -329,7 +332,7 @@ function makeDiv(params = {}, rng) {
       wantRem ? `Whatever is left at the end that's smaller than ${divisor} is the remainder.` : `It should divide evenly with nothing left over.`,
     ],
     inputKind: r ? 'text' : 'number',
-    misconceptions: r ? [mis((raw) => { const s = String(raw).toLowerCase().replace(/\s+/g, ''); return s === String(q); }, `So close! ${grp(q)} is right, but there's a **remainder** left over. Write it as "${q} r${r}". ➗`)] : [],
+    misconceptions: r ? [mis((raw) => { const s = String(raw).toLowerCase().replace(/\s+/g, ''); return s === String(q); }, `So close! ${grp(q)} is right, but there's a **remainder** left over. Write it as "${q} r${r}". ➗`, String(q))] : [],
     check: r
       ? (raw) => {
           const s = String(raw).toLowerCase().replace(/\s+/g, '');
@@ -390,6 +393,7 @@ function makeBaseTenBuild(params = {}, rng) {
       `${target} = ${breakdown}.`,
       `Match each column to the matching digit of ${target}.`,
     ],
+    misconceptions: (() => { const w = digs.reduce((a, dd) => a + dd, 0); return w !== target ? [mis(checkInt(w), `That's just the digits added up. Each block column is worth a different amount — ones, tens, hundreds. Put **${digs[digs.length - 1]} in the ${names[digs.length - 1]} column**, not all in ones. 🧱`, w)] : []; })(),
     check: checkInt(target),
   });
 }
@@ -415,6 +419,12 @@ function makePlaceValue(params = {}, rng) {
         { text: `Expanded form: ${ansStr}. 🧩` },
       ],
       hints: ['Each digit is worth its face value times its place (ones, tens, hundreds...).', 'Write each nonzero digit times its place, joined with +.'],
+      misconceptions: (() => {
+        const faces = [];
+        for (let i = digs.length - 1; i >= 0; i--) if (digs[i]) faces.push(digs[i]);
+        const w = faces.join(' + ');
+        return faces.reduce((a, b) => a + b, 0) !== n ? [mis((raw) => String(raw).replace(/\s/g, '') === w.replace(/\s/g, ''), `Each digit needs its **place** added on. A 3 in the hundreds place is worth 300, not 3. Write each digit times its place, like 300 + 40 + 5. 🧩`, w)] : [];
+      })(),
       check: (raw) => {
         const got = String(raw).replace(/,/g, '').split('+').map((x) => Number(x.trim())).filter((x) => x);
         return got.reduce((a, b) => a + b, 0) === n && got.every((x) => /^\d0*$/.test(String(x)) || x < 10);
@@ -435,6 +445,7 @@ function makePlaceValue(params = {}, rng) {
         { text: `That digit is ${digit}. ✅` },
       ],
       hints: [`Start at the ones place on the right and count left.`, `${placeNames[place]} is ${place} place(s) left of the ones.`],
+      misconceptions: (() => { const w = digit * placeValAt(place); return w !== digit ? [mis(checkInt(w), `The question asks for the **digit** itself, not what it's worth. Just read off the single number sitting in the ${placeNames[place]} place. 🔎`, w)] : []; })(),
       check: checkInt(digit),
     });
   }
@@ -451,6 +462,7 @@ function makePlaceValue(params = {}, rng) {
     ],
     hints: [`A digit's value = the digit × its place value.`, `${placeNames[place]} place is worth ${grp(placeValAt(place))}.`],
     visual: n <= 9999 ? { type: 'baseTen', value: n } : null,
+    misconceptions: (() => { return val !== digit ? [mis(checkInt(digit), `That's the digit by itself. Its **value** depends on its place — the ${digit} in the ${placeNames[place]} place is worth ${digit} × ${grp(placeValAt(place))} = ${grp(val)}. 💎`, digit)] : []; })(),
     check: checkInt(val),
   });
 }
@@ -477,7 +489,14 @@ function makeRounding(params = {}, rng) {
     ],
     hints: [`Find the digit just to the RIGHT of the place you're rounding to.`, `5 or more? Round up. 4 or less? Keep it the same.`, `Everything to the right becomes 0.`],
     visual: n <= 100 ? { type: 'numberLine', min: Math.floor(n / to) * to, max: Math.ceil(n / to) * to, step: to / 2 || 1, mark: n } : null,
-    misconceptions: (() => { const w = Math.floor(n / to) * to; return w !== rounded ? [mis(checkInt(w), `Not quite — that digit is **${lookDigit}**, which is 5 or more, so you round **up**, not down. ⬆️`)] : []; })(),
+    misconceptions: (() => {
+      const floorM = Math.floor(n / to) * to, ceilM = Math.ceil(n / to) * to;
+      // the wrong-direction multiple: if we rounded up, the trap is rounding down, and vice versa
+      const w = rounded === floorM ? ceilM : floorM;
+      return w !== rounded ? [mis(checkInt(w), lookDigit >= 5
+        ? `Not quite — that digit is **${lookDigit}**, which is 5 or more, so you round **up**, not down. ⬆️`
+        : `Not quite — that digit is **${lookDigit}**, which is less than 5, so it stays the same — round **down**, not up. ⬇️`, w)] : [];
+    })(),
     check: checkInt(rounded),
   });
 }
@@ -501,6 +520,7 @@ function makeCompare(params = {}, rng) {
       { text: `${grp(a)} ${ans} ${grp(b)}. ${ans === '>' ? '◀ points to the bigger one!' : ans === '<' ? 'The open side faces the bigger one!' : ''}` },
     ],
     hints: [`Compare the leftmost digits first.`, `The alligator mouth always opens toward the bigger number. 🐊`],
+    misconceptions: (() => { const w = ans === '>' ? '<' : ans === '<' ? '>' : null; return w ? [mis(checkChoice(w), `Check which way the sign points — the open, wide side always faces the **bigger** number, and the point faces the smaller. 🐊`, w)] : []; })(),
     check: checkChoice(ans),
   });
 }
@@ -526,7 +546,7 @@ function makeFractionCompare(params = {}, rng) {
     ],
     hints: [`Same-size pieces are easy to compare — find a common denominator.`, `When denominators match, just compare the numerators.`],
     visual: { type: 'fractionBar', bars: [{ num: n1, den: d1 }, { num: n2, den: d2 }] },
-    misconceptions: (() => { const byDenom = d1 > d2 ? '>' : d1 < d2 ? '<' : '='; return byDenom !== ans && d1 !== d2 ? [mis(checkChoice(byDenom), `Tricky! A **bigger bottom number means smaller pieces**, not a bigger fraction. Picture the bars to compare. 🍕`)] : []; })(),
+    misconceptions: (() => { const byDenom = d1 > d2 ? '>' : d1 < d2 ? '<' : '='; return byDenom !== ans && d1 !== d2 ? [mis(checkChoice(byDenom), `Tricky! A **bigger bottom number means smaller pieces**, not a bigger fraction. Picture the bars to compare. 🍕`, byDenom)] : []; })(),
     check: checkChoice(ans),
   });
 }
@@ -552,6 +572,7 @@ function makeEquivFraction(params = {}, rng) {
     ],
     hints: [`Equivalent fractions are the same amount cut into more pieces.`, `Multiply top AND bottom by the same number.`, `${den} × ? = ${tDen}`],
     visual: { type: 'fractionBar', bars: [{ num, den }, { num: tNum, den: tDen }] },
+    misconceptions: (() => { const w = num + (tDen - den); return w !== tNum ? [mis(checkInt(w), `Watch out — you can't *add* the same amount to the top. The bottom was **multiplied** by ${mult}, so multiply the top by ${mult} too: ${num} × ${mult} = ${tNum}. ✖️`, w)] : []; })(),
     check: checkInt(tNum),
   });
 }
@@ -579,6 +600,7 @@ function makeFractionShade(params = {}, rng) {
       `The top (${num}) is how many parts to color in.`,
       `Tap exactly ${num} part${num > 1 ? 's' : ''}.`,
     ],
+    misconceptions: (() => { return den !== num ? [mis(checkInt(den), `That shaded the **bottom** number of parts. The bottom (${den}) is how many parts there are in all — the **top** (${num}) is how many to color. Shade just ${num}. 🎨`, den)] : []; })(),
     check: checkInt(num),
   });
 }
@@ -631,7 +653,7 @@ function makeFractionAddSub(params = {}, rng) {
       if (op !== '+') return [];
       const wN = n1 + n2, wD = d1 + d2;
       return wD > 0 && Math.abs(wN / wD - sNum / sDen) > 1e-9
-        ? [mis(checkFraction(wN, wD), `Watch out — you **don't add the bottom numbers**. Give both fractions the same denominator first, then add just the tops. 🍕`)] : [];
+        ? [mis(checkFraction(wN, wD), `Watch out — you **don't add the bottom numbers**. Give both fractions the same denominator first, then add just the tops. 🍕`, `${wN}/${wD}`)] : [];
     })(),
     check: checkFraction(sNum, sDen),
   });
@@ -657,6 +679,7 @@ function makeFractionOfNum(params = {}, rng) {
     ],
     hints: [`"of" tells you to multiply.`, `Divide by the bottom to find one part, then times the top.`],
     visual: { type: 'groups', groups: den, perGroup: whole / den },
+    misconceptions: (() => { const w = whole / den; return w !== ans ? [mis(checkInt(w), `That's just **one** part. ${whole} ÷ ${den} = ${w} is 1/${den}. You need ${num} of those parts: ${w} × ${num} = ${ans}. 🎯`, w)] : []; })(),
     check: checkInt(ans),
   });
 }
@@ -682,6 +705,7 @@ function makeDecimalAddSub(params = {}, rng) {
       { text: `Bring the decimal point straight down. Answer: **${ans.toFixed(places)}**. 💯` },
     ],
     hints: [`Stack them so the decimal points are in a straight line.`, `Fill empty spots with 0 if you need to.`, `Drop the decimal point straight down into the answer.`],
+    misconceptions: (() => { const w = +(ans * 10).toFixed(places); return Math.abs(w - ans) > 1e-9 ? [mis(checkDecimal(w), `Check your **decimal point** — it slid over a spot. Line the points up in a straight column and bring the point straight down into the answer. 🔢`, w.toFixed(places))] : []; })(),
     check: checkDecimal(ans),
   });
 }
@@ -705,6 +729,7 @@ function makeDecimalCompare(params = {}, rng) {
       { text: `${a} ${ans} ${b}. ✅` },
     ],
     hints: [`Compare the whole-number part first.`, `Add trailing zeros so both have the same length, then compare like whole numbers.`],
+    misconceptions: (() => { const w = ans === '>' ? '<' : ans === '<' ? '>' : null; return w ? [mis(checkChoice(w), `Careful with longer decimals — more digits after the point doesn't mean bigger! Add zeros so both are the same length, then the **open** side of the sign faces the bigger number. 🔢`, w)] : []; })(),
     check: checkChoice(ans),
   });
 }
@@ -728,6 +753,7 @@ function makeFactors(params = {}, rng) {
         { text: `First five multiples: ${list.join(', ')}. 🔢` },
       ],
       hints: [`Just skip-count: ${n}, then keep adding ${n}.`, `Multiples = the times table of ${n}.`],
+      misconceptions: (() => { const wrong = [n * 2, n * 3, n * 4, n * 5, n * 6]; return [mis(checkSet(wrong), `Don't skip the first one! The very first multiple of ${n} is **${n} itself** (${n} × 1). Start your list at ${n}. 🔢`, wrong.join(', '))]; })(),
       check: checkSet(list),
     });
   }
@@ -745,6 +771,9 @@ function makeFactors(params = {}, rng) {
         { text: `${n} is ${isPrime ? 'PRIME' : 'COMPOSITE'}. ✅` },
       ],
       hints: [`Try dividing by 2, 3, 5, 7...`, `If anything besides 1 and itself divides evenly, it's composite.`],
+      misconceptions: (() => { const w = isPrime ? 'Composite' : 'Prime'; return [mis(checkChoice(w), isPrime
+        ? `Not quite — **prime** means the ONLY factors are 1 and ${n} itself. Nothing else divides it evenly, so ${n} is prime. 🔒`
+        : `Not quite — **composite** means it has more factors than just 1 and itself. Since ${factor} divides ${n} evenly, ${n} is composite. 🧩`, w)]; })(),
       check: checkChoice(isPrime ? 'Prime' : 'Composite'),
     });
   }
@@ -760,6 +789,7 @@ function makeFactors(params = {}, rng) {
       { text: `Factors of ${n}: ${factors.join(', ')}. 🧮` },
     ],
     hints: [`Always start with 1 and the number itself.`, `Find pairs that multiply to ${n}.`],
+    misconceptions: (() => { const inner = factors.filter((f) => f !== 1 && f !== n); return inner.length ? [mis(checkSet(inner), `Don't forget the bookends! **1** and **${n} itself** are always factors of ${n}, because 1 × ${n} = ${n}. Add them to your list. 🧮`, inner.join(', '))] : []; })(),
     check: checkSet(factors),
   });
 }
