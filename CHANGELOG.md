@@ -4,6 +4,23 @@ All notable changes to MathQuest. Versions follow [Semantic Versioning](https://
 The app version lives in `js/version.js` (and the service-worker cache name); bumping it
 ships a self-update to every installed device.
 
+## [2.29.0] — 2026-06-28 — "Smoother & Cleaner" (Plan M6)
+Track C / Plan M6: refinement foundation — consolidate accreted CSS so motion is predictable.
+### Fixed
+- **One reduced-motion guard, not three** (`css/styles.css`) — the stylesheet had accreted
+  three inconsistent `@media (prefers-reduced-motion)` blocks (`.001ms` vs `0ms` vs `0s`, only
+  one zeroing `animation-iteration-count`). Collapsed into a single comprehensive guard (zeros
+  animation duration + iteration-count + transition duration + scroll-behavior) alongside the
+  explicit calm-mode toggle.
+### Changed
+- **Token adoption** — `border-radius:18px` literals now use the existing `--radius-md` token
+  (pixel-identical; improves theming consistency).
+### Internal
+- New **`tests/css-health.mjs`** regression guard: enforces exactly one reduced-motion guard,
+  the calm-mode rule, a complete guard, and no stray tokenized radius literals. Added to the
+  suite. `service-worker.js` cache → `2.29.0`. Full gate green (14 jsdom suites + `engine:check`
+  + `fuzz`).
+
 ## [2.28.0] — 2026-06-28 — "Help, Step by Step" (Plan M2)
 Track B / Plan M2: tiered hints + a bottom-out, so help is laddered and never a dead end.
 ### Changed
